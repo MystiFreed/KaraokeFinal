@@ -1,3 +1,5 @@
+//TO DELETE?
+
 //This is the class Band.h. This class is derived from Artist.h class, and is specific to bands, not individual artists. 
 //Mysti Freed
 //4-NOV-2019

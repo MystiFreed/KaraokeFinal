@@ -11,7 +11,7 @@ class Song : public CatalogEntry
 		string artistKey = "";
 
 	
-	public:blank
+	public:
 		Song() :CatalogEntry() {};
 		Song(string newTitle, string newArtistKey) :CatalogEntry()
 		{
@@ -30,7 +30,6 @@ class Song : public CatalogEntry
 		virtual void fromFile(vector<string>::iterator );
 
 		virtual string	getKey();
-		virtual void	updateKey();
 
 };
 
@@ -45,10 +44,6 @@ void Song::setArtistKey(string newArtistKey) { artistKey = newArtistKey; };
 string Song::getTitle() { return title; };
 string Song::getArtistKey() { return artistKey; };
 string Song::getKey() { return songKey; };
-
-void Song::updateKey() {
-	cout << "\n test in update key\n";
-songKey = title + " - " + artistKey; };
 
 string Song::display()
 { 

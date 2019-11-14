@@ -112,3 +112,7 @@ string Artist::getKey() {
 	return alphaName;
 
 }
+
+map<string, Artist> artistMap;
+string artistFileTXT = "Artists.txt";
+fstream artistFstream;// (artistFileTXT, ios::in | ios::out);

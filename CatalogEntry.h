@@ -18,8 +18,6 @@ public:
 	//The iterator is created when the map is read from the file, the key is read from the first value, then the iterator is moved to the start of the class fields and this function is called.
 	virtual void fromFile(std::vector<string>::iterator iter)=0;
 
-	//set the key field using one of the other fields in the class. update the key any time that field changes.
-	virtual void updateKey() = 0;
 	//return the key string from the class
 	virtual string getKey() = 0;
 };

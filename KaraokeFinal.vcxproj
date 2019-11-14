@@ -160,6 +160,7 @@
     <ClInclude Include="DateCalcLong.h" />
     <ClInclude Include="FileManagement.h" />
     <ClInclude Include="Genre.h" />
+    <ClInclude Include="Singer.h" />
     <ClInclude Include="IndividualArtist.h" />
     <ClInclude Include="MapManagement.h" />
     <ClInclude Include="maps.h" />
