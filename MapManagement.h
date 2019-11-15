@@ -1,41 +1,41 @@
+/////////PRIMARY Maps/////save unique objects of a class with a unique key. Maps are in the .h file of the class that the map contains. This is the official record of all objects of the class. Map will be loaded at the start of program, new objects inserted into map will be saved to file.
+/////////SECONDARY Multimaps/////////////save only keys to file, all the map functions like find and emplace only return iterators which are not useful to save. Lookups will be needed to use the contents of these maps
+/////This file contains functions that can be used with maps
+
+
+
 #pragma once
 #include <map>
 #include <iterator>
+#include "Artist.h"
+#include "Song.h"
+
 
 template <typename T>  void displayMap(map<string, T>& );
-template <typename T> bool SelectByKey(map<string, T> , string , T* );
-template <typename T> bool UserInputSelectByKey(map<string, T> , string , T* );
+template <typename T> bool SelectByKey(map<string, T> , string , T& );
+template <typename T> bool UserInputSelectByKey(map<string, T> , string , T& );
 template <typename T>  bool addObjectToMap(typename map<string, T>&, T&);
 void addObjectToMap(typename multimap<string, string>&, string , string );
-
-
-
+template<typename T> void primaryMapSeparateLineByDelimiter(map<string, T>& , string);
 
 
 //use with any ordered map that has string as the key and an object of a class that has a key field, and updateKey() and getKey() functions in the class.
 //http://www.cplusplus.com/reference/map/map/emplace/ returns the bool that emplace returns (second part of pair that emplace returns)
 template <typename T>  bool addObjectToMap(typename map<string, T>& existingMap, T& newObject)
 {
-	newObject.updateKey();//ensures that the key field in the object has most current data ---NEED?
-	string newKey = newObject.getKey(); //uses the key field in the object as the key for the map
-									
+	string newKey = newObject.getKey(); //uses the key field in the object as the key for the map								
 	//this shows the results of emplace, which is a pair that conaitns a pointer to the value in the map (accessed by .first) and a bool (the .second) about whehter successful insert
 	return existingMap.emplace(newKey, newObject).second;
 
 };
 	
-//use with any ordered map that has string as the key and an object of a class that has a key field, and updateKey() and getKey() functions in the class.
+//multimap version
 //http://www.cplusplus.com/reference/map/map/emplace/ returns the bool that emplace returns (second part of pair that emplace returns)
  void addObjectToMap(typename multimap<string, string>& existingMap, string newKey, string newValue)
 {
-	
-	//this shows the results of emplace, which is a pair that conaitns a pointer to the value in the map (accessed by .first) and a bool (the .second) about whehter successful insert
 	 existingMap.emplace(newKey, newValue);
-
 };
 	 
-
-
 //use with any ordered map that has string as the key, for testing only - replace with save to file
 template <typename T>  void displayMap(map<string, T>& existingMap) {
 
@@ -51,9 +51,8 @@ template <typename T>  void displayMap(multimap<string, T>& existingMap) {
 };
 
 
-
 //include instructions to show the user for entering a useful search string.
-template <typename T> bool UserInputSelectByKey(map<string, T> myMap, string userInputInstructions, T* storeObject)
+template <typename T> bool UserInputSelectByKey(map<string, T> myMap, string userInputInstructions, T& storeObject)
 {
 	////menu management
 	string sectionTitle = "";//gives a header to next menu section so it is easier to read
@@ -66,12 +65,8 @@ template <typename T> bool UserInputSelectByKey(map<string, T> myMap, string use
 	cout << userInputInstructions;
 	cin >> searchString;
 
-
-
 	if (SelectByKey(myMap, searchString, storeObject))//if it is not map.end then the search found a match
-	{
-		return true;
-	}
+	{		return true;	}
 
 	//full key not found, try substring search and ask user if that is what they were looking for
 typename	map<string, T>::iterator it = myMap.begin();//start searching from beginning
@@ -119,20 +114,21 @@ typename	map<string, T>::iterator it = myMap.begin();//start searching from begi
 
 /////NEED to test 
 //include instructions to show the user for entering a useful search string.
-template <typename T> bool SelectByKey(map<string, T> myMap, string searchString, T* storeObject)
+template <typename T> bool SelectByKey(map<string, T> myMap, string searchString, T& storeObject)
 {
 	//attempt finding exact match
-	typename map<string, T>::iterator it;
-	it = myMap.find(searchString);
-	if (it != myMap.end())//if it is not map.end then the search found something and it is in the iterator
+	typename map<string, T>::iterator iter;
+	iter = myMap.find(searchString);
+	if (iter != myMap.end())//if it is not map.end then the search found something and it is in the iterator
 	{
-		storeObject = &it.second;
+		//storeObject = iter->second ; //NEED copy constructor for this to work - Artist, Song, Singer
+		
 		return true;//iterator has been updated and can be used back where the function was called from.
 	}
 	return false;
 };
 
-
+//NEED to edit this to put element delimiter between each element - change the from file to expect that, and change Singer.h to use this function
 //overwrites current contents of the file
 template<typename T>void	primaryMapToFile(map<string, T>& myMap, fstream& myFstream)
 {
@@ -156,7 +152,7 @@ template<typename T> void primaryMapFromFile(map<string, T>& myMap, fstream& inp
 		}
 		else
 		{
-			primaryMapSeparateLineByDelimiter(myMap);
+			primaryMapSeparateLineByDelimiter(myMap, line);
 		}
 
 	}
@@ -165,9 +161,10 @@ template<typename T> void primaryMapFromFile(map<string, T>& myMap, fstream& inp
 
 };
 
-template<typename T> void primaryMapSeparateLineByDelimiter(map<string, T>& myMap)
+template<typename T> void primaryMapSeparateLineByDelimiter(map<string, T>& myMap, string line)
 {
 	vector<string> fields = SeparateLineByDelimiter(line, FIELD_DELIMITER);
+
 	vector<string>::iterator iter = fields.begin();
 	string tempKey = *iter;//stores contents of first item in vector as the key
 	T tempObject = T();
@@ -178,6 +175,10 @@ template<typename T> void primaryMapSeparateLineByDelimiter(map<string, T>& myMa
 
 }
 
+
+
+
+///from maps.h NEED to figure out the best loacation for these.
 
 multimap<string, string> singerHistory; //map<dateAsString, songKey>> //NEEDS moved to Singer.h when created
 
@@ -193,13 +194,22 @@ Artist userInputArtist() {
 	string alphaName = "";
 	cout << "\nArtist name, alphabetical (Move \", The \" or \", A\" to the end of the artist name if applicable) :";
 	getline(cin, alphaName);
+	Artist tempArtist;
+	if (SelectByKey(artistMap, alphaName, tempArtist)) {
+		return tempArtist;//already existed, so use that one.
+	}
+	
 	return Artist(alphaName);
 };
 
-Song userInputSong(string artistKey) {//temporary, need to complete this 
+Song userInputSong(string artistKey) {
+	Song tempSong;
 	string songTitle = "";
 	cout << "\nSong Title:";
 	getline(cin, songTitle);
+	if (SelectByKey(songMap, songTitle, tempSong)) {
+		return tempSong;//already existed, so use that one.
+	}
 	return Song(songTitle, artistKey);
 };
 

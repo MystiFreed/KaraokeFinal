@@ -25,8 +25,6 @@ vector<string> SeparateLineByDelimiter(string, char);
 void GoBeginningOfFile(fstream& inputReader);
 
 
-//template functions
-//template <typename T> void ReadInAllObjects(fstream&, T& map );
 
 
 //sets reader back to start of file //Amy
@@ -128,6 +126,10 @@ bool openFileInOut(fstream& file, string filenameTXT)
 
 
 /*might adjust for map?
+
+//template functions
+//template <typename T> void ReadInAllObjects(fstream&, T& map );
+
 //reads each line from file and adds to a vector of the same object type as tempObject
 //for tempObject parameter, declare a variable of the object type that matches your file, then pass that variable to the function.
 template <typename T> void ReadInAllObjects(fstream& inputFile, T& outputMap ){

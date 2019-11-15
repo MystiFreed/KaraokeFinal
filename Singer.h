@@ -29,8 +29,6 @@ public:
 	string getDisplayName
 	();
 
-
-
 	virtual string	display();
 	virtual string	toFile();
 	virtual void fromFile(vector<string>::iterator);

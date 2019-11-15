@@ -8,21 +8,38 @@
 #include "CatalogEntry.h"
 #include "maps.h"
 #include <map>
-
+void test();
 void startup();
 int main()
 {
 	startup();
+	test();
 	
 
+};
+
+void startup() {
+	cout << "open song fstream: " << openFileInOut(songFstream, songFileTXT) << endl;
+	cout << "\nopen artist fstream: " << openFileInOut(artistFstream, artistFileTXT) << endl;
+	primaryMapFromFile(songMap, songFstream);
+	primaryMapFromFile(artistMap, artistFstream);
+	cout << "\nDone importing map data";
+};
+
+//run this to test basic functions after changes
+void test() {
+
 	for (int i = 0; i < 5; i++) {
-cout<<		"\n------------------\nAdd a new Artist and Song (later will add select existing artist, function created but not tested yet.";
-		
-		//Artist tempArtist = userInputArtist(); //NEED to update userInputArtist function with artist fields
+		cout << "\n------------------\nAdd a new Artist and Song (later will add select existing artist, function created but not tested yet.";
+
+		Artist tempArtist = userInputArtist(); 
 		Song tempSong = userInputSong(tempArtist.getKey());
-		if (addSongToCatalogs(tempSong)) { cout << "Added to map\n"; }
+		if (addSongToCatalogs(tempSong)) { cout << "Added to maps\n"; }
 		else { cout << "Error\n"; };
+		cout<<"Found in songMap? 1=true"<<to_string(songMap.count(tempSong.getKey()))<<"\n";
+		cout << "Found in songCatalogByArtist? 1=true" << to_string(songCatalogByArtist.count(tempSong.getKey())) << "\n";
 	}
+	
 	cout << "Check contents of songMap:\n";
 	displayMap(songMap);
 	cout << "Check contents of artistMap:\n";
@@ -38,19 +55,10 @@ cout<<		"\n------------------\nAdd a new Artist and Song (later will add select 
 	primaryMapFromFile(testMap, songFstream);
 
 
-	cout << "For Testing, display contents of map \n";
+	cout << "For Testing, display contents of map that were read in from file\n";
 	displayMap(testMap);
-	//	//displayMap(songCatalogByArtist);
+}
 
-};
-
-void startup() {
-	cout << "open song fstream: " << openFileInOut(songFstream, songFileTXT) << endl;
-	cout << "\nopen artist fstream: " << openFileInOut(artistFstream, artistFileTXT) << endl;
-	primaryMapFromFile(songMap, songFstream);
-	primaryMapFromFile(artistMap, artistFstream);
-	cout << "\nDone importing map data";
-};
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
 // Debug program: F5 or Debug > Start Debugging menu
 
