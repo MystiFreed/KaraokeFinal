@@ -1,6 +1,8 @@
 // KaraokeSongs.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
+//testing the tutorial #1
+
 #include <iostream>
 #include "Song.h"
 #include "MapManagement.h"
