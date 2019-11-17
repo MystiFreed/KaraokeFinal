@@ -56,7 +56,7 @@ char getInputReprompt(std::string promptMessage, char minRange, char maxRange) {
 	bool isInvalidInput;
 	string low(1,minRange);//convert char to string
 	string high(1,maxRange);//convert char to string
-	std::string invalidMessage = "Error: Enter a character between " + low + " and " + high+". ";
+	std::string invalidMessage = "Error: Enter a character between " + low + " and " + high +". ";
 
 	do {
 		std::cout << promptMessage;

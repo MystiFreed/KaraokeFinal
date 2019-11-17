@@ -8,12 +8,19 @@
 #include "MapManagement.h"
 #include "FileManagement.h"
 #include "CatalogEntry.h"
+#include "QueueManagement_KJ.h"
+#include "Singer.h"
 #include "maps.h"
 #include <map>
 
+using namespace std;
+
+//function prototypes
 void test();
 void startup();
+void linkListTester();
 bool displayMenu();
+//char getInputReprompt(string, char, char);
 
 int main()
 {
@@ -31,7 +38,7 @@ void startup() {
 	primaryMapFromFile(songMap, songFstream);
 	primaryMapFromFile(artistMap, artistFstream);
 	cout << "\nDone importing map data";
-
+	linkListTester();
 
 };
 
@@ -41,34 +48,39 @@ bool displayMenu()
 	char userSelection; //user choice within the top-of-house menu display
 
 	string prompt = "\n----Karaoke Role Selection Menu----\n ";
-	prompt += "A) Catalogue Management\n "; //this holds the menu options specific to management of the song/artist catalogues
-	prompt += "B) KJ Queue Management\n "; //this menu holds options for the KJ to manage the queue of singers
-	prompt += "C) Singer Menu\n "; //this menu holds singer options - histories, etc
-	prompt += "D) Exit program\n ";
+	prompt += "1) Catalogue Management\n "; //this holds the menu options specific to management of the song/artist catalogues
+	prompt += "2) KJ Queue Management\n "; //this menu holds options for the KJ to manage the queue of singers
+	prompt += "3) Singer Menu\n "; //this menu holds singer options - histories, etc
+	prompt += "4) Exit program\n ";
 	prompt += "Please make a selection:\n ";
-	userSelection = getInputReprompt(prompt, 'A', 'D');//getInputPreprompt converts any entry to upper for comparison
+	//this is having some issues, need to take a look at the getInputReprompt function in FileManagement.h
+
+	userSelection = getInputReprompt(prompt, 1, 4);//getInputPreprompt converts any entry to upper for comparison
+	//cin >> userSelection;
 
 	//call the MenuMember() menu
-	if (toupper(userSelection) == 'A')
+	if (toupper(userSelection) == 1)
 	{
-		test();
+		linkListTester();
+		//test();
+		
 		return true;//causes main menu to continue
 	}
 
-	else if (toupper(userSelection) == 'B')
+	else if (toupper(userSelection) == 2)
 	{
-		cout << "Add MenuInventory()" << endl;
+		linkListTester();
 		return true;//causes main menu to continue
 	}
 	//call the MenuArt() menu
-	else if (toupper(userSelection) == 'C')
+	else if (toupper(userSelection) == 3)
 	{
 		//MenuArt();
 		return true;//causes main menu to continue
 
 	}
 	//currently a stub with re-call to the displayMenu()
-	else if (toupper(userSelection) == 'D')
+	else if (toupper(userSelection) == 4)
 	{
 		cout << "Thank you, program closing." << endl;
 		return false;//causes main menu to stop
@@ -110,6 +122,35 @@ void test() {
 
 	cout << "For Testing, display contents of map that were read in from file\n";
 	displayMap(testMap);
+}
+
+void linkListTester()
+{
+	QueueManagement_KJ<string> list;
+	
+	//Singer singer1("MystiFreed");
+	//Singer singer2("EthanFreed");
+	//Singer singer3("JonFreed");
+	//Singer singer4("AdrianVanderveer");
+	//Singer singer5("AlexGaumer");
+
+	//QueueNode<string>("MystiFreed");
+	//string name1 = singer1.getDisplayName();
+	//string name2 = singer2.getDisplayName();
+	//string name3 = singer3.getDisplayName();
+	//string name4 = singer4.getDisplayName();
+	//string name5 = singer5.getDisplayName();
+
+	list.appendNode("Mysti");
+	list.appendNode("Jon");
+	list.appendNode("Alex");
+	list.appendNode("Adrian");
+	list.appendNode("Ethan");
+
+	list.displayList();
+	//list.deleteNode("Alex");
+	list.displayList();
+	
 }
 
 
