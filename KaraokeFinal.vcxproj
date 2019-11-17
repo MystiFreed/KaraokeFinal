@@ -167,6 +167,7 @@
     <ClInclude Include="Song.h" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="..\..\..\..\..\Mysti%27s PC\source\repos\MystiFreed\KaraokeFinal\Artists.txt" />
     <Text Include="Songs.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
