@@ -154,6 +154,7 @@
     <ClCompile Include="KaraokeFinal.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\Mysti%27s PC\source\repos\MystiFreed\KaraokeFinal\QueueManagement_KJ.h" />
     <ClInclude Include="Artist.h" />
     <ClInclude Include="Band.h" />
     <ClInclude Include="CatalogEntry.h" />
