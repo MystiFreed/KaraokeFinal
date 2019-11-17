@@ -58,7 +58,13 @@ public:
 		alphaName = an;
 		displayName = alphaName; //sets the alphaName to the displayName
 	}
-	
+	//copy constructor
+	Artist(const Artist& a2) {
+		alphaName = a2.alphaName;
+		displayName = a2.displayName;
+		primaryGenre = a2.primaryGenre;
+	}
+
 	//setters/mutators
 	void setAlphaName(string an);		//{ alphaName = an; }
 	void setDisplayName(string dn);	//{ displayName = dn; }

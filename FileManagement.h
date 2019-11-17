@@ -40,44 +40,15 @@ vector<string> SeparateLineByDelimiter(string line, char delimiter) {
 	vector<string> inputFields;
 	std::stringstream ss(line);
 	std::string nextField;
-	while (std::getline(ss, nextField, delimiter)) {
+	while ( std::getline(ss, nextField, delimiter)) {
 		inputFields.push_back(nextField);
 	}
 	return inputFields;
 };
 
 
-/*Amy's input validating function for character within a range of allowed uppercase characters. Useful for menu input. Continues reprompting until input is acceptable.
-char getInputReprompt(std::string, char, char);
-char getInputReprompt(std::string promptMessage, char minRange, char maxRange){};
-*///Amy
-char getInputReprompt(std::string promptMessage, char minRange, char maxRange) {
-	char input;
-	bool isInvalidInput;
-	string low(1,minRange);//convert char to string
-	string high(1,maxRange);//convert char to string
-	std::string invalidMessage = "Error: Enter a character between " + low + " and " + high+". ";
 
-	do {
-		std::cout << promptMessage;
-		input = std::cin.get();
-		input = toupper(input);
-		if (isInvalidInput = std::cin.fail()) //invalid input 
-		{
-			std::cout << "Input Type " << invalidMessage;
-		}
-		if (input<toupper(minRange) || input>toupper(maxRange)) //outside range
-		{
-			std::cout << "Outside Range " << invalidMessage;
-			isInvalidInput = true;
-		}
-		if (isInvalidInput) {//clear to reprompt
-			std::cin.clear();
-			std::cin.ignore(100, '\n');
-		}
-	} while (isInvalidInput);//reprompt until valid
-	return input;//return valid input
-};
+
 /*Amy's input validating function for integer within a range. Continues reprompting until input is acceptable. Useful for menu input.
 int getInputReprompt(std::string, int, int);
 int getInputReprompt(std::string promptMessage, int minRange, int maxRange) {};*/
@@ -137,6 +108,7 @@ GoBeginningOfFile(inputFile);//sets to start of file
 	string line = "";
 	while (inputFile) //keep going until end of file
 	{
+		cin.ignore();
 		getline(inputFile, line, '\n');
 		if (line == "") {//skip blank line
 		}

@@ -14,17 +14,16 @@
 template <typename T>  void displayMap(map<string, T>& );
 template <typename T> bool SelectByKey(map<string, T> , string , T& );
 template <typename T> bool UserInputSelectByKey(map<string, T> , string , T& );
-template <typename T>  bool addObjectToMap(typename map<string, T>&, T&);
+template <typename T>  bool addObjectToMap(typename map<string, T>&, T);
 void addObjectToMap(typename multimap<string, string>&, string , string );
 template<typename T> void primaryMapSeparateLineByDelimiter(map<string, T>& , string);
 
 
 //use with any ordered map that has string as the key and an object of a class that has a key field, and updateKey() and getKey() functions in the class.
 //http://www.cplusplus.com/reference/map/map/emplace/ returns the bool that emplace returns (second part of pair that emplace returns)
-template <typename T>  bool addObjectToMap(typename map<string, T>& existingMap, T& newObject)
+template <typename T>  bool addObjectToMap(typename map<string, T>& existingMap, T newObject)
 {
 	string newKey = newObject.getKey(); //uses the key field in the object as the key for the map								
-	//this shows the results of emplace, which is a pair that conaitns a pointer to the value in the map (accessed by .first) and a bool (the .second) about whehter successful insert
 	return existingMap.emplace(newKey, newObject).second;
 
 };
@@ -186,13 +185,14 @@ multimap<string, string> singerHistory; //map<dateAsString, songKey>> //NEEDS mo
 /////functions for maps
 Artist userInputArtist();
 Song userInputSong(string);
-bool addSongToCatalogs(string);
+bool addSongToCatalogs(Song);
 
 /////////functions and user menus specific to individual maps we are using (generic map functions are in MapManagement.h)/////////////////
 
 Artist userInputArtist() {
 	string alphaName = "";
 	cout << "\nArtist name, alphabetical (Move \", The \" or \", A\" to the end of the artist name if applicable) :";
+	cin.ignore();
 	getline(cin, alphaName);
 	Artist tempArtist;
 	if (SelectByKey(artistMap, alphaName, tempArtist)) {
@@ -206,6 +206,7 @@ Song userInputSong(string artistKey) {
 	Song tempSong;
 	string songTitle = "";
 	cout << "\nSong Title:";
+	cin.ignore(); 
 	getline(cin, songTitle);
 	if (SelectByKey(songMap, songTitle, tempSong)) {
 		return tempSong;//already existed, so use that one.

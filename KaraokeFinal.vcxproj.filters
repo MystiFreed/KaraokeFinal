@@ -23,9 +23,6 @@
     <ClInclude Include="Artist.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Band.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="CatalogEntry.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -42,9 +39,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MapManagement.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="maps.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Song.h">
