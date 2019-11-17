@@ -9,6 +9,9 @@
 #pragma once
 #ifndef QUEUEMANAGEMENT_KJ_H
 #define QUEUEMANAGEMENT_KJ_H
+#include <iostream>
+
+using namespace std;
 
 //This is the QueueNode class, which creates a type used to store the node of the linked list (GADDIS pg 1148) with modifications for a doubly
 //linked list (GADDIS pg 1153)
@@ -19,11 +22,11 @@ class QueueNode
 {
 public:
 	T value; //this is the value housed in the node
-	QueueNode<T>* next; //pointer to the next node
-	QueueNode<T>* previous; //pointer to the previous node
+	QueueNode<T> *next; //pointer to the next node
+	QueueNode<T> *previous; //pointer to the previous node
 
 	//constructor for the node
-	QueueNode(T nodeValue)
+	QueueNode (T nodeValue)
 	{
 		value = nodeValue;
 		next = nullptr;
@@ -37,8 +40,8 @@ template <class T>
 class QueueManagement_KJ
 {
 private:
-	QueueNode<T>* head; //this lists the head pointer
-	QueueNode<T>* tail; //this lists the tail pointer
+	QueueNode<T> *head; //this lists the head pointer
+	QueueNode<T> *tail; //this lists the tail pointer
 public:
 	//constructor
 	QueueManagement_KJ()
@@ -63,20 +66,22 @@ public:
 template <class T>
 void QueueManagement_KJ<T>::appendNode(T newS)
 {
-	QueueNode<T>* newSinger; //this points to the new singer added to the queue
-	QueueNode<T>* nodePtr; //this iterates through the list
+	QueueNode<T> *newNode; //this points to the new singer added to the queue
+	QueueNode<T> *nodePtr; //this iterates through the list
 
 	//create a new singer node and store the new singer in that node
-	newSinger = new QueueNode<T>(newS);
+	newNode = new QueueNode<T>(newS);
 
 	//if this is the first singer of the night, add them to the first in queue and make newSinger the first node
 	if (!head)
-		head = newSinger;
+		head = newNode;
 	else //if they're not the first one of the night, add them to the end
+	{
 		nodePtr = head;
-	while (nodePtr->next)
-		nodePtr = nodePtr->next; //get to the end of the list
-	nodePtr->next = newSinger; //set the singer to the last node (after the end is found
+		while (nodePtr->next)
+			nodePtr = nodePtr->next; //get to the end of the list
+		nodePtr->next = newNode; //set the singer to the last node (after the end is found
+	}
 
 	//do I need to add more here for the double part of doubly linked list? make sure to look this up
 }
@@ -86,7 +91,7 @@ void QueueManagement_KJ<T>::appendNode(T newS)
 template <class T>
 void QueueManagement_KJ<T>::displayList() const
 {
-	QueueNode<T>* nodePtr; //used to iterate through the list
+	QueueNode<T> *nodePtr; //used to iterate through the list
 
 	//position the pointer at the beginning of the list
 	nodePtr = head;
@@ -116,7 +121,34 @@ void QueueManagement_KJ<T>::insertNode(T newS)
 template <class T>
 void QueueManagement_KJ<T>::deleteNode(T singerToRemove)
 {
-	//stub only
+	QueueNode<T> *nodePtr; //used to iterate through the list
+	QueueNode<T> *previousNode; //points to the previous singer
+
+	//if the head is empty, no need to do anything
+	if (!head)
+		return;
+
+	if (head->value == singerToRemove) //if the head is the right singer to remove
+	{
+		nodePtr = head->next; 
+		delete head;
+		head = nodePtr;
+	}
+	else //if the first isn't the singer to remove, search the list
+	{
+		nodePtr = head;
+		while (nodePtr != nullptr && nodePtr->value != singerToRemove)
+		{
+			previousNode = nodePtr;
+			nodePtr = nodePtr->next;
+		}
+		//if the value isn't found, reset the ptr and delete it
+		if (nodePtr)
+		{
+			previousNode->next = nodePtr->next;
+			delete nodePtr;
+		}
+	}
 }
 
 //This cancels out the rest of the queue at the end of the night 
@@ -124,16 +156,16 @@ void QueueManagement_KJ<T>::deleteNode(T singerToRemove)
 template <class T>
 QueueManagement_KJ<T>::~QueueManagement_KJ()
 {
-	QueueNode<T>* nodePtr; //used to iterate through the list
-	QueueNode<T>* nextSinger; //points to the next singer in the list
+	QueueNode<T> *nodePtr; //used to iterate through the list
+	QueueNode<T> *nextNode; //points to the next singer in the list
 
 	//start at the beginning of the queue
 	nodePtr = head;
 	while (nodePtr != nullptr) //while there are still singers in the queue
 	{
-		nextSinger = nodePtr->next; //save the pointer for the next in line
+		nextNode = nodePtr->next; //save the pointer for the next in line
 		delete nodePtr; //delete the current node
-		nodePtr = nextSinger; //position the pointer at the next singer
+		nodePtr = nextNode; //position the pointer at the next singer
 	}
 }
 #endif // !QUEUEMANAGEMENT_KJ_H

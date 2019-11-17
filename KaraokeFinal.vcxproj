@@ -156,7 +156,6 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\Mysti%27s PC\source\repos\MystiFreed\KaraokeFinal\QueueManagement_KJ.h" />
     <ClInclude Include="Artist.h" />
-    <ClInclude Include="Band.h" />
     <ClInclude Include="CatalogEntry.h" />
     <ClInclude Include="DateCalcLong.h" />
     <ClInclude Include="FileManagement.h" />
@@ -164,7 +163,6 @@
     <ClInclude Include="Singer.h" />
     <ClInclude Include="IndividualArtist.h" />
     <ClInclude Include="MapManagement.h" />
-    <ClInclude Include="maps.h" />
     <ClInclude Include="Song.h" />
   </ItemGroup>
   <ItemGroup>
