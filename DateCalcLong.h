@@ -39,12 +39,12 @@ struct tm* setDate(int year, int month, int day, time_t& storeTime) {
 	return timeinfo;
 };
 
-tm* addDays(tm* startingDate, int addDays) {
-	tm* newDate = startingDate;
-	newDate->tm_mday += addDays;
-	mktime(newDate);
-	return newDate;
-};
+//tm* addDays(tm* startingDate, int addDays) {
+//	tm* newDate = startingDate;
+//	newDate->tm_mday += addDays;
+//	mktime(newDate);
+//	return newDate;
+//};
 
 //returns date as a string
 std::string displayDate(tm* dateStruct) {
@@ -53,7 +53,7 @@ std::string displayDate(tm* dateStruct) {
 		"%D", dateStruct);
 	return time_buf;
 };
-string dateToKey(tm* dateStruct) {
+string dateToString(tm* dateStruct) {
 	char    time_buf[256];
 	strftime(time_buf, sizeof(time_buf),
 		"%F", dateStruct);
@@ -89,108 +89,3 @@ day=	getInputReprompt("Enter the day:", MIN_DAY, max_day);
 year=	getInputReprompt("Enter the year:", MIN_YEAR,MAX_YEAR);
 	return setDate(year, month, day);
 }
-
-
-/*Amy's input validating function for integer within a range. Continues reprompting until input is acceptable.
-int getInputReprompt(std::string, int, int);
-*/
-int getInputReprompt(std::string promptMessage, int minRange, int maxRange) {
-	int input;
-	bool isInvalidInput;
-	std::string invalidMessage = "Error: Enter an integer between " + std::to_string(minRange) + " and " + std::to_string(maxRange) + ". ";
-
-	do {
-		std::cout << promptMessage;
-		std::cin >> input;
-		if (isInvalidInput = std::cin.fail()) //invalid input 
-		{
-			std::cout << "Input Type " << invalidMessage;
-			isInvalidInput = true;
-		}
-		if (input<minRange || input>maxRange) //outside range
-		{
-			std::cout << "Outside Range " << invalidMessage;
-			isInvalidInput = true;
-		}
-		if (isInvalidInput) {
-			std::cin.clear();
-			std::cin.ignore(100, '\n');
-		}
-	} while (isInvalidInput);
-	return input;
-}
-
-/*Amy's input validating function for double over the min. Continues reprompting until input is acceptable.
-int getInputReprompt(std::string, double);
-*/
-double getInputReprompt(std::string promptMessage, double minRange) {
-	double input;
-	bool isInvalidInput;
-	std::string invalidMessage = "Error: Enter an amount greater than " + std::to_string(minRange)+ ". ";
-
-	do {
-		std::cout << promptMessage;
-		std::cin >> input;
-		if (isInvalidInput = std::cin.fail()) //invalid input 
-		{
-			std::cout << "Input Type " << invalidMessage;
-			isInvalidInput = true;
-		}
-		if (input<minRange ) //outside range
-		{
-			std::cout << "Outside Range " << invalidMessage;
-			isInvalidInput = true;
-		}
-		if (isInvalidInput) {
-			std::cin.clear();
-			std::cin.ignore(100, '\n');
-		}
-	} while (isInvalidInput);
-	return input;
-}
-
-
-
-
-/////////////////////////////////////////
-///for testing or not sure if needed........
-///////////////////////////////////////////
-
-void days()
-{
-	time_t rawtime;
-	struct tm* timeinfo;
-	int year, month, day;
-	const char* weekday[] = { "Sunday", "Monday",
-							   "Tuesday", "Wednesday",
-							   "Thursday", "Friday", "Saturday" };
-
-	/* prompt user for date */
-	printf("Enter year: "); fflush(stdout); scanf("%d", &year);
-	printf("Enter month: "); fflush(stdout); scanf("%d", &month);
-	printf("Enter day: "); fflush(stdout); scanf("%d", &day);
-
-	timeinfo = setDate(year, month, day);
-
-	/* call mktime: timeinfo->tm_wday will be set */
-
-
-	printf("That day is a %s.\n", weekday[timeinfo->tm_wday]);
-	int moreDays = 60;
-
-	addDays(timeinfo, moreDays);
-
-	printf("%x more days is a %s:\n", moreDays, weekday[timeinfo->tm_wday]);
-	std::cout << displayDate(timeinfo);
-
-}
-/*may not be needed if not using time_t as a key in any map...
-tm* userInputDate(time_t& date_t) {
-	int month, day, year = 0;
-	day = getInputReprompt("Enter the month:", 1, 12);
-	month = getInputReprompt("Enter the day:", 1, 31);
-	year = getInputReprompt("Enter the year:", 1900, 3000);
-
-	return setDate(year, month, day, date_t);
-}
-*/

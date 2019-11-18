@@ -12,7 +12,6 @@
 using namespace std;
 
 // menu functions
-char getInputReprompt(std::string, char, char);
 int getInputReprompt(std::string, int, int);
 
 //file handling variables

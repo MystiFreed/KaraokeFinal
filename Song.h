@@ -18,6 +18,20 @@ class Song : public CatalogEntry
 			title = newTitle;
 			artistKey = newArtistKey;
 		};
+		//copy constructor
+		Song(const Song& a2) {
+			songKey = a2.songKey;
+			title = a2.title;
+			artistKey = a2.artistKey;
+		}
+		//https://en.cppreference.com/w/cpp/language/copy_assignment
+		Song& operator=(const Song& a2)
+		{
+			songKey = a2.songKey;
+			title = a2.title;
+			artistKey = a2.artistKey;
+			return *this;
+		}
 
 		void setTitle(string newTitle);
 		string getTitle();
@@ -59,7 +73,9 @@ void Song::fromFile(std::vector<string>::iterator iter) {
 }
 
 map<string, Song> songMap;
-multimap<string, string> songCatalogByArtist; //key artistKey, value songKey ==will add using addSongToCatalogs
-
 string songFileTXT = "Songs.txt";
 fstream songFstream;// (songFileTXT, ios::in | ios::out);
+
+multimap<string, string> songCatalogByArtist; //key artistKey, value songKey ==will add using addSongToCatalogs
+string songsByArtistFileTXT = "SongsByArtist.txt";
+fstream songsByArtistFstream;

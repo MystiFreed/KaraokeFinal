@@ -20,9 +20,9 @@ class Artist : public CatalogEntry
 {
 private:
 	//int id; holds the identifier for the artist
-	string alphaName; //holds the artist' name alphabetically
-	string displayName; //holds the name of the artist
-	Genre primaryGenre; //holds the primary genre for the artist
+	string alphaName=BLANK_FIELD; //holds the artist' name alphabetically
+	string displayName = BLANK_FIELD; //holds the name of the artist
+	//Genre primaryGenre; //holds the primary genre for the artist
 public:
 	//default constructor
 	Artist() : CatalogEntry() {}
@@ -32,7 +32,7 @@ public:
 	{	
 		alphaName = an;
 		displayName = dn;
-		primaryGenre = g;
+		//primaryGenre = g;
 	}
 
 	//constructor where there's only an alphabetical name (for example, Prince)
@@ -40,7 +40,7 @@ public:
 	{
 		alphaName = an;
 		displayName = alphaName; //sets the alphaName to the displayName
-		primaryGenre = g;
+		//primaryGenre = g;
 	}
 
 	//constructor that allows for setup without a Genre, when it's not known
@@ -62,13 +62,20 @@ public:
 	Artist(const Artist& a2) {
 		alphaName = a2.alphaName;
 		displayName = a2.displayName;
-		primaryGenre = a2.primaryGenre;
+		//primaryGenre = a2.primaryGenre;
 	}
-
+	//https://en.cppreference.com/w/cpp/language/copy_assignment
+	Artist& operator=(const Artist& a2)
+	{
+		alphaName = a2.alphaName;
+		displayName = a2.displayName;
+		//primaryGenre = a2.primaryGenre;
+		return *this;
+	}
 	//setters/mutators
 	void setAlphaName(string an);		//{ alphaName = an; }
 	void setDisplayName(string dn);	//{ displayName = dn; }
-	void setGenre(Genre g);	//{ primaryGenre = g; }
+	//void setGenre(Genre g);	//{ primaryGenre = g; }
 										//
 	//accessors (getters)				//
 	string getAlphaName(); /*const*/		//{ return alphaName; }
@@ -91,7 +98,7 @@ void Artist::setDisplayName(string dn)	{ displayName = dn; };
 
 string Artist::getAlphaName()			{ return alphaName; };
 string Artist::getDisplayName()			{ return displayName; };
-Genre Artist::getPrimaryGenre()			{ return primaryGenre; };
+//Genre Artist::getPrimaryGenre()			{ return primaryGenre; };
 
 void Artist::updateKey()
 {
@@ -105,7 +112,7 @@ string Artist::display()
 
 string Artist::toFile()
 {
-	return alphaName + FIELD_DELIMITER; //not sure if we're using the same delimiter for all?
+	return alphaName + FIELD_DELIMITER+ displayName+ FIELD_DELIMITER; //not sure if we're using the same delimiter for all?
 }
 
 void Artist::fromFile(std::vector<string>::iterator iter)
