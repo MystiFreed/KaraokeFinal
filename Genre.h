@@ -43,7 +43,8 @@ enum class Genre
 	WORLD,
 	SOFT_ROCK,
 	PUNK,
-	TRAP
+	TRAP,
+	UNKNOWN
 };
 
 #endif GENRE_H

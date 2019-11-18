@@ -10,13 +10,21 @@
 #include "Artist.h"
 #include "Song.h"
 
+const bool DEBUGMAP = false;
+template <typename T> bool SelectByKey(map<string, T>, string, T&);
+template <typename T> bool UserInputSelectByKey(map<string, T>, string, string&, T&);
 
 template <typename T>  void displayMap(map<string, T>& );
-template <typename T> bool SelectByKey(map<string, T> , string , T& );
-template <typename T> bool UserInputSelectByKey(map<string, T> , string , T& );
 template <typename T>  bool addObjectToMap(typename map<string, T>&, T);
-void addObjectToMap(typename multimap<string, string>&, string , string );
-template<typename T> void primaryMapSeparateLineByDelimiter(map<string, T>& , string);
+template<typename T> void primaryMapSeparateLineByDelimiter(map<string, T>&, string);
+template<typename T> void primaryMapToFile(map<string, T>& , fstream& );
+template<typename T> void primaryMapFromFile(map<string, T>& , fstream& );
+
+void addObjectToMap(typename multimap<string, string>*, string, string);
+void displayMap(multimap<string, string>&);
+void multiMapSeparateLineByDelimiter(multimap<string, string>& , string );
+void multiMapToFile(multimap<string, string>& , fstream& );
+void multiMapFromFile(multimap<string, string>& , fstream& );
 
 
 //use with any ordered map that has string as the key and an object of a class that has a key field, and updateKey() and getKey() functions in the class.
@@ -28,13 +36,6 @@ template <typename T>  bool addObjectToMap(typename map<string, T>& existingMap,
 
 };
 	
-//multimap version
-//http://www.cplusplus.com/reference/map/map/emplace/ returns the bool that emplace returns (second part of pair that emplace returns)
- void addObjectToMap(typename multimap<string, string>& existingMap, string newKey, string newValue)
-{
-	 existingMap.emplace(newKey, newValue);
-};
-	 
 //use with any ordered map that has string as the key, for testing only - replace with save to file
 template <typename T>  void displayMap(map<string, T>& existingMap) {
 
@@ -42,17 +43,13 @@ template <typename T>  void displayMap(map<string, T>& existingMap) {
 		cout << "Key:" <<element.first << " Object: " << element.second.display() << endl;
 	}
 };
-template <typename T>  void displayMap(multimap<string, T>& existingMap) {
-
-	for (auto& element : existingMap) {
-		cout << "Key:" << element.first << " Object: " << element.second << endl;
-	}
-};
-
 
 //include instructions to show the user for entering a useful search string.
-template <typename T> bool UserInputSelectByKey(map<string, T> myMap, string userInputInstructions, T& storeObject)
+template <typename T> bool UserInputSelectByKey(map<string, T> myMap, string userInputInstructions, string& storeInput, T& storeObject)
+
 {
+	if (DEBUGMAP) cout << "\nstarting UserInputSelectByKey\n";
+
 	////menu management
 	string sectionTitle = "";//gives a header to next menu section so it is easier to read
 	string sectionPrompt = "";//defines the prompt with options for this section
@@ -62,20 +59,26 @@ template <typename T> bool UserInputSelectByKey(map<string, T> myMap, string use
 	bool isKeepLooking = true;
 
 	cout << userInputInstructions;
-	cin >> searchString;
+	cin >> searchString; 
+	storeInput = searchString;//saves user input in address provided as parameter for use outside the function
 
 	if (SelectByKey(myMap, searchString, storeObject))//if it is not map.end then the search found a match
 	{		return true;	}
+	if (DEBUGMAP) cout << "\n no selectbykey found, continuing\n";
 
 	//full key not found, try substring search and ask user if that is what they were looking for
-typename	map<string, T>::iterator it = myMap.begin();//start searching from beginning
-	while (isKeepLooking)
-	{
-		while (it != myMap.end())//stop search after end reached without match
+	typename	map<string, T>::iterator iter = myMap.begin();//start searching from beginning
+
+
+	//while (isKeepLooking)
+	//{
+		while (iter != myMap.end())//stop search after end reached without match
 		{
-			if (it.first.find(searchString) != std::string::npos)//possible match
+			if (DEBUGMAP) cout << "\n starting iter loop\n";
+
+			if (iter->first.find(searchString) != std::string::npos)//possible match
 			{//check if possible match is what user wants
-				string sectionTitle = "\n----Select This One?---\n " + it->display() + "\n";
+				string sectionTitle = "\n----Select This One?---\n " + iter->second.display() + "\n";
 				enum ConfirmMenu { CANCEL, SELECT, AGAIN };
 				string sectionPrompt = sectionTitle + "\n  0:Cancel, go back without selection\n  1:Confirm, select this \n  2: Keep looking, see next match \nSelect an option: "; //define the prompt string.
 				int menuSelected = getInputReprompt(sectionPrompt, CANCEL, AGAIN); //get input within menu option range.
@@ -89,7 +92,8 @@ typename	map<string, T>::iterator it = myMap.begin();//start searching from begi
 					return true;
 					break;
 				case AGAIN:
-					isKeepLooking = true;
+					//keep looking not returning
+					//isKeepLooking = true;
 					break;
 				default:
 					cerr << "Error in select object\n";
@@ -97,43 +101,35 @@ typename	map<string, T>::iterator it = myMap.begin();//start searching from begi
 					break;
 				}//end switch
 			}//end if
-			else
-			{
-				cout << "That was not found";
-				return false;
-			}//end else
 
-			advance(it, 1);
+			advance(iter, 1);
 		}//end while
-	}//end while
+	//}//end while
+	return false;
 };//end func
 
-
-
-
-/////NEED to test 
 //include instructions to show the user for entering a useful search string.
 template <typename T> bool SelectByKey(map<string, T> myMap, string searchString, T& storeObject)
 {
+	if (DEBUGMAP) cout << "\nstarting SelectByKey\n";
 	//attempt finding exact match
 	typename map<string, T>::iterator iter;
 	iter = myMap.find(searchString);
 	if (iter != myMap.end())//if it is not map.end then the search found something and it is in the iterator
 	{
-		//storeObject = iter->second ; //NEED copy constructor for this to work - Artist, Song, Singer
+		storeObject = iter->second ; //NEED copy constructor for this to work - Artist, Song, Singer
 		
 		return true;//iterator has been updated and can be used back where the function was called from.
 	}
 	return false;
 };
 
-//NEED to edit this to put element delimiter between each element - change the from file to expect that, and change Singer.h to use this function
 //overwrites current contents of the file
-template<typename T>void	primaryMapToFile(map<string, T>& myMap, fstream& myFstream)
+template<typename T> void primaryMapToFile(map<string, T>& myMap, fstream& myFstream)
 {
 	for (auto& e : myMap)
 	{
-		myFstream << e.first << FIELD_DELIMITER << e.second.toFile() << FIELD_DELIMITER << endl;//put key and class output all on a line with field delimiter between key and value
+		myFstream << ELEMENT_DELIMITER<<e.first << FIELD_DELIMITER << e.second.toFile() << FIELD_DELIMITER << ELEMENT_DELIMITER << endl;//put key and class output all on a line with field delimiter between key and value
 	}
 	cout << "\nDone writing map to file.\n";
 	GoBeginningOfFile(myFstream);
@@ -159,7 +155,6 @@ template<typename T> void primaryMapFromFile(map<string, T>& myMap, fstream& inp
 	GoBeginningOfFile(inputFile);
 
 };
-
 template<typename T> void primaryMapSeparateLineByDelimiter(map<string, T>& myMap, string line)
 {
 	vector<string> fields = SeparateLineByDelimiter(line, FIELD_DELIMITER);
@@ -170,17 +165,64 @@ template<typename T> void primaryMapSeparateLineByDelimiter(map<string, T>& myMa
 	iter++;//iterator now points to the first class field that is saved as a string in the vector
 	tempObject.fromFile(iter);//pass iterator to class's FromFile() to update the class fields of the object (it will be different for each class)
 	bool check = myMap.emplace(make_pair(tempKey, tempObject)).second; //add to map; .second collects the bool portion of what emplace returns
-	//cout << "\nAdded " << tempKey << " to map.\n"; 
-
 }
 
+///MULTIMAP
 
+//overwrites current contents of the file
+void multiMapToFile(multimap<string, string>& myMap, fstream& myFstream)
+{
+	for (auto& e : myMap)
+	{
+		myFstream << ELEMENT_DELIMITER << e.first << FIELD_DELIMITER << e.second << FIELD_DELIMITER << ELEMENT_DELIMITER << endl;//put key and class output all on a line with field delimiter between key and value
+	}
+	cout << "\nDone writing map to file.\n";
+	GoBeginningOfFile(myFstream);
+};
+ void multiMapFromFile(multimap<string, string>& myMap, fstream& inputFile)
+{
+	GoBeginningOfFile(inputFile);
+	while (inputFile)//keep going until end of file
+	{
+		string line = "";
+		getline(inputFile, line, '\n');
 
+		if (line == "")
+		{//skip blank line
+		}
+		else
+		{
+			multiMapSeparateLineByDelimiter(myMap, line);
+		}
+	}
+	cout << "\nDone reading map from file.\n";
+	GoBeginningOfFile(inputFile);
+};
+void multiMapSeparateLineByDelimiter(multimap<string, string>& myMap, string line)
+{
+	vector<string> fields = SeparateLineByDelimiter(line, FIELD_DELIMITER);
+
+	vector<string>::iterator iter = fields.begin();
+	string tempKey = *iter;//stores contents of first item in vector as the key
+	
+	iter++;//iterator now points to the first class field that is saved as a string in the vector
+	string tempValue = *iter;
+//	myMap.emplace(make_pair(tempKey, tempValue)); //add to map;
+}
+ void displayMap(multimap<string, string>& existingMap) {
+
+	for (auto& element : existingMap) {
+		cout << "Key:" << element.first << " Object: " << element.second << endl;
+	}
+};
+//multimap version
+//http://www.cplusplus.com/reference/map/map/emplace/ returns the bool that emplace returns (second part of pair that emplace returns)
+void addObjectToMap(typename multimap<string, string>* existingMap, string newKey, string newValue)
+{
+	existingMap->emplace(newKey, newValue);
+};
 
 ///from maps.h NEED to figure out the best loacation for these.
-
-multimap<string, string> singerHistory; //map<dateAsString, songKey>> //NEEDS moved to Singer.h when created
-
 
 /////functions for maps
 Artist userInputArtist();
@@ -190,37 +232,31 @@ bool addSongToCatalogs(Song);
 /////////functions and user menus specific to individual maps we are using (generic map functions are in MapManagement.h)/////////////////
 
 Artist userInputArtist() {
+	if (DEBUGMAP) cout << "\nstarting userInputArtist\n";
+
 	string alphaName = "";
-	cout << "\nArtist name, alphabetical (Move \", The \" or \", A\" to the end of the artist name if applicable) :";
-	cin.ignore();
-	getline(cin, alphaName);
+	string instructions= "\nArtist name, alphabetical (Move \", The \" to the end of the artist name if applicable) :";
 	Artist tempArtist;
-	if (SelectByKey(artistMap, alphaName, tempArtist)) {
-		return tempArtist;//already existed, so use that one.
-	}
-	
-	return Artist(alphaName);
+	if (UserInputSelectByKey(artistMap, instructions, alphaName, tempArtist)) { return tempArtist; };//if found, return existing 
+	return Artist(alphaName);//not found, return created one
 };
 
 Song userInputSong(string artistKey) {
-	Song tempSong;
+	if (DEBUGMAP) cout << "\nstarting userInputSong\n";
 	string songTitle = "";
-	cout << "\nSong Title:";
-	cin.ignore(); 
-	getline(cin, songTitle);
-	if (SelectByKey(songMap, songTitle, tempSong)) {
-		return tempSong;//already existed, so use that one.
-	}
+	Song tempSong;
+	string instructions = "\nSong Title:";
+	if (UserInputSelectByKey(songMap, instructions, songTitle, tempSong)) { return tempSong; };//if found, return existing 
 	return Song(songTitle, artistKey);
 };
 
 //new songs must be inserted in all relevant maps
 bool addSongToCatalogs(Song newSong) {
-	if (!addObjectToMap(songMap, newSong))//.second is the bool portion of the pair this function returns (see emplace)
+	if (!addObjectToMap(songMap, newSong))
 	{
 		cout << "Already exists in catalog, not added."; return false;
 	}
-	addObjectToMap(songCatalogByArtist, newSong.getKey(), newSong.getArtistKey());
+	addObjectToMap(&songCatalogByArtist, newSong.getKey(), newSong.getArtistKey());
 	return true;
 };
 

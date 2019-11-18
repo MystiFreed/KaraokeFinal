@@ -10,8 +10,8 @@
 #include "CatalogEntry.h"
 #include "QueueManagement_KJ.h"
 #include "Singer.h"
-#include "maps.h"
 #include <map>
+#include "DateCalcLong.h"
 
 using namespace std;
 
@@ -22,21 +22,18 @@ void linkListTester();
 bool displayMenu();
 void menuManageCatalogue();
 void menuDisplayCatalogue();
-bool DEBUGMAIN = true;
-///deleted
-char getInputReprompt(std::string promptMessage, char minRange, char maxRange) {
-	if (DEBUGMAIN) cout << "Deleted the char version of getInputReprompt due to bugs, use int version for menus instead";
-	return'A';
-};
+void exitSaving();
+const bool DEBUGMAIN = true;
+
 
 int main()
 {
-	//startup();
+	startup();
 	//test(); this is currently under the catalogue management menu as a placeholder
 	while (displayMenu()); //automatically repeats until a false (exit) is returned.
-
+	exitSaving();
 	return 0;
-
+	
 };
 
 void startup() {
@@ -72,12 +69,10 @@ bool displayMenu()
 	//this is having some issues, need to take a look at the getInputReprompt function in FileManagement.h
 	userSelection = getInputReprompt(prompt, 1, 4);//getInputPreprompt converts any entry to upper for comparison
 
-
-	userSelection = 1;
 	//call the MenuMember() menu
 	if (toupper(userSelection) == 1)
 	{
-		linkListTester();
+		menuManageCatalogue();
 		//test();
 		
 		return true;//causes main menu to continue
@@ -110,6 +105,28 @@ bool displayMenu()
 
 //run this to test basic functions after changes
 void test() {
+	multimap<string, string> testMultiMap;
+	fstream testFstream("testMap.txt", ios::in | ios::out);
+	addObjectToMap(&testMultiMap, "key1", "value1");
+	addObjectToMap(&testMultiMap, "key2", "value2");
+	multiMapToFile(testMultiMap, testFstream);
+	multimap<string, string> placedMap;
+	multiMapFromFile(placedMap, testFstream);
+
+	Singer amy("Amy1", "Amy");
+	cout << "add " << endl;
+
+	addObjectToMap(&amy.SingerHistoryBySong, "FaveSong", dateToString(setDate(2019, 1, 1)));
+	addObjectToMap(&amy.SingerHistoryBySong, "SecondBestSong", dateToString(setDate(2019, 1, 1)));
+	addObjectToMap(&amy.SingerHistoryBySong, "SecondBestSong", dateToString(setDate(2019, 1, 2)));
+
+	addObjectToMap(singerMap, amy);
+	displayMap(singerMap);
+
+	primaryMapToFile(singerMap, singerFstream);
+	map<string, Singer> testReadSingerMap;
+	primaryMapFromFile(testReadSingerMap, singerFstream);
+	displayMap(testReadSingerMap);
 
 	for (int i = 0; i < 5; i++) {
 		cout << "\n------------------\nAdd a new Artist and Song (later will add select existing artist, function created but not tested yet.";
@@ -140,7 +157,13 @@ void test() {
 	cout << "For Testing, display contents of map that were read in from file\n";
 	displayMap(testMap);
 }
+void exitSaving() {
+	primaryMapToFile(songMap, songFstream);
+	primaryMapToFile(artistMap, artistFstream);
+	primaryMapToFile(singerMap, singerFstream);
+	//add multimaps here
 
+}
 void linkListTester()
 {
 	QueueManagement_KJ<string> list;
@@ -175,7 +198,7 @@ void menuManageCatalogue() {
 
 	while (continueMenu)
 	{
-		char userSelection;
+		int userSelection;
 		string prompt = "\n----Catalogue Management Menu----\n ";
 		prompt += "1) Add Artist\n "; //this holds the menu options specific to management of the song/artist catalogues
 		prompt += "2) Add Song\n "; //this menu holds options for the KJ to manage the queue of singers
@@ -227,14 +250,14 @@ void menuDisplayCatalogue()
 		//if (viewMethod == BACK_MENU) { return; };
 
 		//GET USER INPUT WHICH CATALOG TO VIEW
-		char userSelection;
+		int userSelection;
 		string promptb = "\n----View Catalogue Menu - SELECT CATALOG----\n ";
 		promptb += "1) Song Catalogue\n ";
 		promptb += "2) Song by Artist Catalogue\n ";
 		promptb += "3) Artist List\n ";
 		promptb += "4) Exit program\n ";
 		promptb += "Please make a selection:\n ";
-		userSelection = getInputReprompt(promptb, 'A', 'D');//getInputPreprompt converts any entry to upper for comparison
+		userSelection = getInputReprompt(promptb, 1, 4);//getInputPreprompt converts any entry to upper for comparison
 
 		switch (userSelection) {
 		case 1:

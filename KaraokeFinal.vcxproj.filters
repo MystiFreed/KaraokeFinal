@@ -58,5 +58,11 @@
     <Text Include="..\..\..\..\..\Mysti%27s PC\source\repos\MystiFreed\KaraokeFinal\Artists.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="testMap.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="Singers.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>
