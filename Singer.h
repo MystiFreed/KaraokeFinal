@@ -42,7 +42,7 @@ void Singer::setDisplayName(string newName) { displayName = newName; };
 string Singer::getDisplayName(){return displayName;}
 
  string	Singer::display() { return displayName; }
- string	Singer::toFile() 
+ string	Singer::toFile()
  {
 	string temp = singerKey + FIELD_DELIMITER + displayName + FIELD_DELIMITER;
 	////put elements of map 
@@ -64,9 +64,9 @@ string Singer::getDisplayName(){return displayName;}
  string Singer::getKey() { return singerKey; }
 
  //NEED to test, this one is complicated!!!
- void Singer::fromFile(vector<string>::iterator iter) 
+ void Singer::fromFile(vector<string>::iterator iter)
  {
-		//whole object in one string from file, separate into four strings 
+		//whole object in one string from file, separate into four strings
 			 singerKey = *iter;//assign first field
 			 displayName = *++iter;//assign next field
 						//	 string MapByDateAsLine = *++iter;//assign next field

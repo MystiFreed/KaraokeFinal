@@ -8,12 +8,18 @@
 #include "MapManagement.h"
 #include "FileManagement.h"
 #include "CatalogEntry.h"
+#include "QueueManagement_KJ.h"
 #include "Singer.h"
+#include "maps.h"
 #include <map>
 #include "DateCalcLong.h"
 
+using namespace std;
+
+//function prototypes
 void test();
 void startup();
+void linkListTester();
 bool displayMenu();
 void menuManageCatalogue();
 void menuDisplayCatalogue();
@@ -42,6 +48,9 @@ void startup() {
 	if (DEBUGMAIN) { cout << "\nopen artist fstream: " << check << endl; }
 	primaryMapFromFile(songMap, songFstream);
 	primaryMapFromFile(artistMap, artistFstream);
+	cout << "\nDone importing map data";
+	linkListTester();
+
 	//NEED TO DO add import and saving for multimaps that are implemented
 	if (DEBUGMAIN) {cout << "\nDone importing map data";}
 };
@@ -57,30 +66,36 @@ bool displayMenu()
 	prompt += "3) Singer Menu\n "; //this menu holds singer options - histories, etc
 	prompt += "4) Exit program\n ";
 	prompt += "Please make a selection:\n ";
+
+	//this is having some issues, need to take a look at the getInputReprompt function in FileManagement.h
 	userSelection = getInputReprompt(prompt, 1, 4);//getInputPreprompt converts any entry to upper for comparison
+
 
 	userSelection = 1;
 	//call the MenuMember() menu
-	if (userSelection == 1)
+	if (toupper(userSelection) == 1)
 	{
-		menuManageCatalogue();
+		linkListTester();
+		//test();
+		
 		return true;//causes main menu to continue
 	}
 
-	else if (userSelection == 2)
+	else if (toupper(userSelection) == 2)
 	{
-		cout << "Add MenuInventory()" << endl;
+		linkListTester();
 		return true;//causes main menu to continue
 	}
 	//call the MenuArt() menu
-	else if (userSelection == 3)
+	else if (toupper(userSelection) == 3)
 	{
 		//MenuArt();
 		return true;//causes main menu to continue
 
 	}
 	//currently a stub with re-call to the displayMenu()
-	else if (userSelection == 4)
+
+	else if (toupper(userSelection) == 4)
 	{
 		cout << "Thank you, program closing." << endl;
 		return false;//causes main menu to stop
@@ -152,7 +167,35 @@ void exitSaving() {
 	//add multimaps here
 
 
-};
+void linkListTester()
+{
+	QueueManagement_KJ<string> list;
+	
+	//Singer singer1("MystiFreed");
+	//Singer singer2("EthanFreed");
+	//Singer singer3("JonFreed");
+	//Singer singer4("AdrianVanderveer");
+	//Singer singer5("AlexGaumer");
+
+	//QueueNode<string>("MystiFreed");
+	//string name1 = singer1.getDisplayName();
+	//string name2 = singer2.getDisplayName();
+	//string name3 = singer3.getDisplayName();
+	//string name4 = singer4.getDisplayName();
+	//string name5 = singer5.getDisplayName();
+
+	list.appendNode("Mysti");
+	list.appendNode("Jon");
+	list.appendNode("Alex");
+	list.appendNode("Adrian");
+	list.appendNode("Ethan");
+
+	list.displayList();
+	//list.deleteNode("Alex");
+	list.displayList();
+	
+}
+
 void menuManageCatalogue() {
 	bool continueMenu = true;
 
@@ -235,4 +278,3 @@ void menuDisplayCatalogue()
 		}
 	}//end while loop
 }//end menuMDisplayCatalogue
-
