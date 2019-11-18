@@ -10,7 +10,6 @@
 #include "CatalogEntry.h"
 #include "QueueManagement_KJ.h"
 #include "Singer.h"
-#include "maps.h"
 #include <map>
 #include "DateCalcLong.h"
 
@@ -70,12 +69,10 @@ bool displayMenu()
 	//this is having some issues, need to take a look at the getInputReprompt function in FileManagement.h
 	userSelection = getInputReprompt(prompt, 1, 4);//getInputPreprompt converts any entry to upper for comparison
 
-
-	userSelection = 1;
 	//call the MenuMember() menu
 	if (toupper(userSelection) == 1)
 	{
-		linkListTester();
+		menuManageCatalogue();
 		//test();
 		
 		return true;//causes main menu to continue
@@ -166,7 +163,7 @@ void exitSaving() {
 	primaryMapToFile(singerMap, singerFstream);
 	//add multimaps here
 
-
+}
 void linkListTester()
 {
 	QueueManagement_KJ<string> list;

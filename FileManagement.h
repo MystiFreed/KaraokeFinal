@@ -46,18 +46,6 @@ vector<string> SeparateLineByDelimiter(string line, char delimiter) {
 };
 
 
-/*Amy's input validating function for character within a range of allowed uppercase characters. Useful for menu input. Continues reprompting until input is acceptable.
-char getInputReprompt(std::string, char, char);
-char getInputReprompt(std::string promptMessage, char minRange, char maxRange){};
-*///Amy
-char getInputReprompt(std::string promptMessage, char minRange, char maxRange) {
-	char input;
-	bool isInvalidInput;
-	string low(1,minRange);//convert char to string
-	string high(1,maxRange);//convert char to string
-	std::string invalidMessage = "Error: Enter a character between " + low + " and " + high +". ";
-
-
 
 /*Amy's input validating function for integer within a range. Continues reprompting until input is acceptable. Useful for menu input.
 int getInputReprompt(std::string, int, int);
