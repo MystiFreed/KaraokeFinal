@@ -151,7 +151,7 @@ template<typename T> void primaryMapFromFile(map<string, T>& myMap, fstream& inp
 		}
 
 	}
-	cout << "\nDone reading map from file.\n";
+	if(DEBUGMAP) cout << "\nDone reading map from file.\n";
 	GoBeginningOfFile(inputFile);
 
 };
@@ -249,6 +249,31 @@ Song userInputSong(string artistKey) {
 	if (UserInputSelectByKey(songMap, instructions, songTitle, tempSong)) { return tempSong; };//if found, return existing 
 	return Song(songTitle, artistKey);
 };
+/*
+Singer userInputSinger() {
+	if (DEBUGMAP) cout << "\nstarting userInputSinger\n";
+	bool uniqueUsername = false;
+	string singerKey = "";
+	string instructions = "\Enter a username:";
+	Singer tempSinger;
+	//do {
+	//	if (UserInputSelectByKey(singerMap, instructions, singerKey, tempSinger)) {
+	//		cout << "This profile already exists, username: " << tempSinger.getKey() << " display name: " << tempSinger.getDisplayName() << endl;
+	//		int userSelection = getInputReprompt(" Is this you? 1) Yes, use this profile 2) No, create new profile", 1, 2);
+	//		if (userSelection == 1) { return tempSinger; };//if found, return existing 
+	//	}
+	//	else {
+	//		uniqueUsername = true;
+	//		tempSinger = Singer(singerKey);
+	//	}
+	//} while (!uniqueUsername);//continue promting and checking if exists until username is unique
+	//
+	//cout << "Enter a display name to be shown on screen. This may be different from the username.";
+	//string tempDisplayName="";
+	//getline(cin, tempDisplayName);
+	//tempSinger.setDisplayName(tempDisplayName);
+	return tempSinger;//not found, return created one
+};*/
 
 //new songs must be inserted in all relevant maps
 bool addSongToCatalogs(Song newSong) {

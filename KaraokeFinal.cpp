@@ -14,22 +14,24 @@
 #include "DateCalcLong.h"
 
 using namespace std;
+//testing functions
+void testIntInput();
+void test();
+void linkListTester();
+const bool DEBUGMAIN = false;
 
 //function prototypes
-void test();
 void startup();
-void linkListTester();
 bool displayMenu();
 void menuManageCatalogue();
 void menuDisplayCatalogue();
 void exitSaving();
-const bool DEBUGMAIN = true;
 
 
 int main()
 {
+
 	startup();
-	//test(); this is currently under the catalogue management menu as a placeholder
 	while (displayMenu()); //automatically repeats until a false (exit) is returned.
 	exitSaving();
 	return 0;
@@ -37,6 +39,7 @@ int main()
 };
 
 void startup() {
+	cout << "Startup...";
 	bool check;
 	if (DEBUGMAIN) {
 		cout << "DEBUGMAIN is true. Displaying startup messages\n";
@@ -47,8 +50,8 @@ void startup() {
 	if (DEBUGMAIN) { cout << "\nopen artist fstream: " << check << endl; }
 	primaryMapFromFile(songMap, songFstream);
 	primaryMapFromFile(artistMap, artistFstream);
-	cout << "\nDone importing map data";
-	linkListTester();
+	cout << "Done importing map data";
+	if (DEBUGMAIN) { linkListTester(); }
 
 	//NEED TO DO add import and saving for multimaps that are implemented
 	if (DEBUGMAIN) {cout << "\nDone importing map data";}
@@ -58,7 +61,7 @@ void startup() {
 bool displayMenu()
 {
 	int userSelection; //user choice within the top-of-house menu display
-
+	enum roleOptions {NONE, CATALOG, KJ,SINGER,EXIT};
 	string prompt = "\n----Karaoke Role Selection Menu----\n ";
 	prompt += "1) Catalogue Management\n "; //this holds the menu options specific to management of the song/artist catalogues
 	prompt += "2) KJ Queue Management\n "; //this menu holds options for the KJ to manage the queue of singers
@@ -67,32 +70,33 @@ bool displayMenu()
 	prompt += "Please make a selection:\n ";
 
 	//this is having some issues, need to take a look at the getInputReprompt function in FileManagement.h
-	userSelection = getInputReprompt(prompt, 1, 4);//getInputPreprompt converts any entry to upper for comparison
+	userSelection = getInputReprompt(prompt, CATALOG, EXIT);//getInputPreprompt converts any entry to upper for comparison
 
 	//call the MenuMember() menu
-	if (toupper(userSelection) == 1)
+	if (toupper(userSelection) == CATALOG)
 	{
 		menuManageCatalogue();
-		//test();
-		
+
 		return true;//causes main menu to continue
 	}
 
-	else if (toupper(userSelection) == 2)
+	else if (toupper(userSelection) == KJ)
 	{
 		linkListTester();
 		return true;//causes main menu to continue
 	}
-	//call the MenuArt() menu
-	else if (toupper(userSelection) == 3)
+	else if (toupper(userSelection) == SINGER)
 	{
-		//MenuArt();
+		//add singer
+		cout << "Singer menu coming soon!\n";
+		//Singer tempSinger;
+		//string storeInput;
+		//UserInputSelectByKey(singerMap, "Enter your singer username:", storeInput, tempSinger);
+		//tempSinger.display();
 		return true;//causes main menu to continue
 
 	}
-	//currently a stub with re-call to the displayMenu()
-
-	else if (toupper(userSelection) == 4)
+	else if (toupper(userSelection) == EXIT)
 	{
 		cout << "Thank you, program closing." << endl;
 		return false;//causes main menu to stop
@@ -123,10 +127,10 @@ void test() {
 	addObjectToMap(singerMap, amy);
 	displayMap(singerMap);
 
-	primaryMapToFile(singerMap, singerFstream);
-	map<string, Singer> testReadSingerMap;
-	primaryMapFromFile(testReadSingerMap, singerFstream);
-	displayMap(testReadSingerMap);
+	//primaryMapToFile(singerMap, singerFstream);
+	//map<string, Singer> testReadSingerMap;
+	//primaryMapFromFile(testReadSingerMap, singerFstream);
+	//displayMap(testReadSingerMap);
 
 	for (int i = 0; i < 5; i++) {
 		cout << "\n------------------\nAdd a new Artist and Song (later will add select existing artist, function created but not tested yet.";
@@ -275,3 +279,10 @@ void menuDisplayCatalogue()
 		}
 	}//end while loop
 }//end menuMDisplayCatalogue
+
+void testIntInput()
+{ for (int x = 0; x < 6; x++) {
+		cout << "\nAttempt " << x << endl;
+		cout << "Selected:" << getInputReprompt("Prompt:", 1, 4);
+	} 
+}
