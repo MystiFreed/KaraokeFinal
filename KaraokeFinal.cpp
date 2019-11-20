@@ -26,7 +26,7 @@ bool displayMenu();
 void menuManageCatalogue();
 void menuDisplayCatalogue();
 void exitSaving();
-
+void menuSinger();
 
 int main()
 {
@@ -87,12 +87,7 @@ bool displayMenu()
 	}
 	else if (toupper(userSelection) == SINGER)
 	{
-		//add singer
-		cout << "Singer menu coming soon!\n";
-		//Singer tempSinger;
-		//string storeInput;
-		//UserInputSelectByKey(singerMap, "Enter your singer username:", storeInput, tempSinger);
-		//tempSinger.display();
+		menuSinger();
 		return true;//causes main menu to continue
 
 	}
@@ -107,6 +102,16 @@ bool displayMenu()
 	}
 };
 
+
+
+void menuSinger() {
+	//add singer
+	cout << "Singer menu coming soon!\n";
+	//Singer tempSinger;
+	//string storeInput;
+	//UserInputSelectByKey(singerMap, "Enter your singer username:", storeInput, tempSinger);
+	//tempSinger.display();
+};
 //run this to test basic functions after changes
 void test() {
 	multimap<string, string> testMultiMap;
