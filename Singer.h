@@ -25,6 +25,21 @@ public:
 		displayName = displayName;
 	};
 
+	//copy constructor
+	Singer(const Singer& a2) {
+		singerKey = a2.singerKey;
+		displayName = a2.displayName;
+		SingerHistoryBySong = a2.SingerHistoryBySong;
+	}
+	//https://en.cppreference.com/w/cpp/language/copy_assignment
+	Singer& operator=(const Singer& a2)
+	{
+		singerKey = a2.singerKey;
+		displayName = a2.displayName;
+		SingerHistoryBySong = a2.SingerHistoryBySong;
+		return *this;
+	}
+
 	void setDisplayName(string newName);
 	string getDisplayName
 	();
