@@ -58,6 +58,8 @@ public:
 	void insertNode(T);
 	void deleteNode(T);
 	void displayList() const;
+	void displayFullList() const;
+	bool verifyNameExists(string);
 	//still need to add in doubly linked elements, such as insert between, etc
 };
 
@@ -95,15 +97,15 @@ void QueueManagement_KJ<T>::displayList() const
 
 	//position the pointer at the beginning of the list
 	nodePtr = head;
+	const int COUNT_MAX = 10;
+	int counter = 0;
 
-	while (nodePtr) //while the pointer points to a valid singer, generate the information in that singer
+	while (counter < COUNT_MAX && nodePtr) //while the pointer points to a valid singer, generate the information in that singer
 	{
 		cout << nodePtr->value << endl; //generate the name of the singer
 		nodePtr = nodePtr->next; //move to the next singer node
+		counter++;
 	}
-
-	//figure out how to limit this, potentially, to 10
-	//do I need to add more here for the double part of doubly linked list? make sure to look this up
 }
 
 //This is the insert operation, which will insert a new singer into a selected place in the queue
@@ -122,7 +124,7 @@ template <class T>
 void QueueManagement_KJ<T>::deleteNode(T singerToRemove)
 {
 	QueueNode<T> *nodePtr; //used to iterate through the list
-	QueueNode<T> *previousNode; //points to the previous singer
+	QueueNode<T> *previousNode = nullptr; //points to the previous singer
 
 	//if the head is empty, no need to do anything
 	if (!head)
@@ -166,6 +168,46 @@ QueueManagement_KJ<T>::~QueueManagement_KJ()
 		nextNode = nodePtr->next; //save the pointer for the next in line
 		delete nodePtr; //delete the current node
 		nodePtr = nextNode; //position the pointer at the next singer
+	}
+}
+
+template <class T>
+bool QueueManagement_KJ<T>::verifyNameExists(string dispname)
+{
+	QueueNode<T>* nodePtr; //used to iterate through the list
+
+	//position the pointer at the beginning of the list
+	nodePtr = head;
+
+	bool exists = false;
+	string tempCheck;
+	string nameToCheck = dispname;
+
+	while (nodePtr) //while the pointer points to a valid singer, generate the information in that singer
+	{
+		tempCheck = nodePtr->value; //generate the name of the singer
+		if (tempCheck == nameToCheck)
+		{
+			exists = true;
+			break;
+		}
+		nodePtr = nodePtr->next; //move to the next singer node
+	}
+	return exists;
+}
+
+template <class T>
+void QueueManagement_KJ<T>::displayFullList() const
+{
+	QueueNode<T>* nodePtr; //used to iterate through the list
+
+	//position the pointer at the beginning of the list
+	nodePtr = head;
+
+	while (nodePtr) //while the pointer points to a valid singer, generate the information in that singer
+	{
+		cout << nodePtr->value << endl; //generate the name of the singer
+		nodePtr = nodePtr->next; //move to the next singer node
 	}
 }
 #endif // !QUEUEMANAGEMENT_KJ_H

@@ -47,15 +47,25 @@
     <ClInclude Include="..\..\..\..\..\Mysti%27s PC\source\repos\MystiFreed\KaraokeFinal\QueueManagement_KJ.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SingerHistory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
+ Change_selectByKey_function
+    <Text Include="Songs.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="Singers.txt">
+
     <Text Include="..\..\..\..\..\Mysti%27s PC\source\repos\MystiFreed\KaraokeFinal\Artists.txt">
       <Filter>Resource Files</Filter>
     </Text>
     <Text Include="testMap.txt">
+ master
       <Filter>Resource Files</Filter>
     </Text>
-    <Text Include="Singers.txt">
+    <Text Include="Artists.txt">
       <Filter>Resource Files</Filter>
     </Text>
   </ItemGroup>
