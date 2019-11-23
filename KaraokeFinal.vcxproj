@@ -161,14 +161,12 @@
     <ClInclude Include="FileManagement.h" />
     <ClInclude Include="Genre.h" />
     <ClInclude Include="Singer.h" />
-    <ClInclude Include="IndividualArtist.h" />
     <ClInclude Include="MapManagement.h" />
     <ClInclude Include="Song.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\..\..\..\Mysti%27s PC\source\repos\MystiFreed\KaraokeFinal\Artists.txt" />
     <Text Include="Singers.txt" />
-    <Text Include="Songs.txt" />
     <Text Include="testMap.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

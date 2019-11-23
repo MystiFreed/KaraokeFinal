@@ -26,6 +26,8 @@ bool displayMenu();
 void menuManageCatalogue();
 void menuDisplayCatalogue();
 void exitSaving();
+void menuQueueManagement();
+void menuSinger();
 
 
 int main()
@@ -82,17 +84,13 @@ bool displayMenu()
 
 	else if (toupper(userSelection) == KJ)
 	{
-		linkListTester();
+		menuQueueManagement();
+		//linkListTester();
 		return true;//causes main menu to continue
 	}
 	else if (toupper(userSelection) == SINGER)
 	{
-		//add singer
-		cout << "Singer menu coming soon!\n";
-		//Singer tempSinger;
-		//string storeInput;
-		//UserInputSelectByKey(singerMap, "Enter your singer username:", storeInput, tempSinger);
-		//tempSinger.display();
+		menuSinger();
 		return true;//causes main menu to continue
 
 	}
@@ -107,6 +105,16 @@ bool displayMenu()
 	}
 };
 
+
+
+void menuSinger() {
+	//add singer
+	cout << "Singer menu coming soon!\n";
+	//Singer tempSinger;
+	//string storeInput;
+	//UserInputSelectByKey(singerMap, "Enter your singer username:", storeInput, tempSinger);
+	//tempSinger.display();
+};
 //run this to test basic functions after changes
 void test() {
 	multimap<string, string> testMultiMap;
@@ -170,7 +178,7 @@ void exitSaving() {
 }
 void linkListTester()
 {
-	QueueManagement_KJ<string> list;
+	/*QueueManagement_KJ<string> list;
 	
 	//Singer singer1("MystiFreed");
 	//Singer singer2("EthanFreed");
@@ -193,7 +201,7 @@ void linkListTester()
 
 	list.displayList();
 	//list.deleteNode("Alex");
-	list.displayList();
+	list.displayList();*/
 	
 }
 
@@ -285,4 +293,71 @@ void testIntInput()
 		cout << "\nAttempt " << x << endl;
 		cout << "Selected:" << getInputReprompt("Prompt:", 1, 4);
 	} 
+}
+
+void menuQueueManagement()
+{
+	bool continueMenu = true;
+
+	QueueManagement_KJ<string> list;
+
+	Singer singer1("MystiFreed");
+	Singer singer2("EthanFreed");
+	Singer singer3("JonFreed");
+	Singer singer4("AdrianVanderveer");
+	Singer singer5("AlexGaumer");
+	//select by key or use the new function to find/create
+
+	list.appendNode(singer1.getDisplayName());
+	list.appendNode(singer2.getDisplayName());
+	list.appendNode(singer3.getDisplayName());
+	list.appendNode(singer4.getDisplayName());
+	list.appendNode(singer5.getDisplayName());
+
+	while (continueMenu)
+	{
+		int userSelection;
+		string prompt = "\n----Queue Management Menu----\n ";
+		prompt += "1) Add Singer\n "; //add a new singer to the queue - this adds them to the end
+		prompt += "2) Remove Singer\n "; //remove a singer from the queue 
+		prompt += "3) Move Singer in Queue\n"; //move a singer from their current place in the queue to another selected place
+		prompt += "4) Display Pending Singers\n "; //display the next 10 singers pending
+		prompt += "5) Display Pending Songs\n"; //display the pending songs (and their corresponding singer)
+		prompt += "6) Exit program\n ";
+		prompt += "Please make a selection:\n ";
+		userSelection = getInputReprompt(prompt, 1, 6);//getInputPreprompt converts any entry to upper for comparison
+
+		Singer newSinger;
+		Singer toRemove;
+		string first;
+		string last;
+		//Song tempSong;
+		switch (userSelection) {
+		case 1:
+			//addObjectToMap(artistMap, userInputArtist());
+			cout << "Please enter the singer's first name:" << endl;
+			cin >> first;
+			cout << "Please enter the singer's last name:" << endl;
+			cin >> last;
+			
+			break;
+		case 2:
+			list.displayList();
+			cout << "Enter the song's Artist and then the Song information.\n";
+			
+
+			break;
+		case 3:
+			//menuDisplayCatalogue();
+			break;
+		case 4:
+			continueMenu = false;
+			return;
+			break;
+		default:
+			continueMenu = false;
+			return;
+			break;
+		}
+	}
 }
