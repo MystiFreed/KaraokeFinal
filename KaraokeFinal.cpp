@@ -12,6 +12,7 @@
 #include "Singer.h"
 #include <map>
 #include "DateCalcLong.h"
+#include "SingerHistory.h"
 
 using namespace std;
 //testing functions
@@ -32,7 +33,6 @@ void menuSinger();
 
 int main()
 {
-
 	startup();
 	while (displayMenu()); //automatically repeats until a false (exit) is returned.
 	exitSaving();
@@ -50,8 +50,19 @@ void startup() {
 	if (DEBUGMAIN) { cout << "\nopen song fstream: " << check << endl; }
 	check = openFileInOut(artistFstream, artistFileTXT);
 	if (DEBUGMAIN) { cout << "\nopen artist fstream: " << check << endl; }
+
+	check = openFileInOut(singerFstream, singerTXT);
+	if (DEBUGMAIN) { cout << "\nopen allSingerHistory fstream: " << check << endl; }
+
+
+	check = openFileInOut(singerHistoryFstream, allSingerHistoryTXT);
+	if (DEBUGMAIN) { cout << "\nopen allSingerHistory fstream: " << check << endl; }
+
+
 	primaryMapFromFile(songMap, songFstream);
 	primaryMapFromFile(artistMap, artistFstream);
+	primaryMapFromFile(singerMap, singerFstream);
+	multiMapFromFile(allSingerHistoryMap, singerHistoryFstream);
 	cout << "Done importing map data";
 	if (DEBUGMAIN) { linkListTester(); }
 
@@ -107,13 +118,56 @@ bool displayMenu()
 
 
 
-void menuSinger() {
-	//add singer
-	cout << "Singer menu coming soon!\n";
-	//Singer tempSinger;
-	//string storeInput;
-	//UserInputSelectByKey(singerMap, "Enter your singer username:", storeInput, tempSinger);
-	//tempSinger.display();
+void menuSinger() 
+{
+	do	{
+
+		int userSelection; //user choice within the top-of-house menu display
+		enum roleOptions { DISPLAYALL, ADD, VIEW, SONGHISTORY, EXIT };
+		string prompt = "\n----Singer Selection Menu----\n ";
+		prompt += "1) Add Singer\n "; //this holds the menu options specific to management of the song/artist catalogues
+		prompt += "2) View Singer\n "; //this menu holds options for the KJ to manage the queue of singers
+		prompt += "3) Song History\n "; //this menu holds singer options - histories, etc
+		prompt += "4) Back\n ";
+		prompt += "Please make a selection:\n ";
+
+		userSelection = getInputReprompt(prompt, DISPLAYALL, EXIT);//getInputPreprompt converts any entry to upper for comparison
+		Singer tempSinger;
+		Song tempSong;
+		tm* tempDate;
+		string storeInput;
+		switch (userSelection)
+		{
+			case DISPLAYALL:
+				displayMap(singerMap);
+			case ADD:
+				 tempSinger = userInputSinger();
+				addObjectToMap(singerMap, tempSinger);
+				cout << endl << "temp object: " << tempSinger.display() << endl;
+				displayMap(singerMap);
+				break;
+			case VIEW:
+				 tempSinger;
+				if (UserInputSelectByKey(singerMap, "Enter the username of the singer:", storeInput, tempSinger)) { cout << tempSinger.display(); }
+				else { cout << "\nNot found\n"; }
+				break;
+			case SONGHISTORY:
+				cout << "\nAll Singer History Map\n";
+				UserInputSelectByKey(singerMap, "singerkey", storeInput, tempSinger);
+				UserInputSelectByKey(songMap, "songkey", storeInput, tempSong);
+				tempDate = userInputDate();
+				//addToSingerHistory("billy",2019,11,20, "Hey Jude - Beatles, The");
+				addToSingerHistory(tempSinger.getKey(),tempDate, tempSong.getKey());
+				displayMap(allSingerHistoryMap);
+				break;
+			case EXIT:
+				return;
+				break;
+			default:
+				return;
+				break;
+		}
+	} while (true);
 };
 //run this to test basic functions after changes
 void test() {
@@ -128,25 +182,16 @@ void test() {
 	Singer amy("Amy1", "Amy");
 	cout << "add " << endl;
 
-	addObjectToMap(&amy.SingerHistoryBySong, "FaveSong", dateToString(setDate(2019, 1, 1)));
-	addObjectToMap(&amy.SingerHistoryBySong, "SecondBestSong", dateToString(setDate(2019, 1, 1)));
-	addObjectToMap(&amy.SingerHistoryBySong, "SecondBestSong", dateToString(setDate(2019, 1, 2)));
+	
 
 	addObjectToMap(singerMap, amy);
 	displayMap(singerMap);
 
-	//primaryMapToFile(singerMap, singerFstream);
-	//map<string, Singer> testReadSingerMap;
-	//primaryMapFromFile(testReadSingerMap, singerFstream);
-	//displayMap(testReadSingerMap);
 
 	for (int i = 0; i < 5; i++) {
 		cout << "\n------------------\nAdd a new Artist and Song (later will add select existing artist, function created but not tested yet.";
 
-		Artist tempArtist = userInputArtist(); 
-		Song tempSong = userInputSong(tempArtist.getKey());
-		if (addSongToCatalogs(tempSong)) { cout << "Added to maps\n"; }
-		else { cout << "Error\n"; };
+		Song tempSong = userInputSong();
 		cout<<"Found in songMap? 1=true"<<to_string(songMap.count(tempSong.getKey()))<<"\n";
 		cout << "Found in songCatalogByArtist? 1=true" << to_string(songCatalogByArtist.count(tempSong.getKey())) << "\n";
 	}
@@ -173,8 +218,7 @@ void exitSaving() {
 	primaryMapToFile(songMap, songFstream);
 	primaryMapToFile(artistMap, artistFstream);
 	primaryMapToFile(singerMap, singerFstream);
-	//add multimaps here
-
+	multiMapToFile(allSingerHistoryMap, singerHistoryFstream);
 }
 void linkListTester()
 {
@@ -223,11 +267,11 @@ void menuManageCatalogue() {
 		Song tempSong;
 		switch (userSelection) {
 		case 1:
-			addObjectToMap(artistMap, userInputArtist());
+			 userInputArtist();
 			break;
 		case 2:
 			cout << "Enter the song's Artist and then the Song information.\n";
-			addSongToCatalogs(userInputSong(userInputArtist().getKey()));
+			userInputSong();
 			
 			break;
 		case 3:
