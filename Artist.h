@@ -25,11 +25,14 @@ private:
 	//Genre primaryGenre; //holds the primary genre for the artist
 public:
 	//default constructor
-	Artist() : CatalogEntry() {}
+	Artist() : CatalogEntry() {
+		
+	}
 
 	//constructor
 	Artist(string an, string dn, Genre g) : CatalogEntry()
 	{	
+		
 		alphaName = an;
 		displayName = dn;
 		//primaryGenre = g;
@@ -46,6 +49,8 @@ public:
 	//constructor that allows for setup without a Genre, when it's not known
 	Artist(string an, string dn) : CatalogEntry()
 	{
+		
+
 		alphaName = an;
 		displayName = dn; 
 		//primaryGenre = g;
@@ -55,11 +60,15 @@ public:
 	//and no genre selected
 	Artist(string an) : CatalogEntry()
 	{
+		
+
 		alphaName = an;
 		displayName = alphaName; //sets the alphaName to the displayName
 	}
 	//copy constructor
 	Artist(const Artist& a2) {
+		
+
 		alphaName = a2.alphaName;
 		displayName = a2.displayName;
 		//primaryGenre = a2.primaryGenre;
@@ -67,6 +76,8 @@ public:
 	//https://en.cppreference.com/w/cpp/language/copy_assignment
 	Artist& operator=(const Artist& a2)
 	{
+		
+
 		alphaName = a2.alphaName;
 		displayName = a2.displayName;
 		//primaryGenre = a2.primaryGenre;

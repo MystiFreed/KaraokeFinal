@@ -51,7 +51,6 @@ class Song : public CatalogEntry
 //#include "Song.h"
 
 
-
 void Song::setTitle(string newTitle) { title = newTitle; };
 void Song::setArtistKey(string newArtistKey) { artistKey = newArtistKey; };
 
@@ -64,7 +63,6 @@ string Song::display()
 		return getKey(); 
 }
 string Song::toFile() { return title + FIELD_DELIMITER + artistKey; }
-
 
 void Song::fromFile(std::vector<string>::iterator iter) {
 	title = *iter;//assign first field

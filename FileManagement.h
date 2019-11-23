@@ -51,28 +51,35 @@ vector<string> SeparateLineByDelimiter(string line, char delimiter) {
 int getInputReprompt(std::string, int, int);
 int getInputReprompt(std::string promptMessage, int minRange, int maxRange) {};*/
 int getInputReprompt(std::string promptMessage, int minRange, int maxRange) {
-	int input;
-	bool isInvalidInput;
+	int intInput;
+	string strInput;
+	bool isInvalidInput=false;
 	std::string invalidMessage = "Error: Enter an integer between " + std::to_string(minRange) + " and " + std::to_string(maxRange) + ". ";
 
 	do {
 		std::cout << promptMessage;
-		std::cin >> input;
-		if (isInvalidInput = std::cin.fail()) //invalid input 
+		getline(cin, strInput);
+		stringstream ssInput(strInput);
+		ssInput>>intInput;	
+		if (isInvalidInput = ssInput.fail()) //invalid input 
 		{
 			std::cout << "Input Type " << invalidMessage;
 		}
-		if (input<minRange || input>maxRange) //outside range
+		else if (intInput<minRange || intInput>maxRange) //outside range
 		{
 			std::cout << "Outside Range " << invalidMessage;
 			isInvalidInput = true;
 		}
 		if (isInvalidInput) {//clear to reprompt
+			cout << intInput << " selected. isInvalidInput " << isInvalidInput;
+
 			std::cin.clear();
-			std::cin.ignore(100, '\n');
+			std::cin.ignore(numeric_limits<streamsize>::max(), '\n');
 		}
 	} while (isInvalidInput);//reprompt until valid
-	return input;//return valid input
+	cout << intInput << " selected. ";
+
+	return intInput;//return valid input
 };
 
 
@@ -106,7 +113,7 @@ GoBeginningOfFile(inputFile);//sets to start of file
 	string line = "";
 	while (inputFile) //keep going until end of file
 	{
-		cin.ignore();
+		clearCin();
 		getline(inputFile, line, '\n');
 		if (line == "") {//skip blank line
 		}
