@@ -42,7 +42,7 @@ string inputMapString(const string existingInput) {
 	string storeInput= existingInput;
 	for (auto& c : storeInput) { 
 		c = toupper((unsigned char)c);
-		if ( c == FIELD_DELIMITER) { c = SAFE_CHAR; }//use this char in place of the delimiter characters if one of them is in user input
+		if ( c == FIELD_DELIMITER||c==ELEMENT_DELIMITER) { c = SAFE_CHAR; }//use this char in place of the delimiter characters if one of them is in user input
 	};
 	return storeInput;
 }
@@ -238,7 +238,7 @@ void multiMapSeparateLineByDelimiter(multimap<string, string>& myMap, string lin
 	
 	iter++;//iterator now points to the first class field that is saved as a string in the vector
 	string tempValue = *iter;
-//	myMap.emplace(make_pair(tempKey, tempValue)); //add to map;
+	myMap.emplace(make_pair(tempKey, tempValue)); //add to map;
 }
  void displayMap(multimap<string, string>& existingMap) {
 
