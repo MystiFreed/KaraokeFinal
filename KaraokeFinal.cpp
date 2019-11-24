@@ -301,6 +301,7 @@ void menuQueueManagement()
 
 	QueueManagement_KJ<string> list;
 	QueueManagement_KJ<string> songList;
+	QueueManagement_KJ<string> displayList;
 
 	Singer singer1("MystiFreed");
 	Singer singer2("EthanFreed");
@@ -315,7 +316,7 @@ void menuQueueManagement()
 	Singer singer11("TobyDofner");
 	//select by key or use the new function to find/create
 
-	list.appendNode(singer1.getDisplayName());
+	/*list.appendNode(singer1.getDisplayName());
 	list.appendNode(singer2.getDisplayName());
 	list.appendNode(singer3.getDisplayName());
 	list.appendNode(singer4.getDisplayName());
@@ -325,7 +326,7 @@ void menuQueueManagement()
 	list.appendNode(singer8.getDisplayName());
 	list.appendNode(singer9.getDisplayName());
 	list.appendNode(singer10.getDisplayName());
-	list.appendNode(singer11.getDisplayName());
+	list.appendNode(singer11.getDisplayName());*/
 
 
 	while (continueMenu)
@@ -342,70 +343,94 @@ void menuQueueManagement()
 		prompt += "Please make a selection:\n ";
 		userSelection = getInputReprompt(prompt, 1, 7);//getInputPreprompt converts any entry to upper for comparison
 
-		Singer newSinger;
-		Song newSong;
-		Singer toRemove;
-		string firstName;
-		string lastName;
-		string displayname;
-		string songTitle;
-		string singerToMove;
-		string singerAfter;
-		bool verifyExists;
-		char songComplete;
+		Singer newSinger; //used to capture a new singer in the queue
+		Song newSong; //used to capture a new song in the queue
+		Singer toRemove; //singer that will be removed from the queue
+		string displayname; //this is the displayname of the singer that's been added
+		string singerKey; //holds the singer key for addition to the map
+		string nodeData; //holds the combined node data for removal
+		string songTitle; //this is the title of the song pulled from the newSong
+		string songKey; //holds the key for the song the singer chooses
+		string singerToMove; //this holds the singer to move in the queue
+		string singerAfter; //singer who will follow the singer being moved in the queue
+		bool verifyExists; //verify that the singer is in the queue
+		char songComplete; //holds the user input for whether the singer completed the song
 		//Song tempSong;
 		switch (userSelection) {
 		case 1:
-			/*cout << "Please enter the singer's first name:" << endl;
-			cin >> firstName;
-			cout << "Please enter the singer's last name:" << endl;
-			cin >> lastName;
-			displayname = firstName+lastName;
-			//credit to geeksforgeeks: https://www.geeksforgeeks.org/conversion-whole-string-uppercase-lowercase-using-stl-c/
-			transform(displayname.begin(), displayname.end(), displayname.begin(), ::toupper); //convert the whole combined string to all caps*/
+			newSinger = userInputSinger(); //use the userInputSinger function from the Singer.h to verify whether to add new or use an existing singer
+			displayname = newSinger.getDisplayName(); //set the displayname to the displayname from the singer's profile
+			singerKey = newSinger.getKey(); //capture the singer's key for use int he map
+			list.appendNode(singerKey, displayname); //add that displayname to the list
+			displayList.appendNode(displayname);
 
-			newSinger = userInputSinger();
-			displayname = newSinger.getDisplayName();
-			list.appendNode(displayname);
-
-			cout << "Please enter the song you that the singer has chosen:\n";
-			cin >> songTitle;
+			cout << "Please enter the song you that the singer has chosen:\n"; //solicit the song that the singer has selected
+			//cin >> songTitle; //gather the song name
 			//credit to geeksforgeeks: https://www.geeksforgeeks.org/conversion-whole-string-uppercase-lowercase-using-stl-c/
-			transform(songTitle.begin(), songTitle.end(), songTitle.begin(), ::toupper); //convert the whole combined string to all caps
-			cout << songTitle;
-			songList.appendNode(songTitle);
+			//transform(songTitle.begin(), songTitle.end(), songTitle.begin(), ::toupper); //convert the whole combined string to all caps
+			newSong = userInputSong(); //use the function to verify the right song name
+			songTitle = newSong.getTitle(); //gather the title for the song
+			songKey = newSong.getKey(); //gather the key for the song
+			songList.appendNode(songTitle); //add to the songlist
+			cout << displayname << " singing " << songTitle << " added.\n";
 			cin.ignore();
 			break;
 		case 2:
 			cout << endl;
-			cout << "Current queue:" << endl;
-			list.displayFullList();
+			cout << "Current queue:" << endl; 
+			list.displayFullList(); //generate the full list of singers
 			cout << endl;
-			cout << "Please select the singer to remove by entering the display name.\n";
-			reenter1:cin >> displayname;
-			verifyExists = list.verifyNameExists(displayname);
-			if (verifyExists == false)
+			//cout << "Please select the singer to remove by entering the display name.\n";//select the user to remove
+			/*reenter1:cin >> displayname; //collect the input*/
+			newSinger = userInputSinger();
+			singerKey = newSinger.getKey();
+			displayname = newSinger.getDisplayName();
+			nodeData = (singerKey + "/" + displayname);
+			/*verifyExists = list.verifyNameExists(displayname); //make sure that the name is on the list
+			if (verifyExists == false) //if not on the list, have them reenter until it is
 			{
 				cout << "Please enter a valid username:\n"; 
 				goto reenter1;
-			}
-			list.deleteNode(displayname);
+			}*/
+
 			cout << endl;
-			cout << "Did the singer complete the song? Y yes, N no.\n";
-			cin >> songComplete;
+			cout << "Did the singer complete the song? Y yes, N no.\n"; //find out if they completed a song or just left
+			reenter2:cin >> songComplete; 
 			if (toupper(songComplete) == 'Y')
 			{
-				//addToSingerHistory(displayname, 2019, 11, 10, "DREAMS-FLEETWOOD MAC");
-				//addObjectToMap(&allSingerHistoryMap, displayname, "DREAMS-FLEETWOOD MAC");
-				//make sure to update both the singer list and the song list
+				songList.displayFullList();
+				cout << "Please select the name of the song they completed:\n";
+				/*reenter3:cin >> songTitle;
+				verifyExists = songList.verifyNameExists(songTitle);
+				if (verifyExists == false) //if not on the list, have them reenter until it is
+				{
+					cout << "Please enter a valid song name:\n";
+					goto reenter3;
+				}*/
+				cin.ignore();
+				newSong = userInputSong();
+				songKey = newSong.getKey();
+				songTitle = newSong.getTitle();
+				addToSingerHistory(singerKey, 2019, 11, 10, songKey); //add the song to the singer's history
+				list.deleteNode(nodeData);
+				displayList.deleteNode(displayname); //delete the singer
+				songList.deleteNode(songTitle); //delete the song
+				songList.displayList();
+				cout << "Singer removed and singer history updated with song: " << songTitle << endl; //tell the KJ that the singer has been removed
 			}
-			if (toupper(songComplete) == 'N')
+			else if (toupper(songComplete) == 'N')
 			{
-				//addToSingerHistory(displayname, 2019, 11, 10, "DREAMS-FLEETWOOD MAC");
-				//addObjectToMap(&allSingerHistoryMap, displayname, "DREAMS-FLEETWOOD MAC");
-				//make sure to update both the singer list and the song list
+				list.deleteNode(displayname); //delete the singer
+				songList.deleteNode(songTitle); //delete the song
+				songList.displayList();
+				cout << "Singer removed.\n"; //tell the KJ that the singer has been removed
 			}
-			cout << displayname << " removed from the queue. Remaining queue:\n";
+			else //resolicit if they type anything but Y or N
+			{
+				cout << "Please enter either Y or yes, they completed, or N for no, they did not complete a song.\n";
+				goto reenter2;
+			}
+			cout << "Remaining queue:\n";
 			cout << endl;
 			list.displayFullList();
 			cin.ignore();
@@ -417,11 +442,12 @@ void menuQueueManagement()
 			cout << "Move this singer to which position (please enter the singer display name that will follow the moved singer).\n";
 			cin >> singerAfter;
 			list.insertNode(singerToMove, singerAfter);
+
 			break;
 		case 4:
 			cout << "On deck: \n";
 			cout << endl; //add a break between the on deck and singer list
-			list.displayList(); //display the top 10 displaynames for singers
+			displayList.displayList(); //display the top 10 displaynames for singers
 			break;
 		case 5:
 			//this needs to pull in the songs tied to the singers in the queue
