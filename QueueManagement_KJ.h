@@ -55,6 +55,7 @@ public:
 
 	//linked list operations
 	void appendNode(T);
+	void appendNode(T, T);
 	void insertNode(T, T);
 	void deleteNode(T);
 	void displayList() const;
@@ -89,6 +90,29 @@ void QueueManagement_KJ<T>::appendNode(T newS)
 	//do I need to add more here for the double part of doubly linked list? make sure to look this up
 }
 
+template <class T>
+void QueueManagement_KJ<T>::appendNode(T newS, T newDN)
+{
+	QueueNode<T>* newNode; //this points to the new singer added to the queue
+	QueueNode<T>* nodePtr; //this iterates through the list
+
+	//create a new singer node and store the new singer in that node
+	newNode = new QueueNode<T>(newS + "/" + newDN);
+
+	//if this is the first singer of the night, add them to the first in queue and make newSinger the first node
+	if (!head)
+		head = newNode;
+	else //if they're not the first one of the night, add them to the end
+	{
+		nodePtr = head;
+		while (nodePtr->next)
+			nodePtr = nodePtr->next; //get to the end of the list
+		nodePtr->next = newNode; //set the singer to the last node (after the end is found
+	}
+
+	//do I need to add more here for the double part of doubly linked list? make sure to look this up
+}
+
 //This is the display operation, which will display the nodes in their order, for use in popping up the next 10 to the screen
 
 template <class T>
@@ -100,6 +124,7 @@ void QueueManagement_KJ<T>::displayList() const
 	nodePtr = head;
 	const int COUNT_MAX = 10;
 	int counter = 0;
+	string displayName;
 
 	while (counter < COUNT_MAX && nodePtr) //while the pointer points to a valid singer, generate the information in that singer
 	{
