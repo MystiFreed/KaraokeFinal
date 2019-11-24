@@ -79,11 +79,11 @@ bool displayMenu()
 	int userSelection; //user choice within the top-of-house menu display
 	enum roleOptions {NONE, CATALOG, KJ,SINGER,EXIT};
 	string prompt = "\n----Karaoke Role Selection Menu----\n ";
-	prompt += "1) Catalogue Management\n "; //this holds the menu options specific to management of the song/artist catalogues
-	prompt += "2) KJ Queue Management\n "; //this menu holds options for the KJ to manage the queue of singers
-	prompt += "3) Singer Menu\n "; //this menu holds singer options - histories, etc
-	prompt += "4) Exit program\n ";
-	prompt += "Please make a selection:\n ";
+	prompt += "  1) Catalogue Management\n "; //this holds the menu options specific to management of the song/artist catalogues
+	prompt += "  2) KJ Queue Management\n "; //this menu holds options for the KJ to manage the queue of singers
+	prompt += "  3) Singer Menu\n "; //this menu holds singer options - histories, etc
+	prompt += "  4) Exit program\n ";
+	prompt += "  Please make a selection:\n ";
 
 	//this is having some issues, need to take a look at the getInputReprompt function in FileManagement.h
 	userSelection = getInputReprompt(prompt, CATALOG, EXIT);//getInputPreprompt converts any entry to upper for comparison
@@ -207,12 +207,12 @@ void menuManageCatalogue() {
 		int userSelection;
 		enum catalogOptions {BACK, ADD_ARTIST, ADD_SONG, VIEW};
 		string prompt = "\n----Catalogue Management Menu----\n ";
-		prompt += to_string(BACK)+") Exit program\n ";
-		prompt += to_string(ADD_ARTIST) + ") Add Artist to Catalogue\n "; //this holds the menu options specific to management of the song/artist catalogues
-		prompt += to_string(ADD_SONG) + ") Add Song to Catalogue\n "; //this menu holds options for the KJ to manage the queue of singers
-		prompt += to_string(VIEW) + ") View Catalogues\n "; //this menu holds singer options - histories, etc
+		prompt += "  "+to_string(BACK)+") Exit program\n ";
+		prompt += "  "+to_string(ADD_ARTIST) + ") Add Artist to Catalogue\n "; //this holds the menu options specific to management of the song/artist catalogues
+		prompt += "  "+to_string(ADD_SONG) + ") Add Song to Catalogue\n "; //this menu holds options for the KJ to manage the queue of singers
+		prompt += "  "+to_string(VIEW) + ") View Catalogues\n "; //this menu holds singer options - histories, etc
 		
-		prompt += "Please make a selection:\n ";
+		prompt += "  Please make a selection:\n ";
 		userSelection = getInputReprompt(prompt, BACK, VIEW);//getInputPreprompt converts any entry to upper for comparison
 
 		Artist tempArtist;
@@ -249,7 +249,7 @@ void menuDisplayCatalogue()
 		//prompt += BACK_MENU +") Back to main menu\n ";
 		//prompt += SCREEN_DISPLAY+") Display on screen\n ";
 		////prompt += PRINT_REPORT +") Print catalog\n "; //NEED TO DO - either create this or remove this menu.
-		//prompt += "Please make a selection:\n ";
+		//prompt += "  Please make a selection:\n ";
 		//viewMethod = getInputReprompt(prompt, BACK_MENU, PRINT_REPORT);//getInputPreprompt converts any entry to upper for comparison
 		// if (viewMethod == BACK_MENU) { return; };
 		
@@ -264,7 +264,7 @@ void menuDisplayCatalogue()
 		promptb += SONG_ARTIST +") Song by Artist Catalogue\n ";
 		promptb += ARTIST +") Artist List\n ";
 		
-		promptb += "Please make a selection:\n ";
+		promptb += "  Please make a selection:\n ";
 		userSelection = getInputReprompt(promptb, 1, 4);//getInputPreprompt converts any entry to upper for comparison
 
 		switch (userSelection) {
@@ -332,14 +332,14 @@ void menuQueueManagement()
 	{
 		int userSelection;
 		string prompt = "\n----Queue Management Menu----\n ";
-		prompt += "1) Add Singer and Selection\n "; //add a new singer to the queue - this adds them to the end
-		prompt += "2) Remove Singer\n "; //remove a singer from the queue 
-		prompt += "3) Move Singer in Queue\n "; //move a singer from their current place in the queue to another selected place
-		prompt += "4) Display Pending Singers\n "; //display the next 10 singers pending
-		prompt += "5) Display Pending Songs\n "; //display the pending songs (and their corresponding singer)
-		prompt += "6) EOD Clear Queue\n "; //clears out any remaining in the queue at the end of the day
-		prompt += "7) Exit to main\n "; //exit to main menu
-		prompt += "Please make a selection:\n ";
+		prompt += "  1) Add Singer and Selection\n "; //add a new singer to the queue - this adds them to the end
+		prompt += "  2) Remove Singer\n "; //remove a singer from the queue 
+		prompt += "  3) Move Singer in Queue\n "; //move a singer from their current place in the queue to another selected place
+		prompt += "  4) Display Pending Singers\n "; //display the next 10 singers pending
+		prompt += "  5) Display Pending Songs\n "; //display the pending songs (and their corresponding singer)
+		prompt += "  6) EOD Clear Queue\n "; //clears out any remaining in the queue at the end of the day
+		prompt += "  7) Exit to main\n "; //exit to main menu
+		prompt += "  Please make a selection:\n ";
 		userSelection = getInputReprompt(prompt, 1, 7);//getInputPreprompt converts any entry to upper for comparison
 
 		Singer newSinger; //used to capture a new singer in the queue

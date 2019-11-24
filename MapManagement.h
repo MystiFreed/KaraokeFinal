@@ -272,7 +272,7 @@ Artist userInputArtist() {
 	if (UserInputSelectByKey(artistMap, instructions, alphaName, tempArtist)) { return tempArtist; 
 	}//if found, return existing 
 	else {
-		string prompt = "Not found, add new Artist? \n1: Use \"" + alphaName + "\" as display name for artist. \n2: Enter a different display name. \n3. Cancel new artist. Enter a selection: ";
+		string prompt = "Not found, add new Artist? \n  1: Use \"" + alphaName + "\" as display name for artist. \n  2: Enter a different display name. \n  3. Cancel new artist. Enter a selection: ";
 		int userSelection = getInputReprompt(prompt, 1, 3);
 		switch (userSelection) {
 		case 1:

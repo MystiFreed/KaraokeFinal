@@ -72,7 +72,8 @@ void viewSingerHistory(Singer selectedSinger) {
 	multimap<string, string> dateSongMap;//temporary map to be filled with all songs this singer has done, by date
 	multimap<string, string> songDateMap;//temporary map to be filled with all songs this singer has done, by song
 	multimap<string, string> artistSongMap;//temporary map to be filled with all songs this singer has done, by artist
-	set<string> uniqueSongs;
+	map<string, string> uniqueSongs;
+	multimap<string, string> uniqueSongsByArtist;
 	set<string> uniqueArtists;
 
 	//split the value string into fields, map with date key and songkey value	
@@ -93,8 +94,12 @@ void viewSingerHistory(Singer selectedSinger) {
 		string artist = tempSong.getArtistKey();
 		addObjectToMap(&songDateMap, song, iter.first);
 		addObjectToMap(&artistSongMap, artist, song);
-		uniqueSongs.emplace(song);
+		uniqueSongs.emplace(song, artist);//only allows a single instance of each
 		uniqueArtists.emplace(artist);
+	}
+	//save unique songs sorted by artist
+	for (auto& e : uniqueSongs) {
+		uniqueSongsByArtist.emplace(make_pair(e.second, e.first));
 	}
 
 	//do stuff with the results
@@ -105,12 +110,13 @@ void viewSingerHistory(Singer selectedSinger) {
 	//cout <<  iter->first << endl;
 	////done printing heading
 	
-	map<int, string, greater <int> > descendingMap;
+	multimap<int, string, greater <int> > descendingMap;
 	
 	///////display song count in descending order///////
 	cout << "\n---Number of times performing song---\n";
 	for (auto& e : uniqueSongs) {
-		descendingMap.emplace(make_pair(songDateMap.count(e), e));
+		string song = e.first;
+		descendingMap.emplace(make_pair(songDateMap.count(song), song));
 	}
 	for (auto& e : descendingMap) {
 		cout << e.first <<": "<<e.second << endl;
@@ -120,6 +126,7 @@ void viewSingerHistory(Singer selectedSinger) {
 
 	///////display artist count in descending order///////
 	cout << "\n---Number of times performing songs by artist---\n";
+	descendingMap.clear();
 	for (auto& e : uniqueArtists) {
 		descendingMap.emplace(make_pair(artistSongMap.count(e), e));
 	}
@@ -127,6 +134,25 @@ void viewSingerHistory(Singer selectedSinger) {
 		cout << e.first << ": " << e.second << endl;
 	}
 	///////display artist count in descending order///////
+
+
+	///////display artist count in descending order///////
+	cout << "\n---Number of unique songs performed by artist---\n";
+	descendingMap.clear();
+	for (auto& e : uniqueArtists) {
+		descendingMap.emplace(make_pair(uniqueSongsByArtist.count(e), e));
+	}
+	for (auto& e : descendingMap) {
+		string artist = e.second;
+		cout << e.first << ": " << artist << endl;
+		multimap<string, string> resultMap;
+		mapResultsByKey(uniqueSongsByArtist, resultMap, artist);
+		for (auto& s : resultMap) {
+			cout << "     " << " " << s.second << endl;
+		}
+	}
+	///////display artist count in descending order///////
+	
 }
 
 //can be used with individual singer history or allSingerHistory
@@ -203,12 +229,12 @@ void menuSinger()
 		int userSelection; //user choice within the top-of-house menu display
 		enum roleOptions { BACK, DISPLAYALL, ADD, VIEW, SONGHISTORY, EXIT };
 		string prompt = "\n----Singer Selection Menu----\n ";
-		prompt += "0) Back\n ";
-		prompt += "1) Display all singers in system\n "; //this holds 
-		prompt += "2) Add Singer\n "; //this holds 
-		prompt += "3) View Singer\n "; //this menu h
-		prompt += "4) Song History\n "; //this menu 
-		prompt += "Please make a selection:\n ";
+		prompt += "  0) Back\n ";
+		prompt += "  1) Display all singers in system\n "; //this holds 
+		prompt += "  2) Add Singer\n "; //this holds 
+		prompt += "  3) View Singer\n "; //this menu h
+		prompt += "  4) Song History\n "; //this menu 
+		prompt += "  Please make a selection:\n ";
 		userSelection = getInputReprompt(prompt, BACK, SONGHISTORY);
 		Singer tempSinger;
 		Song tempSong;
@@ -270,11 +296,11 @@ void historyOptionsMenu(Singer selectedSinger) {
 
 	//enum historyOptions { BACK, LAST90, LAST30 };
 	//string prompt = "\n----Singer History Menu----\n ";
-	//prompt += to_string(historyOptions::BACK) + ") Back\n ";
-	////prompt += to_string(historyOptions::ALL) + ") All history\n "; //this holds 
-	//prompt += to_string(historyOptions::LAST90) + ") Last 90 days\n "; //this holds 
-	//prompt += to_string(historyOptions::LAST30) + ") Last 30 days\n "; //this menu h
-	//prompt += "Please make a selection:\n ";
+	//prompt += "  "+to_string(historyOptions::BACK) + ") Back\n ";
+	////prompt += "  "+to_string(historyOptions::ALL) + ") All history\n "; //this holds 
+	//prompt += "  "+to_string(historyOptions::LAST90) + ") Last 90 days\n "; //this holds 
+	//prompt += "  "+to_string(historyOptions::LAST30) + ") Last 30 days\n "; //this menu h
+	//prompt += "  Please make a selection:\n ";
 	//int userSelection = getInputReprompt(prompt, BACK, LAST30);
 	//time_t     now = time(0);
 	//tm* startDate = localtime(&now);//https://stackoverflow.com/questions/997946/how-to-get-current-time-and-date-in-c
