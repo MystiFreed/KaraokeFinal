@@ -414,11 +414,11 @@ void menuQueueManagement()
 				goto reenter1;
 			}
 			list.deleteNode(displayname);
-			//add in 'if name doesn't exist, reenter' functionality
 			cout << endl;
 			cout << displayname << " removed from the queue. Remaining queue:\n";
 			cout << endl;
 			list.displayFullList();
+			//figure out why this is generating an error (some sort of trailing data)
 			break;
 		case 3:
 			list.displayList();
