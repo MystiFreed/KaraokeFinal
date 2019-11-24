@@ -13,6 +13,7 @@
 #include <map>
 #include "DateCalcLong.h"
 #include "SingerHistory.h"
+#include <algorithm>
 
 using namespace std;
 
@@ -301,6 +302,7 @@ void menuQueueManagement()
 	bool continueMenu = true;
 
 	QueueManagement_KJ<string> list;
+	QueueManagement_KJ<string> songList;
 
 	Singer singer1("MystiFreed");
 	Singer singer2("EthanFreed");
@@ -327,11 +329,12 @@ void menuQueueManagement()
 	list.appendNode(singer10.getDisplayName());
 	list.appendNode(singer11.getDisplayName());
 
+
 	while (continueMenu)
 	{
 		int userSelection;
 		string prompt = "\n----Queue Management Menu----\n ";
-		prompt += "1) Add Singer\n "; //add a new singer to the queue - this adds them to the end
+		prompt += "1) Add Singer and Selection\n "; //add a new singer to the queue - this adds them to the end
 		prompt += "2) Remove Singer\n "; //remove a singer from the queue 
 		prompt += "3) Move Singer in Queue\n "; //move a singer from their current place in the queue to another selected place
 		prompt += "4) Display Pending Singers\n "; //display the next 10 singers pending
@@ -342,20 +345,38 @@ void menuQueueManagement()
 		userSelection = getInputReprompt(prompt, 1, 7);//getInputPreprompt converts any entry to upper for comparison
 
 		Singer newSinger;
+		Song newSong;
 		Singer toRemove;
-		string first;
-		string last;
+		string firstName;
+		string lastName;
 		string displayname;
+		string songTitle;
+		string singerToMove;
+		string singerAfter;
 		bool verifyExists;
+		char songComplete;
 		//Song tempSong;
 		switch (userSelection) {
 		case 1:
-			//verify whether or not they already exist, if not, point to the constructor
-			cout << "Please enter the singer's first name:" << endl;
-			cin >> first;
+			/*cout << "Please enter the singer's first name:" << endl;
+			cin >> firstName;
 			cout << "Please enter the singer's last name:" << endl;
-			cin >> last;
-			
+			cin >> lastName;
+			displayname = firstName+lastName;
+			//credit to geeksforgeeks: https://www.geeksforgeeks.org/conversion-whole-string-uppercase-lowercase-using-stl-c/
+			transform(displayname.begin(), displayname.end(), displayname.begin(), ::toupper); //convert the whole combined string to all caps*/
+
+			newSinger = userInputSinger();
+			displayname = newSinger.getDisplayName();
+			list.appendNode(displayname);
+
+			cout << "Please enter the song you that the singer has chosen:\n";
+			cin >> songTitle;
+			//credit to geeksforgeeks: https://www.geeksforgeeks.org/conversion-whole-string-uppercase-lowercase-using-stl-c/
+			transform(songTitle.begin(), songTitle.end(), songTitle.begin(), ::toupper); //convert the whole combined string to all caps
+			cout << songTitle;
+			songList.appendNode(songTitle);
+			cin.ignore();
 			break;
 		case 2:
 			cout << endl;
@@ -372,36 +393,46 @@ void menuQueueManagement()
 			}
 			list.deleteNode(displayname);
 			cout << endl;
+			cout << "Did the singer complete the song? Y yes, N no.\n";
+			cin >> songComplete;
+			if (toupper(songComplete) == 'Y')
+			{
+				//addToSingerHistory(displayname, 2019, 11, 10, "DREAMS-FLEETWOOD MAC");
+				//addObjectToMap(&allSingerHistoryMap, displayname, "DREAMS-FLEETWOOD MAC");
+				//make sure to update both the singer list and the song list
+			}
+			if (toupper(songComplete) == 'N')
+			{
+				//addToSingerHistory(displayname, 2019, 11, 10, "DREAMS-FLEETWOOD MAC");
+				//addObjectToMap(&allSingerHistoryMap, displayname, "DREAMS-FLEETWOOD MAC");
+				//make sure to update both the singer list and the song list
+			}
 			cout << displayname << " removed from the queue. Remaining queue:\n";
 			cout << endl;
 			list.displayFullList();
-			//figure out why this is generating an error (some sort of trailing data)
+			cin.ignore();
 			break;
 		case 3:
-			list.displayList();
+			list.displayFullList();
 			cout << "Please select the singer to move by entering the display name.\n";
-			cin >> displayname;
-
-
+			cin >> singerToMove;
+			cout << "Move this singer to which position (please enter the singer display name that will follow the moved singer).\n";
+			cin >> singerAfter;
+			list.insertNode(singerToMove, singerAfter);
 			break;
 		case 4:
 			cout << "On deck: \n";
 			cout << endl; //add a break between the on deck and singer list
-			//figure out how to limit to 10
-			//figure out how to pull in the first/last name vs display name
-			list.displayList();
+			list.displayList(); //display the top 10 displaynames for singers
 			break;
 		case 5:
 			//this needs to pull in the songs tied to the singers in the queue
-
+			songList.displayFullList();
 			break;
 		case 6:
-			//clear out anyone in the queue and return to main menu
-			cout << "Queue Cleared, returning to main menu\n ";
-			//list.displayList(); //verify that the queue is cleared
-			continueMenu = false;
-			return;
-			break;
+			cout << "Clearing queue.\n";
+			list.~QueueManagement_KJ(); //call the destructor to remove all pending singers, send back to the main to avoid duplicate delete[] calls
+			main();
 		default:
 			continueMenu = false; //change the boolean from true to false and exit the menu
 			return;

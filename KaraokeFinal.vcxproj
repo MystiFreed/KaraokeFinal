@@ -140,11 +140,11 @@
     <Text Include="Artists.txt" />
     <Text Include="allSingerHistory.txt" />
     <Text Include="Singers.txt" />
- Change_selectByKey_function
     <Text Include="Songs.txt" />
-
     <Text Include="testMap.txt" />
- master
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\Mysti%27s PC\source\repos\MystiFreed\KaraokeFinal\KaraokeFinal.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

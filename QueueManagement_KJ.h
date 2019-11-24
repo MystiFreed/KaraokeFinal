@@ -55,11 +55,12 @@ public:
 
 	//linked list operations
 	void appendNode(T);
-	void insertNode(T);
+	void insertNode(T, T);
 	void deleteNode(T);
 	void displayList() const;
 	void displayFullList() const;
 	bool verifyNameExists(string);
+	void deleteList();
 	//still need to add in doubly linked elements, such as insert between, etc
 };
 
@@ -112,9 +113,26 @@ void QueueManagement_KJ<T>::displayList() const
 //placeholder only, as I need to look into this for the doubly linked list vs single
 
 template <class T>
-void QueueManagement_KJ<T>::insertNode(T newS)
+//credit to geeksforgeeks for the basic ideas: https://www.geeksforgeeks.org/insert-a-node-at-a-specific-position-in-a-linked-list/
+//second: https://www.geeksforgeeks.org/rearrange-a-given-linked-list-in-place/ and https://ide.geeksforgeeks.org/1eGSEy
+
+//1) Initialize current node as head.
+//2) While next of current node is not null, do following
+//a) Find the last node, remove it from the endand insert it as next of the current node.
+//b) Move current to next to next of current
+void QueueManagement_KJ<T>::insertNode(T movedNode, T beforenode)
 {
-	//stub only
+	QueueNode<T>* nodePtr; //used to iterate through the list
+	QueueNode<T>* previousNode = nullptr; //points to the previous singer
+
+	int queueSize = 0; //this holds the size of the existing queue
+	if (!head)
+		return;
+
+	if (head->value == beforenode)
+	{
+
+	}
 }
 
 //This is the delete operation, which will remove a singer who has left the venue
@@ -210,5 +228,6 @@ void QueueManagement_KJ<T>::displayFullList() const
 		nodePtr = nodePtr->next; //move to the next singer node
 	}
 }
+
 #endif // !QUEUEMANAGEMENT_KJ_H
 
