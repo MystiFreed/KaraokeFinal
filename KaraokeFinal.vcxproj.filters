@@ -65,9 +65,10 @@
     <Text Include="allSingerHistory.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="testMap.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="KaraokeFinal.cpp">
+    <ClCompile Include="..\..\..\..\..\Mysti%27s PC\source\repos\MystiFreed\KaraokeFinal\KaraokeFinal.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
