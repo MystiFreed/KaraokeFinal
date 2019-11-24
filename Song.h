@@ -27,6 +27,7 @@ class Song : public CatalogEntry
 		Song(const Song& a2) {
 			songKey = a2.songKey;
 			title = a2.title;
+			artistKey = a2.artistKey;
 			if (DEBUGSONG) cout << songKey << "3\n";
 
 		}
@@ -35,6 +36,7 @@ class Song : public CatalogEntry
 		{
 			songKey = a2.songKey;
 			title = a2.title;
+			artistKey = a2.artistKey;
 			if (DEBUGSONG) cout << songKey << "4\n";
 
 			return *this;
@@ -70,10 +72,14 @@ string Song::display()
 { 
 		return getKey(); 
 }
-string Song::toFile() { return title + FIELD_DELIMITER + artistKey; }
+string Song::toFile() { return songKey + FIELD_DELIMITER + title + FIELD_DELIMITER + artistKey; }
 
 void Song::fromFile(std::vector<string>::iterator iter) {
-	title = *iter;//assign first field
+	
+	songKey = *iter;//assign first field
+
+	title = *++iter;//assign next field
+	if(DEBUGSONG) cout << "test " << display() << endl;
 	artistKey = *++iter;//assign next field
 
 }

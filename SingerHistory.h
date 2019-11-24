@@ -32,9 +32,9 @@ void addToSingerHistory(string singerKey, int year, int month, int day, string s
 //this version collects required information as parameters
 void addToSingerHistory(string singerKey, tm* performedDate, string songKey) {
 	string dateString = dateToString(performedDate);
-	string newValue = dateString + FIELD_DELIMITER + songKey + FIELD_DELIMITER;
+	string newValue = dateString + FIELD_DELIMITER + songKey ;
 	addObjectToMap(&allSingerHistoryMap, singerKey, newValue);
-
+	multiMapToFile(allSingerHistoryMap, singerHistoryFstream);
 }
 //this version gets user input for all required fields for this function, enter a singerKey if you know it, otherwise use "". It will check that the singer exists or ask the user to enter the singer.
 void addToSingerHistory(string singerKey) {

@@ -31,13 +31,11 @@ void menuDisplayCatalogue();
 void exitSaving();
 void menuQueueManagement();
 void menuSinger();
-void verifyNameExists();
+//void verifyNameExists();
 
 int main()
-{
-
-	startup();
-	//for (int i = 0; i < 5; i++) { cout << "round " << i << endl; Singer tempSinger = userInputSinger(); cout<<"\nmain display "<< tempSinger.display() << endl; }
+{startup();
+	
 	while (displayMenu()); //automatically repeats until a false (exit) is returned.
 	exitSaving();
 	return 0;
