@@ -15,12 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="KaraokeFinal.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="Artist.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Band.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CatalogEntry.h">
@@ -35,38 +33,42 @@
     <ClInclude Include="Genre.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="IndividualArtist.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="MapManagement.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Song.h">
+    <ClInclude Include="QueueManagement_KJ.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Singer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\Mysti%27s PC\source\repos\MystiFreed\KaraokeFinal\QueueManagement_KJ.h">
+    <ClInclude Include="SingerHistory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SingerHistory.h">
+    <ClInclude Include="Song.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
- Change_selectByKey_function
-    <Text Include="Songs.txt">
-      <Filter>Resource Files</Filter>
-    </Text>
-    <Text Include="Singers.txt">
-
-    <Text Include="..\..\..\..\..\Mysti%27s PC\source\repos\MystiFreed\KaraokeFinal\Artists.txt">
-      <Filter>Resource Files</Filter>
-    </Text>
-    <Text Include="testMap.txt">
- master
-      <Filter>Resource Files</Filter>
-    </Text>
     <Text Include="Artists.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="Singers.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="Songs.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="allSingerHistory.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="KaraokeFinal.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

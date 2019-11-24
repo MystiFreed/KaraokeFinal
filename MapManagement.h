@@ -11,7 +11,7 @@
 #include "Song.h"
 #include "Singer.h"
 #include <set>
-const bool DEBUGMAP = true;
+const bool DEBUGMAP = false;
 template <typename T> bool SelectByKey(map<string, T>, string, T&);
 template <typename T> bool UserInputSelectByKey(map<string, T>, string, string&, T&);
 
@@ -28,6 +28,25 @@ void multiMapSeparateLineByDelimiter(multimap<string, string>& , string );
 void multiMapToFile(multimap<string, string>& , fstream& );
 void multiMapFromFile(multimap<string, string>& , fstream& );
 
+string inputMapString(const string);
+string inputMapString();
+
+//Use to collect user input if it is for one of the maps, confirms that no delimiters are part of the user input, converts to uppercase to enable comparisons later
+string inputMapString() {
+	string storeInput;
+	getline(cin, storeInput);
+	return  inputMapString(storeInput);
+}
+//Use to convert string for use with one of the maps, confirms that no delimiters are part of the user input, converts to uppercase to enable comparisons later
+string inputMapString(const string existingInput) {
+	string storeInput= existingInput;
+	for (auto& c : storeInput) { 
+		c = toupper((unsigned char)c);
+		if (c == ELEMENT_DELIMITER || c == FIELD_DELIMITER) { c = SAFE_CHAR; }//use this char in place of the delimiter characters if one of them is in user input
+	};
+	return storeInput;
+}
+
 void clearCin() {
 	//std::cin.clear();
 	//std::cin.ignore(numeric_limits<streamsize>::max(), '\n');
@@ -43,7 +62,6 @@ template <typename T>  bool addObjectToMap(typename map<string, T>& existingMap,
 	
 //use with any ordered map that has string as the key, for testing only - replace with save to file
 template <typename T>  void displayMap(map<string, T>& existingMap) {
-
 	for (auto& element : existingMap) {
 		cout << "Key:" <<element.first << " Object: " << element.second.display() << endl;
 	}
@@ -60,17 +78,16 @@ template <typename T> bool UserInputSelectByKey(map<string, T> myMap, string use
 	string sectionPrompt = "";//defines the prompt with options for this section
 	int menuSelected = -1; //stores the user input
 
-	string searchString;
+	
 	bool isKeepLooking = true;
 
 	cout << userInputInstructions;
-	clearCin();
-	getline(cin, searchString); 
+	string searchString = inputMapString();
 	storeInput = searchString;//saves user input in address provided as parameter for use outside the function
 	if (DEBUGMAP) cout << "\n searchString: " << searchString <<" storeInput: "<< storeInput << endl;
 	if (SelectByKey(myMap, searchString, storeObject))//if it is not map.end then the search found a match
 	{		return true;	}
-	if (DEBUGMAP) cout << "\n no selectbykey found, continuing\n";
+	if (DEBUGMAP) cout << "\n no selectbykey found, continuing with substring search\n";
 
 	//full key not found, try substring search and ask user if that is what they were looking for
 	typename	map<string, T>::iterator iter = myMap.begin();//start searching from beginning
@@ -80,8 +97,6 @@ template <typename T> bool UserInputSelectByKey(map<string, T> myMap, string use
 	//{
 		while (iter != myMap.end())//stop search after end reached without match
 		{
-			if (DEBUGMAP) cout << "\n starting iter loop\n";
-
 			if (iter->first.find(searchString) != std::string::npos)//possible match
 			{//check if possible match is what user wants
 				string sectionTitle = "\n----Select This One?---\n " + iter->first+" "+iter->second.display() + "\n";
@@ -95,6 +110,8 @@ template <typename T> bool UserInputSelectByKey(map<string, T> myMap, string use
 					return false;
 					break;
 				case SELECT:
+					storeObject = iter->second;
+			
 					return true;
 					break;
 				case AGAIN:
@@ -247,7 +264,7 @@ Artist userInputArtist() {
 	if (UserInputSelectByKey(artistMap, instructions, alphaName, tempArtist)) { return tempArtist; 
 	}//if found, return existing 
 	else {
-		string prompt = "Not found, add new Artist? \n1: Enter a record under " + alphaName + ". \n2: Enter all fields for new record. \n3. Cancel. Enter a selection: ";
+		string prompt = "Not found, add new Artist? \n1: Use \"" + alphaName + "\" as display name for artist. \n2: Enter a different display name. \n3. Cancel new artist. Enter a selection: ";
 		int userSelection = getInputReprompt(prompt, 1, 3);
 		switch (userSelection) {
 		case 1:
@@ -255,12 +272,9 @@ Artist userInputArtist() {
 			addObjectToMap(artistMap, tempArtist);
 			break;
 		case 2:
-			cout << "\nEnter artist name, alphabetical (Move \", The \" to the end of the artist name if applicable) :";
-			getline(cin, alphaName);
 			cout << "Enter the display name for the artist (not alphabetical sorting):";
-			getline(cin, displayName);
+			displayName = inputMapString();
 			tempArtist = Artist(alphaName, displayName);//not found, return created one
-
 			addObjectToMap(artistMap, tempArtist);
 			break;
 		default:
@@ -274,12 +288,13 @@ return tempArtist;
 Song userInputSong() {
 	if (DEBUGMAP) cout << "\nstarting userInputSong\n";
 	string songTitle = "";
-
 	Song tempSong;
 	string instructions = "\nSong Title:";
 	if (UserInputSelectByKey(songMap, instructions, songTitle, tempSong)) { return tempSong; };//if found, return existing 
+	cout << songTitle<<" was not found. Enter artist and song information to add the song record:\n";
 	Artist tempArtist = userInputArtist();
-	tempSong = Song(songTitle, tempArtist.getKey());
+	string tempArtistKey = tempArtist.getKey();
+	tempSong = Song(songTitle, tempArtistKey);
 	addSongToCatalogs(tempSong);
 	return tempSong;
 };
@@ -294,7 +309,8 @@ Singer userInputSinger() {
 		if (UserInputSelectByKey(singerMap, instructions, singerKey, tempSinger)) {
 			cout << "This profile already exists, username: " << tempSinger.getKey() << " display name: " << tempSinger.getDisplayName() << endl;
 			int userSelection = getInputReprompt(" Is this you? 1) Yes, use this profile 2) No, create new profile", 1, 2);
-			if (userSelection == 1) { return tempSinger; };//if found, return existing 
+			if (userSelection == 1) { 
+				return tempSinger; };//if found, return existing 
 		}
 		else {
 			uniqueUsername = true;
@@ -304,14 +320,14 @@ Singer userInputSinger() {
 	
 	cout << "Enter a display name to be shown on screen. This may be different from the username.";
 	string tempDisplayName="";
-	//clearCin();
-	getline(cin, tempDisplayName);
+	tempDisplayName = inputMapString();
 	tempSinger.setDisplayName(tempDisplayName);
 	return tempSinger;//not found, return created one
 };
 
 //new songs must be inserted in all relevant maps
 bool addSongToCatalogs(Song newSong) {
+	if (DEBUGMAP)cout <<endl<< "addSongToCatalogs: " << newSong.display()<<endl;
 	if (!addObjectToMap(songMap, newSong))
 	{
 		cout << "Already exists in catalog, not added."; return false;
