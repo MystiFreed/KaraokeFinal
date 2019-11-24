@@ -142,9 +142,10 @@
     <Text Include="Singers.txt" />
     <Text Include="Songs.txt" />
     <Text Include="testMap.txt" />
+    <Text Include="Text.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\Mysti%27s PC\source\repos\MystiFreed\KaraokeFinal\KaraokeFinal.cpp" />
+    <ClCompile Include="KaraokeFinal.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

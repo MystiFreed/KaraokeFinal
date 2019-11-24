@@ -42,7 +42,7 @@ string inputMapString(const string existingInput) {
 	string storeInput= existingInput;
 	for (auto& c : storeInput) { 
 		c = toupper((unsigned char)c);
-		if (c == ELEMENT_DELIMITER || c == FIELD_DELIMITER) { c = SAFE_CHAR; }//use this char in place of the delimiter characters if one of them is in user input
+		if ( c == FIELD_DELIMITER) { c = SAFE_CHAR; }//use this char in place of the delimiter characters if one of them is in user input
 	};
 	return storeInput;
 }
@@ -150,9 +150,10 @@ template <typename T> bool SelectByKey(map<string, T> myMap, string searchString
 //overwrites current contents of the file
 template<typename T> void primaryMapToFile(map<string, T>& myMap, fstream& myFstream)
 {
+	GoBeginningOfFile(myFstream);
 	for (auto& e : myMap)
 	{
-		myFstream <<e.first << FIELD_DELIMITER << e.second.toFile() << FIELD_DELIMITER << ELEMENT_DELIMITER << endl;//put key and class output all on a line with field delimiter between key and value
+		myFstream <<e.first << FIELD_DELIMITER << e.second.toFile() << FIELD_DELIMITER << endl;//put key and class output all on a line with field delimiter between key and value
 	}
 	cout << "\nDone writing map to file.\n";
 	GoBeginningOfFile(myFstream);
@@ -181,6 +182,11 @@ template<typename T> void primaryMapFromFile(map<string, T>& myMap, fstream& inp
 template<typename T> void primaryMapSeparateLineByDelimiter(map<string, T>& myMap, string line)
 {
 	vector<string> fields = SeparateLineByDelimiter(line, FIELD_DELIMITER);
+	
+	if (DEBUGSONG) {
+		cout << "fields vector: ";
+		for (auto& e : fields) { cout << e << FIELD_DELIMITER; } cout << endl;
+	}
 
 	vector<string>::iterator iter = fields.begin();
 	string tempKey = *iter;//stores contents of first item in vector as the key
@@ -195,9 +201,11 @@ template<typename T> void primaryMapSeparateLineByDelimiter(map<string, T>& myMa
 //overwrites current contents of the file
 void multiMapToFile(multimap<string, string>& myMap, fstream& myFstream)
 {
+	GoBeginningOfFile(myFstream);
+
 	for (auto& e : myMap)
 	{
-		myFstream << e.first << FIELD_DELIMITER << e.second << FIELD_DELIMITER << ELEMENT_DELIMITER << endl;//put key and class output all on a line with field delimiter between key and value
+		myFstream << e.first << FIELD_DELIMITER << e.second << FIELD_DELIMITER << endl;//put key and class output all on a line with field delimiter between key and value
 	}
 	cout << "\nDone writing map to file.\n";
 	GoBeginningOfFile(myFstream);

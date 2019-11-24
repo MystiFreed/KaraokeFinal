@@ -16,7 +16,6 @@ int getInputReprompt(std::string, int, int);
 
 //file handling variables
 const char FIELD_DELIMITER = '|'; //use this to separate fields
-const char ELEMENT_DELIMITER = '^';//use this to separate elements in an array or vector (with the field delimiter surrounding the entire array or vector
 const char SAFE_CHAR = '_';//use this char in place of the delimiter characters if one of them is in user input
 
 //file handling functions/
