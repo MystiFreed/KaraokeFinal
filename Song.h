@@ -4,32 +4,39 @@
 #include "CatalogEntry.h"
 #include "FileManagement.h"
 using namespace std;
+const bool DEBUGSONG = false;
 class Song : public CatalogEntry
 {
-		string songKey;
-		std::string title = "";
-		string artistKey = "";
-
-	
+		string songKey=BLANK_FIELD;
+		std::string title = BLANK_FIELD;
+		string artistKey = BLANK_FIELD;
+		void setKey() {
+			songKey = title + " - " + artistKey;
+			if(DEBUGSONG) cout<<songKey<<"1\n";
+		}
 	public:
-		Song() :CatalogEntry() {};
+		Song() :CatalogEntry() {  };
 		Song(string newTitle, string newArtistKey) :CatalogEntry()
 		{
 			title = newTitle;
 			artistKey = newArtistKey;
+			setKey();
+			if (DEBUGSONG) cout << songKey << "2\n";
 		};
 		//copy constructor
 		Song(const Song& a2) {
 			songKey = a2.songKey;
 			title = a2.title;
-			artistKey = a2.artistKey;
+			if (DEBUGSONG) cout << songKey << "3\n";
+
 		}
 		//https://en.cppreference.com/w/cpp/language/copy_assignment
 		Song& operator=(const Song& a2)
 		{
 			songKey = a2.songKey;
 			title = a2.title;
-			artistKey = a2.artistKey;
+			if (DEBUGSONG) cout << songKey << "4\n";
+
 			return *this;
 		}
 
@@ -44,7 +51,7 @@ class Song : public CatalogEntry
 		virtual void fromFile(vector<string>::iterator );
 
 		virtual string	getKey();
-
+		
 };
 
 //Class implementation
@@ -56,7 +63,8 @@ void Song::setArtistKey(string newArtistKey) { artistKey = newArtistKey; };
 
 string Song::getTitle() { return title; };
 string Song::getArtistKey() { return artistKey; };
-string Song::getKey() { return songKey; };
+string Song::getKey() { 
+return songKey; };
 
 string Song::display()
 { 

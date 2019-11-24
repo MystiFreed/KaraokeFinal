@@ -6,15 +6,13 @@
 #include <iterator> 
 #include <utility>
 using namespace std;
-////global
 
-
-void days();
+//void days();
 struct tm* setDate(int, int, int);
 struct tm* setDate(int, int, int, time_t&);
 int getInputReprompt(std::string, int, int);
 
-void addDays(tm*, int);
+tm* addDays(tm*, int);
 std::string displayDate(const tm* const timeinfo);
 
 
@@ -39,12 +37,18 @@ struct tm* setDate(int year, int month, int day, time_t& storeTime) {
 	return timeinfo;
 };
 
-//tm* addDays(tm* startingDate, int addDays) {
-//	tm* newDate = startingDate;
-//	newDate->tm_mday += addDays;
-//	mktime(newDate);
-//	return newDate;
-//};
+
+tm* addDays(tm* startingDate, int addDays) {
+
+	tm* newDate = startingDate;
+
+	newDate->tm_mday += addDays;
+
+	mktime(newDate);
+
+	return newDate;
+
+};
 
 //returns date as a string
 std::string displayDate(tm* dateStruct) {

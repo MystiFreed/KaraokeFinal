@@ -15,6 +15,7 @@
 #include "SingerHistory.h"
 
 using namespace std;
+
 //testing functions
 void testIntInput();
 void test();
@@ -33,7 +34,9 @@ void verifyNameExists();
 
 int main()
 {
+
 	startup();
+	//for (int i = 0; i < 5; i++) { cout << "round " << i << endl; Singer tempSinger = userInputSinger(); cout<<"\nmain display "<< tempSinger.display() << endl; }
 	while (displayMenu()); //automatically repeats until a false (exit) is returned.
 	exitSaving();
 	return 0;
@@ -118,57 +121,6 @@ bool displayMenu()
 
 
 
-void menuSinger() 
-{
-	do	{
-
-		int userSelection; //user choice within the top-of-house menu display
-		enum roleOptions { DISPLAYALL, ADD, VIEW, SONGHISTORY, EXIT };
-		string prompt = "\n----Singer Selection Menu----\n ";
-		prompt += "1) Add Singer\n "; //this holds the menu options specific to management of the song/artist catalogues
-		prompt += "2) View Singer\n "; //this menu holds options for the KJ to manage the queue of singers
-		prompt += "3) Song History\n "; //this menu holds singer options - histories, etc
-		prompt += "4) Back\n ";
-		prompt += "Please make a selection:\n ";
-
-		userSelection = getInputReprompt(prompt, DISPLAYALL, EXIT);//getInputPreprompt converts any entry to upper for comparison
-		Singer tempSinger;
-		Song tempSong;
-		tm* tempDate;
-		string storeInput;
-		switch (userSelection)
-		{
-			case DISPLAYALL:
-				displayMap(singerMap);
-			case ADD:
-				 tempSinger = userInputSinger();
-				addObjectToMap(singerMap, tempSinger);
-				cout << endl << "temp object: " << tempSinger.display() << endl;
-				displayMap(singerMap);
-				break;
-			case VIEW:
-				 tempSinger;
-				if (UserInputSelectByKey(singerMap, "Enter the username of the singer:", storeInput, tempSinger)) { cout << tempSinger.display(); }
-				else { cout << "\nNot found\n"; }
-				break;
-			case SONGHISTORY:
-				cout << "\nAll Singer History Map\n";
-				UserInputSelectByKey(singerMap, "singerkey", storeInput, tempSinger);
-				UserInputSelectByKey(songMap, "songkey", storeInput, tempSong);
-				tempDate = userInputDate();
-				//addToSingerHistory("billy",2019,11,20, "Hey Jude - Beatles, The");
-				addToSingerHistory(tempSinger.getKey(),tempDate, tempSong.getKey());
-				displayMap(allSingerHistoryMap);
-				break;
-			case EXIT:
-				return;
-				break;
-			default:
-				return;
-				break;
-		}
-	} while (true);
-};
 //run this to test basic functions after changes
 void test() {
 	multimap<string, string> testMultiMap;
@@ -270,7 +222,6 @@ void menuManageCatalogue() {
 			 userInputArtist();
 			break;
 		case 2:
-			cout << "Enter the song's Artist and then the Song information.\n";
 			userInputSong();
 			
 			break;
@@ -290,42 +241,48 @@ void menuManageCatalogue() {
 }
 void menuDisplayCatalogue()
 {
-	bool continueMenu = true;
-
-	while (continueMenu)
+	while (true)//always continue, use returns to exit function
 	{
 		//GET USER INPUT ON VIEW METHOD //NEED TO DO finish this if desired
-		enum viewOption { SCREEN_DISPLAY, PRINT_REPORT, BACK_MENU };
-		int viewMethod = SCREEN_DISPLAY;
+		enum viewOption { BACK_MENU, SCREEN_DISPLAY, PRINT_REPORT};
+		
+
 		//string prompt = "\n----View Catalogue Menu----\n ";
-		//prompt += SCREEN_DISPLAY+") Display on screen\n "; 
-		//prompt += PRINT_REPORT +") Print catalog\n "; 
-		//prompt += BACK_MENU +") Back to previous menu\n ";
+		//prompt += BACK_MENU +") Back to main menu\n ";
+		//prompt += SCREEN_DISPLAY+") Display on screen\n ";
+		////prompt += PRINT_REPORT +") Print catalog\n "; //NEED TO DO - either create this or remove this menu.
 		//prompt += "Please make a selection:\n ";
-		//viewMethod = getInputReprompt(prompt, SCREEN_DISPLAY, BACK_MENU);//getInputPreprompt converts any entry to upper for comparison
-		//if (viewMethod == BACK_MENU) { return; };
+		//viewMethod = getInputReprompt(prompt, BACK_MENU, PRINT_REPORT);//getInputPreprompt converts any entry to upper for comparison
+		// if (viewMethod == BACK_MENU) { return; };
+		
+		int viewMethod = SCREEN_DISPLAY;//NEED TO DO - delete this if above menu gets finished
 
 		//GET USER INPUT WHICH CATALOG TO VIEW
 		int userSelection;
+		enum catalogSelection { BACK, SONG, SONG_ARTIST, ARTIST };
 		string promptb = "\n----View Catalogue Menu - SELECT CATALOG----\n ";
-		promptb += "1) Song Catalogue\n ";
-		promptb += "2) Song by Artist Catalogue\n ";
-		promptb += "3) Artist List\n ";
-		promptb += "4) Exit program\n ";
+		promptb += BACK +") Back to previous menu\n ";
+		promptb += SONG +") Song Catalogue\n ";
+		promptb += SONG_ARTIST +") Song by Artist Catalogue\n ";
+		promptb += ARTIST +") Artist List\n ";
+		
 		promptb += "Please make a selection:\n ";
 		userSelection = getInputReprompt(promptb, 1, 4);//getInputPreprompt converts any entry to upper for comparison
 
 		switch (userSelection) {
-		case 1:
+		case BACK:
+			//allow while loop to continue;
+			break;
+		case SONG:
 			if (viewMethod == SCREEN_DISPLAY) { displayMap(songMap); }
 			break;
-		case 2:
+		case SONG_ARTIST:
 			if (viewMethod == SCREEN_DISPLAY) { displayMap(songCatalogByArtist); }
 			break;
-		case 3:
+		case ARTIST:
 			if (viewMethod == SCREEN_DISPLAY) { displayMap(artistMap); }
 			break;
-		case 4:
+		default:
 			return;
 			break;
 		}
