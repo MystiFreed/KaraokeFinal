@@ -15,8 +15,9 @@ using namespace std;
 int getInputReprompt(std::string, int, int);
 
 //file handling variables
-const char FIELD_DELIMITER = '$'; //use this to separate fields
-const char ELEMENT_DELIMITER = '|';//use this to separate elements in an array or vector (with the field delimiter surrounding the entire array or vector
+const char FIELD_DELIMITER = '|'; //use this to separate fields
+const char ELEMENT_DELIMITER = '^';//use this to separate elements in an array or vector (with the field delimiter surrounding the entire array or vector
+const char SAFE_CHAR = '_';//use this char in place of the delimiter characters if one of them is in user input
 
 //file handling functions/
 vector<string> ReadLineByID(fstream&, string);//can find any substring, not just ID
@@ -71,13 +72,10 @@ int getInputReprompt(std::string promptMessage, int minRange, int maxRange) {
 			isInvalidInput = true;
 		}
 		if (isInvalidInput) {//clear to reprompt
-			cout << intInput << " selected. isInvalidInput " << isInvalidInput;
-
 			std::cin.clear();
 			std::cin.ignore(numeric_limits<streamsize>::max(), '\n');
 		}
 	} while (isInvalidInput);//reprompt until valid
-	cout << intInput << " selected. ";
 
 	return intInput;//return valid input
 };
@@ -100,113 +98,3 @@ bool openFileInOut(fstream& file, string filenameTXT)
 }
 
 
-
-/*might adjust for map?
-
-//template functions
-//template <typename T> void ReadInAllObjects(fstream&, T& map );
-
-//reads each line from file and adds to a vector of the same object type as tempObject
-//for tempObject parameter, declare a variable of the object type that matches your file, then pass that variable to the function.
-template <typename T> void ReadInAllObjects(fstream& inputFile, T& outputMap ){
-GoBeginningOfFile(inputFile);//sets to start of file
-	string line = "";
-	while (inputFile) //keep going until end of file
-	{
-		clearCin();
-		getline(inputFile, line, '\n');
-		if (line == "") {//skip blank line
-		}
-		else
-		{
-			try {
-
-				tempObject = T(SeparateLineByFIELD_DELIMITER(line)); //creates an object fro the line, adds it to vector
-				if (DEBUGUSEFULTHINGS) cout << "debug " << tempObject.display()<<endl;
-				allObjectVector.push_back(tempObject);
-			}
-			catch (exception& e) {
-				cerr << "Error in ReadInAllObjects:Unable to read in member, skipping:  " << e.what();
-				GoBeginningOfFile(inputFile);//sets to start of file
-
-			}
-			catch (runtime_error& e) {
-				cerr << "Error in ReadInAllObjects:Unable to read in member, skipping:  " << e.what();
-				GoBeginningOfFile(inputFile);//sets to start of file
-
-			}
-
-		}
-	}
-	GoBeginningOfFile(inputFile);//sets to start of file
-
-	return allObjectVector;
-}
-
-
-
-
-template <typename T> void MenuObjectSelectFromFile(fstream& inputFile, T& storeObject, string className, const int BLANK_ID)
-{
-	////menu management
-	string sectionTitle = "";//gives a header to next menu section so it is easier to read
-	string sectionPrompt = "";//defines the prompt with options for this section
-	int menuSelected = -1; //stores the user input
-
-	string searchString;
-	int storeLineNum;
-	string storeLine;
-	bool isKeepLooking = true;
-	cout << "Enter the ID or text that you would like to search for.";
-	cin >> searchString;
-	GoBeginningOfFile(inputFile);
-	do {
-		try {
-			if (FindStringInFile(inputFile, searchString, storeLine, storeLineNum)) //returns true if found
-			{
-				storeObject = T(SeparateLineByDelimiter(storeLine));//uses the object constructor that takes vector of strings.
-
-				sectionTitle = "\n----Select This "+className+"---\n " + storeObject.display() + "\n";
-				enum ConfirmMenu { CANCEL, SELECT, AGAIN };
-				sectionPrompt = sectionTitle + "\n  0:Cancel, go back without selection\n  1:Confirm, select this \n  2: Keep looking, see next match \nSelect an option: "; //define the prompt string.
-				menuSelected = getInputReprompt(sectionPrompt, CANCEL, AGAIN); //get input within menu option range.
-
-				switch (menuSelected) {
-				case CANCEL:
-					GoBeginningOfFile(inputFile);//reset file to beginning
-					storeObject = T(BLANK_ID);
-					return;
-					break;
-				case SELECT:
-					GoBeginningOfFile(inputFile);//reset file to beginning
-					return; //value is stored in the storeObject that was given as parameter
-					break;
-				case AGAIN:
-					isKeepLooking = true;
-					break;
-				default:
-					cerr << "Error in select object\n";
-					GoBeginningOfFile(inputFile);//reset file to beginning
-					storeObject = T(BLANK_ID);
-					return;
-					break;
-				}
-			}//end if
-			else {
-				"That was not found.\n";
-				GoBeginningOfFile(inputFile);//reset file to beginning
-				storeObject = T(BLANK_ID);
-				return;
-			}
-		}
-		catch (...)
-		{
-			cout << "That was not found";
-			GoBeginningOfFile(inputFile);//reset file to beginning
-			storeObject = T(BLANK_ID);
-			return;
-		}
-	} while (isKeepLooking);
-};
-
-*/

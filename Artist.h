@@ -129,7 +129,7 @@ string Artist::toFile()
 void Artist::fromFile(std::vector<string>::iterator iter)
 {
 	alphaName = *iter;
-	//I think this is all we need here, but lets chat, I want to make sure
+	displayName = *++iter;//assign next field//I think this is all we need here, but lets chat, I want to make sure
 }
 
 string Artist::getKey() {
