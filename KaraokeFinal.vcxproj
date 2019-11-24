@@ -140,10 +140,11 @@
     <Text Include="Artists.txt" />
     <Text Include="allSingerHistory.txt" />
     <Text Include="Singers.txt" />
+ Change_selectByKey_function
     <Text Include="Songs.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="KaraokeFinal.cpp" />
+
+    <Text Include="testMap.txt" />
+ master
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
