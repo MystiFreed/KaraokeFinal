@@ -30,7 +30,7 @@ void menuDisplayCatalogue();
 void exitSaving();
 void menuQueueManagement();
 void menuSinger();
-
+void verifyNameExists();
 
 int main()
 {
@@ -307,6 +307,12 @@ void menuQueueManagement()
 	Singer singer3("JonFreed");
 	Singer singer4("AdrianVanderveer");
 	Singer singer5("AlexGaumer");
+	Singer singer6("RoseMendlik");
+	Singer singer7("TomMendlik");
+	Singer singer8("SharonFreed");
+	Singer singer9("DavidFreed");
+	Singer singer10("PauleenDofner");
+	Singer singer11("TobyDofner");
 	//select by key or use the new function to find/create
 
 	list.appendNode(singer1.getDisplayName());
@@ -314,6 +320,12 @@ void menuQueueManagement()
 	list.appendNode(singer3.getDisplayName());
 	list.appendNode(singer4.getDisplayName());
 	list.appendNode(singer5.getDisplayName());
+	list.appendNode(singer6.getDisplayName());
+	list.appendNode(singer7.getDisplayName());
+	list.appendNode(singer8.getDisplayName());
+	list.appendNode(singer9.getDisplayName());
+	list.appendNode(singer10.getDisplayName());
+	list.appendNode(singer11.getDisplayName());
 
 	while (continueMenu)
 	{
@@ -321,21 +333,24 @@ void menuQueueManagement()
 		string prompt = "\n----Queue Management Menu----\n ";
 		prompt += "1) Add Singer\n "; //add a new singer to the queue - this adds them to the end
 		prompt += "2) Remove Singer\n "; //remove a singer from the queue 
-		prompt += "3) Move Singer in Queue\n"; //move a singer from their current place in the queue to another selected place
+		prompt += "3) Move Singer in Queue\n "; //move a singer from their current place in the queue to another selected place
 		prompt += "4) Display Pending Singers\n "; //display the next 10 singers pending
-		prompt += "5) Display Pending Songs\n"; //display the pending songs (and their corresponding singer)
-		prompt += "6) Exit program\n ";
+		prompt += "5) Display Pending Songs\n "; //display the pending songs (and their corresponding singer)
+		prompt += "6) EOD Clear Queue\n "; //clears out any remaining in the queue at the end of the day
+		prompt += "7) Exit to main\n "; //exit to main menu
 		prompt += "Please make a selection:\n ";
-		userSelection = getInputReprompt(prompt, 1, 6);//getInputPreprompt converts any entry to upper for comparison
+		userSelection = getInputReprompt(prompt, 1, 7);//getInputPreprompt converts any entry to upper for comparison
 
 		Singer newSinger;
 		Singer toRemove;
 		string first;
 		string last;
+		string displayname;
+		bool verifyExists;
 		//Song tempSong;
 		switch (userSelection) {
 		case 1:
-			//addObjectToMap(artistMap, userInputArtist());
+			//verify whether or not they already exist, if not, point to the constructor
 			cout << "Please enter the singer's first name:" << endl;
 			cin >> first;
 			cout << "Please enter the singer's last name:" << endl;
@@ -343,20 +358,52 @@ void menuQueueManagement()
 			
 			break;
 		case 2:
-			list.displayList();
-			cout << "Enter the song's Artist and then the Song information.\n";
-			
-
+			cout << endl;
+			cout << "Current queue:" << endl;
+			list.displayFullList();
+			cout << endl;
+			cout << "Please select the singer to remove by entering the display name.\n";
+			reenter1:cin >> displayname;
+			verifyExists = list.verifyNameExists(displayname);
+			if (verifyExists == false)
+			{
+				cout << "Please enter a valid username:\n"; 
+				goto reenter1;
+			}
+			list.deleteNode(displayname);
+			//add in 'if name doesn't exist, reenter' functionality
+			cout << endl;
+			cout << displayname << " removed from the queue. Remaining queue:\n";
+			cout << endl;
+			list.displayFullList();
 			break;
 		case 3:
-			//menuDisplayCatalogue();
+			list.displayList();
+			cout << "Please select the singer to move by entering the display name.\n";
+			cin >> displayname;
+
+
 			break;
 		case 4:
+			cout << "On deck: \n";
+			cout << endl; //add a break between the on deck and singer list
+			//figure out how to limit to 10
+			//figure out how to pull in the first/last name vs display name
+			list.displayList();
+			break;
+		case 5:
+			//this needs to pull in the songs tied to the singers in the queue
+
+			break;
+		case 6:
+			//clear out anyone in the queue and return to main menu
+			cout << "Queue Cleared, returning to main menu\n ";
+			//list.displayList(); //verify that the queue is cleared
 			continueMenu = false;
 			return;
 			break;
 		default:
-			continueMenu = false;
+			continueMenu = false; //change the boolean from true to false and exit the menu
 			return;
 			break;
 		}
