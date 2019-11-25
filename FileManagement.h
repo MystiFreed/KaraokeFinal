@@ -19,11 +19,23 @@ const char FIELD_DELIMITER = '|'; //use this to separate fields
 const char SAFE_CHAR = '_';//use this char in place of the delimiter characters if one of them is in user input
 
 //file handling functions/
-vector<string> ReadLineByID(fstream&, string);//can find any substring, not just ID
+vector<string> ReadLineByID(fstream&, string);//can find any string, not just ID
 vector<string> SeparateLineByDelimiter(string, char);
 void GoBeginningOfFile(fstream& inputReader);
+string generateDisplayName(string);
 
+//substring function to divide up the elements into display name and key
+string generateDisplayName(string comb)
+{
+	string fullString = comb;
+	string singerKey;
+	char delimiter = '/';
+	string displayName;
 
+	singerKey = fullString.substr(0, fullString.find(delimiter));
+	displayName = fullString.substr(fullString.find(delimiter) + 1);
+	return displayName;
+}
 
 
 //sets reader back to start of file //Amy
