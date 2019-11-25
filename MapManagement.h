@@ -42,7 +42,7 @@ string inputMapString(const string existingInput) {
 	string storeInput= existingInput;
 	for (auto& c : storeInput) { 
 		c = toupper((unsigned char)c);
-		if ( c == FIELD_DELIMITER) { c = SAFE_CHAR; }//use this char in place of the delimiter characters if one of them is in user input
+		if ( c == FIELD_DELIMITER||c==ELEMENT_DELIMITER) { c = SAFE_CHAR; }//use this char in place of the delimiter characters if one of them is in user input
 	};
 	return storeInput;
 }
@@ -238,7 +238,7 @@ void multiMapSeparateLineByDelimiter(multimap<string, string>& myMap, string lin
 	
 	iter++;//iterator now points to the first class field that is saved as a string in the vector
 	string tempValue = *iter;
-//	myMap.emplace(make_pair(tempKey, tempValue)); //add to map;
+	myMap.emplace(make_pair(tempKey, tempValue)); //add to map;
 }
  void displayMap(multimap<string, string>& existingMap) {
 
@@ -272,7 +272,7 @@ Artist userInputArtist() {
 	if (UserInputSelectByKey(artistMap, instructions, alphaName, tempArtist)) { return tempArtist; 
 	}//if found, return existing 
 	else {
-		string prompt = "Not found, add new Artist? \n1: Use \"" + alphaName + "\" as display name for artist. \n2: Enter a different display name. \n3. Cancel new artist. Enter a selection: ";
+		string prompt = "Not found, add new Artist? \n  1: Use \"" + alphaName + "\" as display name for artist. \n  2: Enter a different display name. \n  3. Cancel new artist. Enter a selection: ";
 		int userSelection = getInputReprompt(prompt, 1, 3);
 		switch (userSelection) {
 		case 1:
