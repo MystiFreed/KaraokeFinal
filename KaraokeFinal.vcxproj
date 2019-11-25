@@ -137,12 +137,14 @@
     <ClInclude Include="Song.h" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="ArtistList.txt" />
     <Text Include="Artists.txt" />
     <Text Include="allSingerHistory.txt" />
     <Text Include="Singers.txt" />
+    <Text Include="SongListByArtistReport.txt" />
+    <Text Include="SongListReport.txt" />
     <Text Include="Songs.txt" />
     <Text Include="testMap.txt" />
-    <Text Include="Text.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="KaraokeFinal.cpp" />

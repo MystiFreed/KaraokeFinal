@@ -118,7 +118,7 @@ void Artist::updateKey()
 
 string Artist::display()
 {
-	return "Artist: " + displayName;
+	return displayName;
 }
 
 string Artist::toFile()

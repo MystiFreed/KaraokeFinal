@@ -63,6 +63,10 @@ void startup() {
 
 
 	primaryMapFromFile(songMap, songFstream);
+	for (auto& e : songMap) {
+		Song newSong = e.second;
+		addObjectToMap(&songCatalogByArtist,  newSong.getArtistKey(), newSong.getTitle());
+	}
 	primaryMapFromFile(artistMap, artistFstream);
 	primaryMapFromFile(singerMap, singerFstream);
 	multiMapFromFile(allSingerHistoryMap, singerHistoryFstream);
@@ -205,11 +209,12 @@ void menuManageCatalogue() {
 	while (true)
 	{
 		int userSelection;
-		enum catalogOptions {BACK, ADD_ARTIST, ADD_SONG, VIEW};
+		enum catalogOptions {BACK, ADD_ARTIST, ADD_SONG, COUNTS, VIEW};
 		string prompt = "\n----Catalogue Management Menu----\n ";
-		prompt += "  "+to_string(BACK)+") Exit program\n ";
+		prompt += "  "+to_string(BACK)+") Back\n ";
 		prompt += "  "+to_string(ADD_ARTIST) + ") Add Artist to Catalogue\n "; //this holds the menu options specific to management of the song/artist catalogues
 		prompt += "  "+to_string(ADD_SONG) + ") Add Song to Catalogue\n "; //this menu holds options for the KJ to manage the queue of singers
+		prompt += "  " + to_string(COUNTS) + ") View Song Popularity Counts\n "; //this menu holds options for the KJ to manage the queue of singers
 		prompt += "  "+to_string(VIEW) + ") View Catalogues\n "; //this menu holds singer options - histories, etc
 		
 		prompt += "  Please make a selection:\n ";
@@ -231,6 +236,10 @@ void menuManageCatalogue() {
 		case VIEW:
 			menuDisplayCatalogue();
 			break;
+		case COUNTS:
+			cout << "\n----Popularity counts from all performance history----\n";
+			viewSingerHistory(allSingerHistoryMap);
+			break;
 		default:// BACK OR ERROR GOES HERE, Returns from function
 			return;
 			break;
@@ -241,48 +250,96 @@ void menuDisplayCatalogue()
 {
 	while (true)//always continue, use returns to exit function
 	{
-		//GET USER INPUT ON VIEW METHOD //NEED TO DO finish this if desired
+	//	GET USER INPUT ON VIEW METHOD 
 		enum viewOption { BACK_MENU, SCREEN_DISPLAY, PRINT_REPORT};
 		
-
-		//string prompt = "\n----View Catalogue Menu----\n ";
-		//prompt += BACK_MENU +") Back to main menu\n ";
-		//prompt += SCREEN_DISPLAY+") Display on screen\n ";
-		////prompt += PRINT_REPORT +") Print catalog\n "; //NEED TO DO - either create this or remove this menu.
-		//prompt += "  Please make a selection:\n ";
-		//viewMethod = getInputReprompt(prompt, BACK_MENU, PRINT_REPORT);//getInputPreprompt converts any entry to upper for comparison
-		// if (viewMethod == BACK_MENU) { return; };
+		string prompt = "\n----View Catalogue Menu----\n ";
+		prompt += "  "+to_string(BACK_MENU) +") Back to previous menu\n ";
+		prompt += "  " + to_string(SCREEN_DISPLAY)+") Display on screen\n ";
+		prompt += "  " + to_string(PRINT_REPORT) +") Print catalog\n "; //NEED TO DO - either create this or remove this menu.
+		prompt += "  Please make a selection:\n ";
+		int viewMethod = getInputReprompt(prompt, BACK_MENU, PRINT_REPORT);//getInputPreprompt converts any entry to upper for comparison
 		
-		int viewMethod = SCREEN_DISPLAY;//NEED TO DO - delete this if above menu gets finished
-
+		//skip the rest if back selected
+		if (viewMethod == BACK_MENU) { return; };
+		
 		//GET USER INPUT WHICH CATALOG TO VIEW
-		int userSelection;
+		int viewCatalog;
 		enum catalogSelection { BACK, SONG, SONG_ARTIST, ARTIST };
 		string promptb = "\n----View Catalogue Menu - SELECT CATALOG----\n ";
-		promptb += BACK +") Back to previous menu\n ";
-		promptb += SONG +") Song Catalogue\n ";
-		promptb += SONG_ARTIST +") Song by Artist Catalogue\n ";
-		promptb += ARTIST +") Artist List\n ";
+		promptb += "  "+to_string(BACK) +") Back to previous menu\n ";
+		promptb += "  " + to_string(SONG) +") Song Catalogue\n ";
+		promptb +="  "+to_string(SONG_ARTIST) +") Song by Artist Catalogue\n ";
+		promptb +="  "+to_string(ARTIST) +") Artist List\n ";
 		
 		promptb += "  Please make a selection:\n ";
-		userSelection = getInputReprompt(promptb, 1, 4);//getInputPreprompt converts any entry to upper for comparison
-
-		switch (userSelection) {
+		viewCatalog = getInputReprompt(promptb, 1, 4);//getInputPreprompt converts any entry to upper for comparison
+		
+		stringstream report;//fill with contents of map
+		char delim = '\t';
+		string reportTXT;
+		switch (viewCatalog) {
 		case BACK:
 			//allow while loop to continue;
 			break;
-		case SONG:
-			if (viewMethod == SCREEN_DISPLAY) { displayMap(songMap); }
+		case SONG: 
+		{
+			reportTXT = "SongListReport.txt";
+			const int WIDTH = 40;
+			report << setw(WIDTH) << left << "Song Title" << delim << setw(WIDTH) << left << "Artist" << endl;
+
+			for (auto& element : songMap) {
+				string artistKey = element.second.getArtistKey();
+				Artist tempArtist;
+				if (SelectByKey(artistMap, artistKey, tempArtist) )
+				{
+					report << setw(WIDTH) << left << element.second.getTitle() << delim << setw(WIDTH) << left << tempArtist.getDisplayName() << endl;
+				}
+			}
 			break;
+		}
 		case SONG_ARTIST:
-			if (viewMethod == SCREEN_DISPLAY) { displayMap(songCatalogByArtist); }
+		{
+			reportTXT = "SongListByArtistReport.txt";
+			const int WIDTH = 30;
+			report << setw(WIDTH) << left << "Artist" << delim << setw(WIDTH) << left << "Song Title" << endl;
+
+			for (auto& element : songCatalogByArtist) {
+					report << setw(WIDTH) << left << element.first << delim << setw(WIDTH) << left << element.second << endl;
+			}
 			break;
+		}
 		case ARTIST:
-			if (viewMethod == SCREEN_DISPLAY) { displayMap(artistMap); }
+		{
+			reportTXT = "ArtistListReport.txt";
+			const int WIDTH = 30;
+			report << setw(WIDTH) << left << "Artist (alphabetical)" << delim << setw(WIDTH) << left << "Artist" << endl;
+
+			for (auto& element : artistMap) {
+					report << setw(WIDTH) << left << element.first << delim << setw(WIDTH) << left << element.second.getDisplayName() << endl;
+			}
 			break;
+		}
 		default:// BACK OR ERROR GOES HERE, Returns from function
 			return;
 			break;
+		}
+
+		//output catalog according to view method selected
+		if (viewMethod == SCREEN_DISPLAY)
+		{
+			cout << report.str();
+		}
+		else if (viewMethod == PRINT_REPORT) {
+			fstream reportFstream;
+			reportFstream.open(reportTXT, fstream::out);
+			reportFstream << report.str();
+			reportFstream.close();
+			cout << "\nReport saved\n";
+		}
+		else {
+			cout << "error in viewMethod if statement";
+
 		}
 	}//end while loop
 }//end menuMDisplayCatalogue

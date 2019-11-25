@@ -14,10 +14,11 @@ void addToSingerHistory(string , int , int , int , string );
 void addToSingerHistory(string);
 bool mapResultsByKey(multimap<string, string>& , multimap<string, string>& , string );
 bool mapResultsByKey(multimap<string, string>& , multimap<string, string>& , string , string );
+void viewSingerMenu();
+
+void viewSingerHistory(multimap<string, string> );
 
 
-
-void 			historyOptionsMenu(Singer);
 
 multimap<string, string> allSingerHistoryMap; //<singerkey, dateAsString$songKey
 
@@ -53,28 +54,22 @@ void addToSingerHistory(string singerKey, tm* performedDate, string songKey) {
 	multiMapToFile(allSingerHistoryMap, singerHistoryFstream);
 }
 
-//get individual singer from all history. Format is a map with the singerkey as key and the value is a string separated by delimiters.
-bool getSingerHistory(multimap<string, string>& storeSingerMap, string singerKey) {
-	multimap<string, string>tempSingerMap;
-		if (mapResultsByKey(allSingerHistoryMap, storeSingerMap, singerKey)) {
-			return true;
-		}
-	return false;
-}
 
-
-
-//can be used with individual singer history or allSingerHistory
 void viewSingerHistory(Singer selectedSinger) {
 	multimap<string, string> singerCompositeMap;
-	getSingerHistory(singerCompositeMap, selectedSinger.getKey());
+	if (mapResultsByKey(allSingerHistoryMap, singerCompositeMap, selectedSinger.getKey())) {
+		viewSingerHistory(singerCompositeMap);
+	}
+	else {
+		cout << "No history for this singer.";
+	}
 
+}
+
+//can be used with individual singer history or allSingerHistory
+void viewSingerHistory(multimap<string, string> singerCompositeMap) {
+	
 	multimap<string, string> dateSongMap;//temporary map to be filled with all songs this singer has done, by date
-	multimap<string, string> songDateMap;//temporary map to be filled with all songs this singer has done, by song
-	multimap<string, string> artistSongMap;//temporary map to be filled with all songs this singer has done, by artist
-	map<string, string> uniqueSongs;
-	multimap<string, string> uniqueSongsByArtist;
-	set<string> uniqueArtists;
 
 	//split the value string into fields, map with date key and songkey value	
 	for (auto& iter : singerCompositeMap) {
@@ -84,7 +79,12 @@ void viewSingerHistory(Singer selectedSinger) {
 		//cout << endl << "test tempFields[0]"<< tempFields[0]<<"  tempFields[1] "<<tempFields[1] << endl;
 		addObjectToMap(&dateSongMap, tempFields[0], tempFields[1]);//add to new map using first split field as the key and second as the value
 	}//now dateSongMap includes only entries for the selected singer, with date as key and song as the value
-//	cout << endl << "test"; for (auto& e : dateSongMap) { cout << "first" << e.first << "second" << e.second << endl; };
+
+	multimap<string, string> songDateMap;//temporary map to be filled with all songs this singer has done, by song
+	multimap<string, string> artistSongMap;//temporary map to be filled with all songs this singer has done, by artist
+	map<string, string> uniqueSongs;
+	multimap<string, string> uniqueSongsByArtist;
+	set<string> uniqueArtists;
 
 	//fill the other maps that are indexed by songkey and artistkey
 	for (auto& iter : dateSongMap) {
@@ -104,16 +104,16 @@ void viewSingerHistory(Singer selectedSinger) {
 
 	//do stuff with the results
 	//heading
-	//auto iter = dateSongMap.begin();
-	//cout << "Results for " << iter->first<< " - ";
-	//iter = dateSongMap.end();
-	//cout <<  iter->first << endl;
+	auto iter = dateSongMap.begin();
+	cout << "\n\n----Results for " << iter->first<< " - ";
+	auto r_iter = dateSongMap.rbegin();
+	cout << r_iter->first << "----"<<endl;
 	////done printing heading
 	
 	multimap<int, string, greater <int> > descendingMap;
 	
 	///////display song count in descending order///////
-	cout << "\n---Number of times performing song---\n";
+	cout << "\n---Number of times performing song----\n";
 	for (auto& e : uniqueSongs) {
 		string song = e.first;
 		descendingMap.emplace(make_pair(songDateMap.count(song), song));
@@ -122,10 +122,10 @@ void viewSingerHistory(Singer selectedSinger) {
 		cout << e.first <<": "<<e.second << endl;
 	}
 	///////display song count in descending order///////
-
+	cin.get();
 
 	///////display artist count in descending order///////
-	cout << "\n---Number of times performing songs by artist---\n";
+	cout << "\n---Number of times songs by artist were performed----\n";
 	descendingMap.clear();
 	for (auto& e : uniqueArtists) {
 		descendingMap.emplace(make_pair(artistSongMap.count(e), e));
@@ -134,10 +134,10 @@ void viewSingerHistory(Singer selectedSinger) {
 		cout << e.first << ": " << e.second << endl;
 	}
 	///////display artist count in descending order///////
+	cin.get();
 
-
-	///////display artist count in descending order///////
-	cout << "\n---Number of unique songs performed by artist---\n";
+	///////display artist unique song count in descending order///////
+	cout << "\n---Number of songs by artist that were performed----\n";
 	descendingMap.clear();
 	for (auto& e : uniqueArtists) {
 		descendingMap.emplace(make_pair(uniqueSongsByArtist.count(e), e));
@@ -151,52 +151,8 @@ void viewSingerHistory(Singer selectedSinger) {
 			cout << "     " << " " << s.second << endl;
 		}
 	}
-	///////display artist count in descending order///////
-	
-}
-
-//can be used with individual singer history or allSingerHistory
-void viewSingerHistory(multimap<string, string>& SingerMap, tm* startDate, tm* endDate) {
-	string minDate = dateToString(startDate);
-	string maxDate = dateToString(endDate);
-
-	multimap<string, string> tempDateMap;
-	multimap<string, string> tempDateRangeMap;
-	multimap<string, string> tempSingerSongMap;
-	multimap<string, string> tempSingerArtistMap;
-	set<string> uniqueSongs;
-	set<string> uniqueArtists;
-
-	//split the value string into fields, map with date key and songkey value	
-	for (auto& iter : SingerMap) {
-		string value = iter.second;//value is a string that includes delimiters
-		vector<string> tempFields = SeparateLineByDelimiter(value, FIELD_DELIMITER);//split on the delimiters
-		addObjectToMap(&tempDateMap, tempFields[0], tempFields[1]);//add to new map using first split field as the key and second as the value
-	}//now tempDateMap includes only entries for the selected singer, with date as key and song as the value
-
-	//filter map down to date range
-	mapResultsByKey(tempDateMap, tempDateRangeMap, minDate, maxDate);
-
-	//fill the other maps that are indexed by songkey and artistkey
-	for (auto& iter : tempDateRangeMap) {
-		string song = iter.second;//songkey
-		Song tempSong;
-		SelectByKey(songMap, song, tempSong);
-		string artist = tempSong.getArtistKey();
-		addObjectToMap(&tempSingerSongMap, song, iter.first);
-		addObjectToMap(&tempSingerArtistMap, artist, song);
-		uniqueSongs.emplace(song);
-		uniqueArtists.emplace(artist);
-	}
-
-	//do stuff with the results
-	cout << "All";
-	for (auto& e : uniqueSongs) {
-		cout << e << "  count:" << tempSingerSongMap.count(e) << endl;
-	}
-	for (auto& e : uniqueArtists) {
-		cout << e << "  count:" << tempSingerArtistMap.count(e) << endl;
-	}
+	///////display artist unique song count in descending order///////
+	cin.get();
 }
 
 
@@ -225,101 +181,98 @@ bool mapResultsByKey(multimap<string, string>& searchMap, multimap<string, strin
 
 void menuSinger()
 {
-	do {
-		int userSelection; //user choice within the top-of-house menu display
-		enum roleOptions { BACK, DISPLAYALL, ADD, VIEW, SONGHISTORY, EXIT };
+	while(true) 
+	{
+		int menuSingerSelection; //user choice within the top-of-house menu display
+		enum roleOptions { BACK, DISPLAYALL, ADD, VIEW_SINGER };
 		string prompt = "\n----Singer Selection Menu----\n ";
 		prompt += "  0) Back\n ";
 		prompt += "  1) Display all singers in system\n "; //this holds 
 		prompt += "  2) Add Singer\n "; //this holds 
 		prompt += "  3) View Singer\n "; //this menu h
-		prompt += "  4) Song History\n "; //this menu 
 		prompt += "  Please make a selection:\n ";
-		userSelection = getInputReprompt(prompt, BACK, SONGHISTORY);
+		menuSingerSelection = getInputReprompt(prompt, BACK, VIEW_SINGER);
 		Singer tempSinger;
 		Song tempSong;
 		tm* tempDate;
 		string storeInput;
-		switch (userSelection)
+		switch (menuSingerSelection)
 		{
-		case DISPLAYALL:
-		{	displayMap(singerMap);
-		break; }
-		case ADD:
+			case DISPLAYALL:
+				displayMap(singerMap);
+				break; 
+							
+			case ADD:
+				do{
+						tempSinger = userInputSinger();
+						addObjectToMap(singerMap, tempSinger);
+						primaryMapToFile(singerMap, singerFstream);
+				} while (getInputReprompt("Add another singer? 0: No, 1: Yes. Enter a selection: ", 0, 1));
+			break;
 			
+			case VIEW_SINGER:
+					viewSingerMenu();
+				break;//case View break
+			default: 
+				cout << "Back";
+				return;
+		}//end menuSingerSelection switch
+	}//menuSinger loop
+};
+
+void viewSingerMenu() {
+
+	Singer tempSinger = userInputSinger();
+
+	do
+	{
+		int singerOptionsSelection; //user choice within the top-of-house menu display
+		enum singerOptions { BACK, ADD_HISTORY, VIEW_HISTORY }; //, REQUEST			};
+		string prompt = "\n----View Singer Menu----\n ";
+		prompt += "  " + to_string(BACK) + ") Back\n ";
+		prompt += "  " + to_string(ADD_HISTORY) + ") Add a song to your history\n "; //this holds 
+		prompt += "  " + to_string(VIEW_HISTORY) + ") View your song history\n "; //this holds 
+		//prompt += "  "+to_string(REQUEST) + ") Put a song request in the queue\n "; //this menu h
+		prompt += "  Please make a selection:\n ";
+		singerOptionsSelection = getInputReprompt(prompt, BACK, VIEW_HISTORY);
+
+		switch (singerOptionsSelection)
 		{
-			do 
-			{
-				tempSinger = userInputSinger();
-				addObjectToMap(singerMap, tempSinger);
-				primaryMapToFile(singerMap, singerFstream);
-			} while (getInputReprompt("Add another singer? 0: No, 1: Yes. Enter a selection: ", 0, 1));
-		break;
-		}
-		case VIEW:
-		{	tempSinger = userInputSinger();
-						//ADD TO QUUEUE
-						//while (getInputReprompt("Add a song request to the queue now? 0: No, 1: Yes, add a song. Enter a selection: ", 0, 1))
-						//{
-						//	cout << "----Add your song request to the queue.----\n (If the song is not available, the KJ will let you know).\n";
-						//	Song songRequest = userInputSong();
-						//	//NEED TO DO ADD TO QUEUE
-						//};
-
-			historyOptionsMenu(tempSinger);
-
-
+		case ADD_HISTORY:
+		{
 			//ADD TO SONG HISTORY
-			while (getInputReprompt("Add a song to your song history? 0: No, 1: Yes, add a song. Enter a selection: ", 0, 1))
+			do
 			{
 				cout << "Add a song to your Singer History\n";
 				addToSingerHistory(tempSinger.getKey());
-			};
-			break;//case View break
+			} while (getInputReprompt("Add a song to your song history? 0: No, 1: Yes, add a song. Enter a selection: ", 0, 1));
+
 		}
-		case SONGHISTORY:
-		{	displayMap(allSingerHistoryMap);break; 
+		break;
+		case VIEW_HISTORY:
+		{
+			viewSingerHistory(tempSinger);
+
 		}
-		default: {
+		break;
+		//case REQUEST:
+		//{
+			//ADD TO QUUEUE
+					//do
+					//{
+					//	cout << "----Add your song request to the queue.----\n (If the song is not available, the KJ will let you know).\n";
+					//	Song songRequest = userInputSong();
+					//	//NEED TO DO ADD TO QUEUE
+					//}while (getInputReprompt("Add a song request to the queue now? 0: No, 1: Yes, add a song. Enter a selection: ", 0, 1));
+
+			//break;
+		//}
+		default:
+		{
 			return;
-			break; }
-		};
-	
+		}
+		break;
+		}//end switch singerOptions
 	} while (true);
-};
 
-void historyOptionsMenu(Singer selectedSinger) {
-
-	//VIEW SINGER HISTORY
-	//multimap<string, string> tempSingerMap;
-	viewSingerHistory(selectedSinger);
-
-	//enum historyOptions { BACK, LAST90, LAST30 };
-	//string prompt = "\n----Singer History Menu----\n ";
-	//prompt += "  "+to_string(historyOptions::BACK) + ") Back\n ";
-	////prompt += "  "+to_string(historyOptions::ALL) + ") All history\n "; //this holds 
-	//prompt += "  "+to_string(historyOptions::LAST90) + ") Last 90 days\n "; //this holds 
-	//prompt += "  "+to_string(historyOptions::LAST30) + ") Last 30 days\n "; //this menu h
-	//prompt += "  Please make a selection:\n ";
-	//int userSelection = getInputReprompt(prompt, BACK, LAST30);
-	//time_t     now = time(0);
-	//tm* startDate = localtime(&now);//https://stackoverflow.com/questions/997946/how-to-get-current-time-and-date-in-c
-	//tm* endDate = localtime(&now);//https://stackoverflow.com/questions/997946/how-to-get-current-time-and-date-in-c
-	//switch (userSelection)
-	//{
-	//	//case ALL:
-	//	
-	//case LAST90:
-	//	addDays(startDate, -90);
-	//	viewSingerHistory(tempSingerMap, startDate, endDate);
-	//	break;
-	//case LAST30:
-	//	addDays(startDate, -30);
-	//	viewSingerHistory(tempSingerMap, startDate, endDate);
-	//	break;
-	//default:
-	//	return;
-	//	break;
-	//
-	//};//end history options}
 };

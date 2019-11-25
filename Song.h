@@ -47,7 +47,6 @@ class Song : public CatalogEntry
 		void setArtistKey(string artistKey);//checks whether artist key exists in map?
 		string getArtistKey();
 
-	
 		virtual string	display();
 		virtual string	toFile();
 		virtual void fromFile(vector<string>::iterator );
@@ -72,6 +71,7 @@ string Song::display()
 { 
 		return getKey(); 
 }
+
 string Song::toFile() { return songKey + FIELD_DELIMITER + title + FIELD_DELIMITER + artistKey; }
 
 void Song::fromFile(std::vector<string>::iterator iter) {

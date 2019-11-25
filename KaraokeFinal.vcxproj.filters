@@ -66,7 +66,13 @@
       <Filter>Resource Files</Filter>
     </Text>
     <Text Include="testMap.txt" />
-    <Text Include="Text.txt">
+    <Text Include="SongListReport.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="SongListByArtistReport.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="ArtistList.txt">
       <Filter>Resource Files</Filter>
     </Text>
   </ItemGroup>

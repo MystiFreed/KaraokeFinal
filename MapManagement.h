@@ -20,6 +20,7 @@ template <typename T>  bool addObjectToMap(typename map<string, T>&, T);
 template<typename T> void primaryMapSeparateLineByDelimiter(map<string, T>&, string);
 template<typename T> void primaryMapToFile(map<string, T>& , fstream& );
 template<typename T> void primaryMapFromFile(map<string, T>& , fstream& );
+template <typename T> string reportMap(map<string, T>&, const char);
 
 typedef std::multimap<string, string>::iterator MMAPIterator;
 void addObjectToMap(typename multimap<string, string>*, string, string);
@@ -27,6 +28,7 @@ void displayMap(multimap<string, string>&);
 void multiMapSeparateLineByDelimiter(multimap<string, string>& , string );
 void multiMapToFile(multimap<string, string>& , fstream& );
 void multiMapFromFile(multimap<string, string>& , fstream& );
+string reportMap(multimap<string, string>& , const char );
 
 string inputMapString(const string);
 string inputMapString();
@@ -47,10 +49,6 @@ string inputMapString(const string existingInput) {
 	return storeInput;
 }
 
-void clearCin() {
-	//std::cin.clear();
-	//std::cin.ignore(numeric_limits<streamsize>::max(), '\n');
-}
 //use with any ordered map that has string as the key and an object of a class that has a key field, and updateKey() and getKey() functions in the class.
 //http://www.cplusplus.com/reference/map/map/emplace/ returns the bool that emplace returns (second part of pair that emplace returns)
 template <typename T>  bool addObjectToMap(typename map<string, T>& existingMap, T newObject)
@@ -62,10 +60,18 @@ template <typename T>  bool addObjectToMap(typename map<string, T>& existingMap,
 	
 //use with any ordered map that has string as the key, for testing only - replace with save to file
 template <typename T>  void displayMap(map<string, T>& existingMap) {
-	for (auto& element : existingMap) {
-		cout << "Key:" <<element.first << " Object: " << element.second.display() << endl;
-	}
+	cout << reportMap(existingMap, '\t');
 };
+
+template <typename T> string reportMap(map<string, T>& existingMap, const char DELIM) {
+	stringstream report;
+	const int WIDTH = 30;
+	for (auto& element : existingMap) {
+			report << setw(WIDTH) <<left<< element.second.display() << DELIM << endl;
+	}
+	return report.str();
+}
+
 
 //include instructions to show the user for entering a useful search string.
 template <typename T> bool UserInputSelectByKey(map<string, T> myMap, string userInputInstructions, string& storeInput, T& storeObject)
@@ -241,12 +247,19 @@ void multiMapSeparateLineByDelimiter(multimap<string, string>& myMap, string lin
 	myMap.emplace(make_pair(tempKey, tempValue)); //add to map;
 }
  void displayMap(multimap<string, string>& existingMap) {
-
-	for (auto& element : existingMap) {
-		cout << "Key:" << element.first << " Object: " << element.second << endl;
-	}
+	 cout << reportMap(existingMap, '\t');
 };
-//multimap version
+
+ string reportMap(multimap<string, string>& existingMap, const char DELIM) {
+	 stringstream report;
+	 const int WIDTH = 30;
+	 for (auto& element : existingMap) {
+		 report << setw(WIDTH) <<left<< element.first << DELIM << setw(WIDTH) <<left<<element.second<<DELIM<<endl;
+	 }
+	 return report.str();
+ }
+ 
+ //multimap version
 //http://www.cplusplus.com/reference/map/map/emplace/ returns the bool that emplace returns (second part of pair that emplace returns)
 void addObjectToMap(typename multimap<string, string>* existingMap, string newKey, string newValue)
 {
@@ -340,7 +353,7 @@ bool addSongToCatalogs(Song newSong) {
 	{
 		cout << "Already exists in catalog, not added."; return false;
 	}
-	addObjectToMap(&songCatalogByArtist, newSong.getKey(), newSong.getArtistKey());
+	addObjectToMap(&songCatalogByArtist, newSong.getArtistKey(), newSong.getTitle());
 	return true;
 };
 
