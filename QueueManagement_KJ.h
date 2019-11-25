@@ -147,17 +147,43 @@ template <class T>
 //b) Move current to next to next of current
 void QueueManagement_KJ<T>::insertNode(T movedNode, T beforenode)
 {
-	QueueNode<T>* nodePtr; //used to iterate through the list
-	QueueNode<T>* previousNode = nullptr; //points to the previous singer
+	QueueNode<T> *newNode;
+	QueueNode<T> *nodePtr; //used to iterate through the list
+	QueueNode<T> *previousNode = nullptr; //points to the previous singer
 
+	//allocate a new node and store the new value in that node
+	newNode = new QueueNode<T>(movedNode);
+
+	//string newData = movedNode;
+	//nodePtr = head;
 	int queueSize = 0; //this holds the size of the existing queue
+
 	if (!head)
-		return;
-
-	if (head->value == beforenode)
 	{
-
+		head = newNode;
+		newNode->next = nullptr;
 	}
+	else
+	{
+		nodePtr = head;
+		previousNode = nullptr;
+		while (nodePtr != nullptr && nodePtr->value != beforenode)
+		{
+			previousNode = nodePtr;
+			nodePtr = nodePtr->next;
+		}
+		if (previousNode == nullptr)
+		{
+			head = newNode;
+			newNode->next = nodePtr;
+		}
+		else
+		{
+			previousNode->next = newNode;
+			newNode->next = nodePtr;
+		}
+	}
+
 }
 
 //This is the delete operation, which will remove a singer who has left the venue
