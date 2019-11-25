@@ -171,34 +171,6 @@ void exitSaving() {
 	primaryMapToFile(singerMap, singerFstream);
 	multiMapToFile(allSingerHistoryMap, singerHistoryFstream);
 }
-void linkListTester()
-{
-	/*QueueManagement_KJ<string> list;
-	
-	//Singer singer1("MystiFreed");
-	//Singer singer2("EthanFreed");
-	//Singer singer3("JonFreed");
-	//Singer singer4("AdrianVanderveer");
-	//Singer singer5("AlexGaumer");
-
-	//QueueNode<string>("MystiFreed");
-	//string name1 = singer1.getDisplayName();
-	//string name2 = singer2.getDisplayName();
-	//string name3 = singer3.getDisplayName();
-	//string name4 = singer4.getDisplayName();
-	//string name5 = singer5.getDisplayName();
-
-	list.appendNode("Mysti");
-	list.appendNode("Jon");
-	list.appendNode("Alex");
-	list.appendNode("Adrian");
-	list.appendNode("Ethan");
-
-	list.displayList();
-	//list.deleteNode("Alex");
-	list.displayList();*/
-	
-}
 
 void menuManageCatalogue() {
 	bool continueMenu = true;
@@ -299,34 +271,9 @@ void menuQueueManagement()
 {
 	bool continueMenu = true;
 
-	QueueManagement_KJ<string> list;
-	QueueManagement_KJ<string> songList;
-	QueueManagement_KJ<string> displayList;
-
-	Singer singer1("MystiFreed");
-	Singer singer2("EthanFreed");
-	Singer singer3("JonFreed");
-	Singer singer4("AdrianVanderveer");
-	Singer singer5("AlexGaumer");
-	Singer singer6("RoseMendlik");
-	Singer singer7("TomMendlik");
-	Singer singer8("SharonFreed");
-	Singer singer9("DavidFreed");
-	Singer singer10("PauleenDofner");
-	Singer singer11("TobyDofner");
-	//select by key or use the new function to find/create
-
-	/*list.appendNode(singer1.getDisplayName());
-	list.appendNode(singer2.getDisplayName());
-	list.appendNode(singer3.getDisplayName());
-	list.appendNode(singer4.getDisplayName());
-	list.appendNode(singer5.getDisplayName());
-	list.appendNode(singer6.getDisplayName());
-	list.appendNode(singer7.getDisplayName());
-	list.appendNode(singer8.getDisplayName());
-	list.appendNode(singer9.getDisplayName());
-	list.appendNode(singer10.getDisplayName());
-	list.appendNode(singer11.getDisplayName());*/
+	QueueManagement_KJ<string> list; //this holds the list of singers with both their key and display name
+	QueueManagement_KJ<string> songList; //this holds all the songs in the queue, this is only the song names
+	QueueManagement_KJ<string> displayList; //this holds only the singer's display name, used to pop up on deck singers for the audience
 
 
 	while (continueMenu)
@@ -346,6 +293,7 @@ void menuQueueManagement()
 		Singer newSinger; //used to capture a new singer in the queue
 		Song newSong; //used to capture a new song in the queue
 		Singer toRemove; //singer that will be removed from the queue
+		Singer moveIt;
 		string displayname; //this is the displayname of the singer that's been added
 		string singerKey; //holds the singer key for addition to the map
 		string nodeData; //holds the combined node data for removal
@@ -353,9 +301,13 @@ void menuQueueManagement()
 		string songKey; //holds the key for the song the singer chooses
 		string singerToMove; //this holds the singer to move in the queue
 		string singerAfter; //singer who will follow the singer being moved in the queue
+		string displayNameMove;
+		string displayNameAfter;
+		string songToMove;
+		string songTitleToMove;
 		bool verifyExists; //verify that the singer is in the queue
 		char songComplete; //holds the user input for whether the singer completed the song
-		//Song tempSong;
+
 		switch (userSelection) {
 		case 1:
 			newSinger = userInputSinger(); //use the userInputSinger function from the Singer.h to verify whether to add new or use an existing singer
@@ -373,7 +325,7 @@ void menuQueueManagement()
 			songKey = newSong.getKey(); //gather the key for the song
 			songList.appendNode(songTitle); //add to the songlist
 			cout << displayname << " singing " << songTitle << " added.\n";
-			cin.ignore();
+			cin.ignore(); //cut off trailing whitespace
 			break;
 		case 2:
 			cout << endl;
@@ -382,23 +334,22 @@ void menuQueueManagement()
 			cout << endl;
 			//cout << "Please select the singer to remove by entering the display name.\n";//select the user to remove
 			/*reenter1:cin >> displayname; //collect the input*/
-			newSinger = userInputSinger();
-			singerKey = newSinger.getKey();
-			displayname = newSinger.getDisplayName();
-			nodeData = (singerKey + "/" + displayname);
+			newSinger = userInputSinger(); //use userInputSinger to gather the right singer
+			singerKey = newSinger.getKey();  //get the key for the singer that needs removed
+			displayname = newSinger.getDisplayName(); //get the display name for the singer to remove
+			nodeData = (singerKey + "/" + displayname); //concatenate key and name to create node data for the list/removal
 			/*verifyExists = list.verifyNameExists(displayname); //make sure that the name is on the list
 			if (verifyExists == false) //if not on the list, have them reenter until it is
 			{
 				cout << "Please enter a valid username:\n"; 
 				goto reenter1;
 			}*/
-
 			cout << endl;
 			cout << "Did the singer complete the song? Y yes, N no.\n"; //find out if they completed a song or just left
 			reenter2:cin >> songComplete; 
 			if (toupper(songComplete) == 'Y')
 			{
-				songList.displayFullList();
+				songList.displayFullList(); //list all the songs in the queue for review
 				cout << "Please select the name of the song they completed:\n";
 				/*reenter3:cin >> songTitle;
 				verifyExists = songList.verifyNameExists(songTitle);
@@ -408,21 +359,25 @@ void menuQueueManagement()
 					goto reenter3;
 				}*/
 				cin.ignore();
-				newSong = userInputSong();
-				songKey = newSong.getKey();
-				songTitle = newSong.getTitle();
+				newSong = userInputSong(); //use userInputSong to gather the right singer
+				songKey = newSong.getKey(); //get the key for the singer that needs to be added to the map
+				songTitle = newSong.getTitle(); //get the song title for the song to remove
 				addToSingerHistory(singerKey, 2019, 11, 10, songKey); //add the song to the singer's history
-				list.deleteNode(nodeData);
-				displayList.deleteNode(displayname); //delete the singer
-				songList.deleteNode(songTitle); //delete the song
-				songList.displayList();
+				list.deleteNode(nodeData); //delete the node from the list that has the singer name/username
+				displayList.deleteNode(displayname); //delete the node from the list that only has display names
+				songList.deleteNode(songTitle); //delete the song from the songlist
 				cout << "Singer removed and singer history updated with song: " << songTitle << endl; //tell the KJ that the singer has been removed
 			}
-			else if (toupper(songComplete) == 'N')
+			else if (toupper(songComplete) == 'N') //don't add to the singer history as they didn't complete the song
 			{
-				list.deleteNode(displayname); //delete the singer
+				list.deleteNode(nodeData); //delete the node from the list that has the singer name/username
+				displayList.deleteNode(displayname); //delete the node from the list that only has display names
+				songList.displayFullList(); //display the songs pending
+				cout << "Please select the name of the song they intended to sing:\n";
+				cin.ignore(); //ignore trailing whitespace
+				newSong = userInputSong();
+				songTitle = newSong.getTitle();
 				songList.deleteNode(songTitle); //delete the song
-				songList.displayList();
 				cout << "Singer removed.\n"; //tell the KJ that the singer has been removed
 			}
 			else //resolicit if they type anything but Y or N
@@ -430,37 +385,58 @@ void menuQueueManagement()
 				cout << "Please enter either Y or yes, they completed, or N for no, they did not complete a song.\n";
 				goto reenter2;
 			}
-			cout << "Remaining queue:\n";
+			cout << "Remaining queue:\n"; //display the remaining queue for the KJ
 			cout << endl;
 			list.displayFullList();
 			cin.ignore();
 			break;
 		case 3:
 			list.displayFullList();
-			cout << "Please select the singer to move by entering the display name.\n";
-			cin >> singerToMove;
-			cout << "Move this singer to which position (please enter the singer display name that will follow the moved singer).\n";
-			cin >> singerAfter;
+			cout << "Please select the singer to move by entering the full name including the / from the list.\n";
+			getline(cin, singerToMove);
+			nodeData = singerToMove;
+			songList.displayFullList();
+			//cin.ignore();
+			//credit to geeksforgeeks: https://www.geeksforgeeks.org/conversion-whole-string-uppercase-lowercase-using-stl-c/
+			transform(singerToMove.begin(), singerToMove.end(), singerToMove.begin(), ::toupper); //convert the whole combined string to all caps
+			displayNameMove = generateDisplayName(singerToMove);
+			cout << "Which song is this singer scheduled to sing?\n";
+			getline(cin, songToMove);
+			//transform(songToMove.begin(), songToMove.end(), songToMove.begin(), ::toupper); //convert the whole combined string to all caps
+			cout << "Move this singer to which position (please enter the singer full name that will follow the moved singer).\n";
+			getline(cin, singerAfter);
+			//cin.ignore();
+			transform(singerAfter.begin(), singerAfter.end(), singerAfter.begin(), ::toupper); //convert the whole combined string to all caps
+			displayNameAfter = generateDisplayName(singerAfter);
+			//cin.ignore();
+			list.deleteNode(singerToMove);
+			displayList.deleteNode(displayNameMove);
 			list.insertNode(singerToMove, singerAfter);
-
+			displayList.insertNode(displayNameMove, displayNameAfter);
 			break;
 		case 4:
 			cout << "On deck: \n";
-			cout << endl; //add a break between the on deck and singer list
-			displayList.displayList(); //display the top 10 displaynames for singers
+			cout << endl;
+			displayList.displayList(); //display the top 10 displaynames only for singers pending
 			break;
 		case 5:
-			//this needs to pull in the songs tied to the singers in the queue
-			songList.displayFullList();
+			cout << "Songs currently in the queue: \n"; 
+			songList.displayFullList(); //display the list of songs in the queue
 			break;
 		case 6:
 			cout << "Clearing queue.\n";
 			list.~QueueManagement_KJ(); //call the destructor to remove all pending singers, send back to the main to avoid duplicate delete[] calls
-			main();
+			//main();
+			menuQueueManagement();
 		default:
 			continueMenu = false; //change the boolean from true to false and exit the menu
 			return;
 			break;
 		}
 	}
+}
+
+void linkListTester()
+{
+	//no longer needed
 }
