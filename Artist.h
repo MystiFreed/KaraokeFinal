@@ -7,9 +7,7 @@
 #pragma once
 #ifndef ARTIST_H
 #define ARTIST_H
-
 #include <string>
-#include "Genre.h"
 #include "CatalogEntry.h"
 #include "FileManagement.h"
 #include <map>
@@ -29,31 +27,11 @@ public:
 		
 	}
 
-	//constructor
-	Artist(string an, string dn, Genre g) : CatalogEntry()
-	{	
-		
-		alphaName = an;
-		displayName = dn;
-		//primaryGenre = g;
-	}
-
-	//constructor where there's only an alphabetical name (for example, Prince)
-	Artist(string an, Genre g) : CatalogEntry()
-	{
-		alphaName = an;
-		displayName = alphaName; //sets the alphaName to the displayName
-		//primaryGenre = g;
-	}
-
 	//constructor that allows for setup without a Genre, when it's not known
 	Artist(string an, string dn) : CatalogEntry()
 	{
-		
-
 		alphaName = an;
 		displayName = dn; 
-		//primaryGenre = g;
 	}
 
 	//constructor where there's only an alphabetical name (for example, Prince)
@@ -91,7 +69,6 @@ public:
 	//accessors (getters)				//
 	string getAlphaName(); /*const*/		//{ return alphaName; }
 	string getDisplayName(); /*const*/	//{ return displayName; }
-		Genre getPrimaryGenre(); /*const*/	//{ return primaryGenre; }
 
 	virtual string display(); //from CatalogEntry.h
 	virtual string toFile(); //from CatalogEntry.h
@@ -118,7 +95,7 @@ void Artist::updateKey()
 
 string Artist::display()
 {
-	return "Artist: " + displayName;
+	return displayName;
 }
 
 string Artist::toFile()

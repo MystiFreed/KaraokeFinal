@@ -5,7 +5,6 @@
 #include "FileManagement.h"
 #include "MapManagement.h"
 #include"Song.h"
-#include "DateCalcLong.h"
 
 class Singer : public CatalogEntry {
 	string singerKey;//"unique username"

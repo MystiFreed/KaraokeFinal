@@ -1,7 +1,4 @@
 // KaraokeSongs.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
-//testing the tutorial #1
 
 #include <iostream>
 #include "Song.h"
@@ -11,16 +8,12 @@
 #include "QueueManagement_KJ.h"
 #include "Singer.h"
 #include <map>
-#include "DateCalcLong.h"
 #include "SingerHistory.h"
 #include <algorithm>
 
 using namespace std;
 
-//testing functions
-void testIntInput();
-void test();
-void linkListTester();
+//testing 
 const bool DEBUGMAIN = false;
 
 //function prototypes
@@ -31,16 +24,13 @@ void menuDisplayCatalogue();
 void exitSaving();
 void menuQueueManagement();
 void menuSinger();
-//void verifyNameExists();
 
 int main()
 {
 	startup();
-	
 	while (displayMenu()); //automatically repeats until a false (exit) is returned.
 	exitSaving();
 	return 0;
-	
 };
 
 void startup() {
@@ -53,24 +43,21 @@ void startup() {
 	if (DEBUGMAIN) { cout << "\nopen song fstream: " << check << endl; }
 	check = openFileInOut(artistFstream, artistFileTXT);
 	if (DEBUGMAIN) { cout << "\nopen artist fstream: " << check << endl; }
-
 	check = openFileInOut(singerFstream, singerTXT);
 	if (DEBUGMAIN) { cout << "\nopen allSingerHistory fstream: " << check << endl; }
-
-
 	check = openFileInOut(singerHistoryFstream, allSingerHistoryTXT);
 	if (DEBUGMAIN) { cout << "\nopen allSingerHistory fstream: " << check << endl; }
 
-
 	primaryMapFromFile(songMap, songFstream);
+	//fill secondary songCatalogByArtist multimap with the contents fo the songMap
+	for (auto& e : songMap) {
+		Song newSong = e.second;
+		addObjectToMap(&songCatalogByArtist,  newSong.getArtistKey(), newSong.getTitle());
+	}
 	primaryMapFromFile(artistMap, artistFstream);
 	primaryMapFromFile(singerMap, singerFstream);
 	multiMapFromFile(allSingerHistoryMap, singerHistoryFstream);
-	cout << "Done importing map data";
-	if (DEBUGMAIN) { linkListTester(); }
-
-	//NEED TO DO add import and saving for multimaps that are implemented
-	if (DEBUGMAIN) {cout << "\nDone importing map data";}
+	cout << "Done importing map data\n";
 };
 
 // Function displays a menu for user selection of the submenu. Returns true if menu should continue.
@@ -118,70 +105,24 @@ bool displayMenu()
 		return true;
 	}
 };
-
-
-
-//run this to test basic functions after changes
-void test() {
-	multimap<string, string> testMultiMap;
-	fstream testFstream("testMap.txt", ios::in | ios::out);
-	addObjectToMap(&testMultiMap, "key1", "value1");
-	addObjectToMap(&testMultiMap, "key2", "value2");
-	multiMapToFile(testMultiMap, testFstream);
-	multimap<string, string> placedMap;
-	multiMapFromFile(placedMap, testFstream);
-
-	Singer amy("Amy1", "Amy");
-	cout << "add " << endl;
-
-	
-
-	addObjectToMap(singerMap, amy);
-	displayMap(singerMap);
-
-
-	for (int i = 0; i < 5; i++) {
-		cout << "\n------------------\nAdd a new Artist and Song (later will add select existing artist, function created but not tested yet.";
-
-		Song tempSong = userInputSong();
-		cout<<"Found in songMap? 1=true"<<to_string(songMap.count(tempSong.getKey()))<<"\n";
-		cout << "Found in songCatalogByArtist? 1=true" << to_string(songCatalogByArtist.count(tempSong.getKey())) << "\n";
-	}
-	
-	cout << "Check contents of songMap:\n";
-	displayMap(songMap);
-	cout << "Check contents of artistMap:\n";
-	displayMap(artistMap);
-	cout << "Check contents of songCatalogbyArtist:\n";
-	displayMap(songCatalogByArtist);
-	cout << "Write contents of songMap to File:\n";
-	primaryMapToFile(songMap, songFstream);
-
-	cout << "Now Reading file into a blank map and displaying that map to ensure that reading worked. You will only see contents below if they were read from the file and inserted into a map correctly\n";
-
-	map<string, Song> testMap; //using a different map to test read since all the items are in
-	primaryMapFromFile(testMap, songFstream);
-
-
-	cout << "For Testing, display contents of map that were read in from file\n";
-	displayMap(testMap);
-}
+//saves current contents of maps to files
 void exitSaving() {
 	primaryMapToFile(songMap, songFstream);
 	primaryMapToFile(artistMap, artistFstream);
 	primaryMapToFile(singerMap, singerFstream);
 	multiMapToFile(allSingerHistoryMap, singerHistoryFstream);
 }
-
+//submenu
 void menuManageCatalogue() {
 	while (true)
 	{
 		int userSelection;
-		enum catalogOptions {BACK, ADD_ARTIST, ADD_SONG, VIEW};
+		enum catalogOptions {BACK,  ADD_SONG, ADD_ARTIST, COUNTS, VIEW};
 		string prompt = "\n----Catalogue Management Menu----\n ";
-		prompt += "  "+to_string(BACK)+") Exit program\n ";
-		prompt += "  "+to_string(ADD_ARTIST) + ") Add Artist to Catalogue\n "; //this holds the menu options specific to management of the song/artist catalogues
-		prompt += "  "+to_string(ADD_SONG) + ") Add Song to Catalogue\n "; //this menu holds options for the KJ to manage the queue of singers
+		prompt += "  "+to_string(BACK)+") Back\n ";
+		prompt += "  "+to_string(ADD_SONG) + ") Add a Song to Catalogue\n "; //this menu holds options for the KJ to manage the queue of singers
+		prompt += "  " + to_string(ADD_ARTIST) + ") Add Multiple Songs by Artist to Catalogue\n "; //this holds the menu options specific to management of the song/artist catalogues
+		prompt += "  " + to_string(COUNTS) + ") View Song Popularity Counts\n "; //this menu holds options for the KJ to manage the queue of singers
 		prompt += "  "+to_string(VIEW) + ") View Catalogues\n "; //this menu holds singer options - histories, etc
 		
 		prompt += "  Please make a selection:\n ";
@@ -191,17 +132,29 @@ void menuManageCatalogue() {
 		Song tempSong;
 		switch (userSelection) {
 		case ADD_ARTIST:
-			do{
-			userInputArtist();
-			} while (getInputReprompt("Add another Artist? 0: No, 1: Yes. Enter a selection: ", 0, 1));
-			 break;
+			do 
+			{
+				Artist tempArtist = userInputArtist();
+				if (!(tempArtist.getKey() == BLANK_FIELD))//skip if no artist entered/selected
+				{
+					do {
+						userInputSong(tempArtist);
+					} while (getInputReprompt("Add another song by this Artist?    0:No,  1:Yes   Enter a selection: \n", 0, 1));
+				}
+			} while (getInputReprompt("Add another Artist?    0:No,  1:Yes   Enter a selection: \n", 0, 1));
+			
+			break;
 		case ADD_SONG:
 			do{
 			 userInputSong();
-			} while (getInputReprompt("Add another Song? 0: No, 1: Yes. Enter a selection: ", 0, 1));
+			} while (getInputReprompt("Add another Song?    0:No,  1:Yes   Enter a selection: \n", 0, 1));
 			break;
 		case VIEW:
 			menuDisplayCatalogue();
+			break;
+		case COUNTS:
+			cout << "\n----Popularity counts from all performance history----\n";
+			viewSingerHistory(allSingerHistoryMap);
 			break;
 		default:// BACK OR ERROR GOES HERE, Returns from function
 			return;
@@ -209,63 +162,105 @@ void menuManageCatalogue() {
 		}
 	}
 }
+//submenu
 void menuDisplayCatalogue()
 {
 	while (true)//always continue, use returns to exit function
 	{
-		//GET USER INPUT ON VIEW METHOD //NEED TO DO finish this if desired
+	//	GET USER INPUT ON VIEW METHOD 
 		enum viewOption { BACK_MENU, SCREEN_DISPLAY, PRINT_REPORT};
 		
-
-		//string prompt = "\n----View Catalogue Menu----\n ";
-		//prompt += BACK_MENU +") Back to main menu\n ";
-		//prompt += SCREEN_DISPLAY+") Display on screen\n ";
-		////prompt += PRINT_REPORT +") Print catalog\n "; //NEED TO DO - either create this or remove this menu.
-		//prompt += "  Please make a selection:\n ";
-		//viewMethod = getInputReprompt(prompt, BACK_MENU, PRINT_REPORT);//getInputPreprompt converts any entry to upper for comparison
-		// if (viewMethod == BACK_MENU) { return; };
+		string prompt = "\n----View Catalogue Menu----\n ";
+		prompt += "  "+to_string(BACK_MENU) +") Back to previous menu\n ";
+		prompt += "  " + to_string(SCREEN_DISPLAY)+") Display on screen\n ";
+		prompt += "  " + to_string(PRINT_REPORT) +") Print catalog\n "; //NEED TO DO - either create this or remove this menu.
+		prompt += "  Please make a selection:\n ";
+		int viewMethod = getInputReprompt(prompt, BACK_MENU, PRINT_REPORT);//getInputPreprompt converts any entry to upper for comparison
 		
-		int viewMethod = SCREEN_DISPLAY;//NEED TO DO - delete this if above menu gets finished
-
+		//skip the rest if back selected
+		if (viewMethod == BACK_MENU) { return; };
+		
 		//GET USER INPUT WHICH CATALOG TO VIEW
-		int userSelection;
+		int viewCatalog;
 		enum catalogSelection { BACK, SONG, SONG_ARTIST, ARTIST };
 		string promptb = "\n----View Catalogue Menu - SELECT CATALOG----\n ";
-		promptb += BACK +") Back to previous menu\n ";
-		promptb += SONG +") Song Catalogue\n ";
-		promptb += SONG_ARTIST +") Song by Artist Catalogue\n ";
-		promptb += ARTIST +") Artist List\n ";
+		promptb += "  "+to_string(BACK) +") Back to previous menu\n ";
+		promptb += "  " + to_string(SONG) +") Song Catalogue\n ";
+		promptb +="  "+to_string(SONG_ARTIST) +") Song by Artist Catalogue\n ";
+		promptb +="  "+to_string(ARTIST) +") Artist List\n ";
 		
 		promptb += "  Please make a selection:\n ";
-		userSelection = getInputReprompt(promptb, 1, 4);//getInputPreprompt converts any entry to upper for comparison
-
-		switch (userSelection) {
+		viewCatalog = getInputReprompt(promptb, 1, 4);//getInputPreprompt converts any entry to upper for comparison
+		
+		stringstream report;//fill with contents of map
+		char delim = '\t';
+		string reportTXT;
+		switch (viewCatalog) {
 		case BACK:
 			//allow while loop to continue;
 			break;
-		case SONG:
-			if (viewMethod == SCREEN_DISPLAY) { displayMap(songMap); }
+		case SONG: 
+		{
+			reportTXT = "SongListReport.txt";
+			const int WIDTH = 40;
+			report << setw(WIDTH) << left << "Song Title" << delim << setw(WIDTH) << left << "Artist" << endl;
+
+			for (auto& element : songMap) {
+				string artistKey = element.second.getArtistKey();
+				Artist tempArtist;
+				if (SelectByKey(artistMap, artistKey, tempArtist) )
+				{
+					report << setw(WIDTH) << left << element.second.getTitle() << delim << setw(WIDTH) << left << tempArtist.getDisplayName() << endl;
+				}
+			}
 			break;
+		}
 		case SONG_ARTIST:
-			if (viewMethod == SCREEN_DISPLAY) { displayMap(songCatalogByArtist); }
+		{
+			reportTXT = "SongListByArtistReport.txt";
+			const int WIDTH = 30;
+			report << setw(WIDTH) << left << "Artist" << delim << setw(WIDTH) << left << "Song Title" << endl;
+
+			for (auto& element : songCatalogByArtist) {
+					report << setw(WIDTH) << left << element.first << delim << setw(WIDTH) << left << element.second << endl;
+			}
 			break;
+		}
 		case ARTIST:
-			if (viewMethod == SCREEN_DISPLAY) { displayMap(artistMap); }
+		{
+			reportTXT = "ArtistListReport.txt";
+			const int WIDTH = 30;
+			report << setw(WIDTH) << left << "Artist (alphabetical)" << delim << setw(WIDTH) << left << "Artist" << endl;
+
+			for (auto& element : artistMap) {
+					report << setw(WIDTH) << left << element.first << delim << setw(WIDTH) << left << element.second.getDisplayName() << endl;
+			}
 			break;
+		}
 		default:// BACK OR ERROR GOES HERE, Returns from function
 			return;
 			break;
 		}
+
+		//output catalog according to view method selected
+		if (viewMethod == SCREEN_DISPLAY)
+		{
+			cout << report.str();
+		}
+		else if (viewMethod == PRINT_REPORT) {
+			fstream reportFstream;
+			reportFstream.open(reportTXT, fstream::out);
+			reportFstream << report.str();
+			reportFstream.close();
+			cout << "\nReport saved\n";
+		}
+		else {
+			cout << "error in viewMethod if statement";
+
+		}
 	}//end while loop
 }//end menuMDisplayCatalogue
-
-void testIntInput()
-{ for (int x = 0; x < 6; x++) {
-		cout << "\nAttempt " << x << endl;
-		cout << "Selected:" << getInputReprompt("Prompt:", 1, 4);
-	} 
-}
-
+//submenu
 void menuQueueManagement()
 {
 	bool continueMenu = true;
@@ -433,9 +428,4 @@ void menuQueueManagement()
 			break;
 		}
 	}
-}
-
-void linkListTester()
-{
-	//no longer needed
 }
