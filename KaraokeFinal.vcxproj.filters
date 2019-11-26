@@ -18,22 +18,10 @@
     <ClInclude Include="Artist.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Band.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="CatalogEntry.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DateCalcLong.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="FileManagement.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Genre.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IndividualArtist.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MapManagement.h">
@@ -65,7 +53,6 @@
     <Text Include="allSingerHistory.txt">
       <Filter>Resource Files</Filter>
     </Text>
-    <Text Include="testMap.txt" />
     <Text Include="SongListReport.txt">
       <Filter>Resource Files</Filter>
     </Text>

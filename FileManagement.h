@@ -17,7 +17,6 @@ int getInputReprompt(std::string, int, int);
 //file handling variables
 const char FIELD_DELIMITER = '|'; //use this to separate fields
 const char ELEMENT_DELIMITER = '^'; //use this to separate fields
-
 const char SAFE_CHAR = '_';//use this char in place of the delimiter characters if one of them is in user input
 
 //file handling functions/
@@ -39,13 +38,11 @@ string generateDisplayName(string comb)
 	return displayName;
 }
 
-
 //sets reader back to start of file //Amy
 void GoBeginningOfFile(fstream& inputReader) {
 	inputReader.clear();
 	inputReader.seekg(0, ios::beg);
 };
-
 
 //turns a string line with delimiter into individual strings, stored in a vector. //Amy
 //adapted from http://www.martinbroadhurst.com/how-to-split-a-string-in-c.html
@@ -58,8 +55,6 @@ vector<string> SeparateLineByDelimiter(string line, char delimiter) {
 	}
 	return inputFields;
 };
-
-
 
 /*Amy's input validating function for integer within a range. Continues reprompting until input is acceptable. Useful for menu input.
 int getInputReprompt(std::string, int, int);
@@ -84,15 +79,14 @@ int getInputReprompt(std::string promptMessage, int minRange, int maxRange) {
 			std::cout << "Outside Range " << invalidMessage;
 			isInvalidInput = true;
 		}
-		if (isInvalidInput) {//clear to reprompt
-			std::cin.clear();
-			std::cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		if (isInvalidInput) {//clear to reprompt (not needed with this version of function that uses getline();
+			//std::cin.clear();
+			//std::cin.ignore(numeric_limits<streamsize>::max(), '\n');
 		}
 	} while (isInvalidInput);//reprompt until valid
 
 	return intInput;//return valid input
 };
-
 
 
 //Mysti's function to ensure that a file opens appropriately for read/write for reuse by the team

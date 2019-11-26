@@ -1,7 +1,4 @@
 // KaraokeSongs.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
-//testing the tutorial #1
 
 #include <iostream>
 #include "Song.h"
@@ -11,16 +8,12 @@
 #include "QueueManagement_KJ.h"
 #include "Singer.h"
 #include <map>
-#include "DateCalcLong.h"
 #include "SingerHistory.h"
 #include <algorithm>
 
 using namespace std;
 
-//testing functions
-void testIntInput();
-void test();
-void linkListTester();
+//testing 
 const bool DEBUGMAIN = false;
 
 //function prototypes
@@ -31,16 +24,13 @@ void menuDisplayCatalogue();
 void exitSaving();
 void menuQueueManagement();
 void menuSinger();
-//void verifyNameExists();
 
 int main()
 {
 	startup();
-	
 	while (displayMenu()); //automatically repeats until a false (exit) is returned.
 	exitSaving();
 	return 0;
-	
 };
 
 void startup() {
@@ -53,16 +43,13 @@ void startup() {
 	if (DEBUGMAIN) { cout << "\nopen song fstream: " << check << endl; }
 	check = openFileInOut(artistFstream, artistFileTXT);
 	if (DEBUGMAIN) { cout << "\nopen artist fstream: " << check << endl; }
-
 	check = openFileInOut(singerFstream, singerTXT);
 	if (DEBUGMAIN) { cout << "\nopen allSingerHistory fstream: " << check << endl; }
-
-
 	check = openFileInOut(singerHistoryFstream, allSingerHistoryTXT);
 	if (DEBUGMAIN) { cout << "\nopen allSingerHistory fstream: " << check << endl; }
 
-
 	primaryMapFromFile(songMap, songFstream);
+	//fill secondary songCatalogByArtist multimap with the contents fo the songMap
 	for (auto& e : songMap) {
 		Song newSong = e.second;
 		addObjectToMap(&songCatalogByArtist,  newSong.getArtistKey(), newSong.getTitle());
@@ -70,11 +57,7 @@ void startup() {
 	primaryMapFromFile(artistMap, artistFstream);
 	primaryMapFromFile(singerMap, singerFstream);
 	multiMapFromFile(allSingerHistoryMap, singerHistoryFstream);
-	cout << "Done importing map data";
-	if (DEBUGMAIN) { linkListTester(); }
-
-	//NEED TO DO add import and saving for multimaps that are implemented
-	if (DEBUGMAIN) {cout << "\nDone importing map data";}
+	cout << "Done importing map data\n";
 };
 
 // Function displays a menu for user selection of the submenu. Returns true if menu should continue.
@@ -122,61 +105,14 @@ bool displayMenu()
 		return true;
 	}
 };
-
-
-
-//run this to test basic functions after changes
-void test() {
-	multimap<string, string> testMultiMap;
-	fstream testFstream("testMap.txt", ios::in | ios::out);
-	addObjectToMap(&testMultiMap, "key1", "value1");
-	addObjectToMap(&testMultiMap, "key2", "value2");
-	multiMapToFile(testMultiMap, testFstream);
-	multimap<string, string> placedMap;
-	multiMapFromFile(placedMap, testFstream);
-
-	Singer amy("Amy1", "Amy");
-	cout << "add " << endl;
-
-	
-
-	addObjectToMap(singerMap, amy);
-	displayMap(singerMap);
-
-
-	for (int i = 0; i < 5; i++) {
-		cout << "\n------------------\nAdd a new Artist and Song (later will add select existing artist, function created but not tested yet.";
-
-		Song tempSong = userInputSong();
-		cout<<"Found in songMap? 1=true"<<to_string(songMap.count(tempSong.getKey()))<<"\n";
-		cout << "Found in songCatalogByArtist? 1=true" << to_string(songCatalogByArtist.count(tempSong.getKey())) << "\n";
-	}
-	
-	cout << "Check contents of songMap:\n";
-	displayMap(songMap);
-	cout << "Check contents of artistMap:\n";
-	displayMap(artistMap);
-	cout << "Check contents of songCatalogbyArtist:\n";
-	displayMap(songCatalogByArtist);
-	cout << "Write contents of songMap to File:\n";
-	primaryMapToFile(songMap, songFstream);
-
-	cout << "Now Reading file into a blank map and displaying that map to ensure that reading worked. You will only see contents below if they were read from the file and inserted into a map correctly\n";
-
-	map<string, Song> testMap; //using a different map to test read since all the items are in
-	primaryMapFromFile(testMap, songFstream);
-
-
-	cout << "For Testing, display contents of map that were read in from file\n";
-	displayMap(testMap);
-}
+//saves current contents of maps to files
 void exitSaving() {
 	primaryMapToFile(songMap, songFstream);
 	primaryMapToFile(artistMap, artistFstream);
 	primaryMapToFile(singerMap, singerFstream);
 	multiMapToFile(allSingerHistoryMap, singerHistoryFstream);
 }
-
+//submenu
 void menuManageCatalogue() {
 	while (true)
 	{
@@ -218,6 +154,7 @@ void menuManageCatalogue() {
 		}
 	}
 }
+//submenu
 void menuDisplayCatalogue()
 {
 	while (true)//always continue, use returns to exit function
@@ -315,14 +252,7 @@ void menuDisplayCatalogue()
 		}
 	}//end while loop
 }//end menuMDisplayCatalogue
-
-void testIntInput()
-{ for (int x = 0; x < 6; x++) {
-		cout << "\nAttempt " << x << endl;
-		cout << "Selected:" << getInputReprompt("Prompt:", 1, 4);
-	} 
-}
-
+//submenu
 void menuQueueManagement()
 {
 	bool continueMenu = true;
@@ -490,9 +420,4 @@ void menuQueueManagement()
 			break;
 		}
 	}
-}
-
-void linkListTester()
-{
-	//no longer needed
 }

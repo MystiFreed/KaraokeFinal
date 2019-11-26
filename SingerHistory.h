@@ -1,29 +1,37 @@
 #pragma once
-#pragma once
+#pragma warning(disable : 4996)//compiler can't do locatltime_s function so this stops the prompting for avoiding deprecated localtime function.
 #include <set>
 #include <string>
 #include "CatalogEntry.h"
 #include "FileManagement.h"
 #include "MapManagement.h"
 #include"Song.h"
-#include "DateCalcLong.h"
+#include <time.h>       /* time_t, struct tm, time, mktime */
+#include <iostream>
+#include <iterator> 
+#include <utility>
+using namespace std;
 
-//functions
+//date time functions
+struct tm* setDate(int , int , int , time_t& );
+struct tm* setDate(int , int , int );
+string dateToString(tm*);
+tm* userInputDate();
+
+//singer history functions
 void addToSingerHistory(string , tm* , string );
 void addToSingerHistory(string , int , int , int , string );
 void addToSingerHistory(string);
-bool mapResultsByKey(multimap<string, string>& , multimap<string, string>& , string );
-bool mapResultsByKey(multimap<string, string>& , multimap<string, string>& , string , string );
-void viewSingerMenu();
 
+void viewSingerMenu();
 void viewSingerHistory(multimap<string, string> );
 
-
-
+//singer history definitions
 multimap<string, string> allSingerHistoryMap; //<singerkey, dateAsString$songKey
-
 string allSingerHistoryTXT = "allSingerHistory.txt";
 fstream singerHistoryFstream;
+
+
 
 //this version collects required information as parameters
 void addToSingerHistory(string singerKey, int year, int month, int day, string songKey) {
@@ -54,7 +62,7 @@ void addToSingerHistory(string singerKey, tm* performedDate, string songKey) {
 	multiMapToFile(allSingerHistoryMap, singerHistoryFstream);
 }
 
-
+//filters to a single singer before viewing singer history
 void viewSingerHistory(Singer selectedSinger) {
 	multimap<string, string> singerCompositeMap;
 	if (mapResultsByKey(allSingerHistoryMap, singerCompositeMap, selectedSinger.getKey())) {
@@ -66,116 +74,95 @@ void viewSingerHistory(Singer selectedSinger) {
 
 }
 
-//can be used with individual singer history or allSingerHistory
+//shows counts based on the multimap in the parameter. Should be <singerkery, "datestring | songkey |">
 void viewSingerHistory(multimap<string, string> singerCompositeMap) {
-	
-	multimap<string, string> dateSongMap;//temporary map to be filled with all songs this singer has done, by date
+	try {
+		multimap<string, string> dateSongMap;//temporary map to be filled with all songs this singer has done, by date
 
-	//split the value string into fields, map with date key and songkey value	
-	for (auto& iter : singerCompositeMap) {
-		string value = iter.second;//value is a string that includes delimiters
-		//cout << endl << "test" << value<<endl;
-		vector<string> tempFields = SeparateLineByDelimiter(value, ELEMENT_DELIMITER);//split on the delimiters
-		//cout << endl << "test tempFields[0]"<< tempFields[0]<<"  tempFields[1] "<<tempFields[1] << endl;
-		addObjectToMap(&dateSongMap, tempFields[0], tempFields[1]);//add to new map using first split field as the key and second as the value
-	}//now dateSongMap includes only entries for the selected singer, with date as key and song as the value
+		//split the value string into fields, map with date key and songkey value	
+		for (auto& iter : singerCompositeMap) {
+			string value = iter.second;//value is a string that includes delimiters
+			vector<string> tempFields = SeparateLineByDelimiter(value, ELEMENT_DELIMITER);//split on the delimiters
+			addObjectToMap(&dateSongMap, tempFields[0], tempFields[1]);//add to new map using first split field as the key and second as the value
+		}//now dateSongMap includes only entries for the selected singer, with date as key and song as the value
 
-	multimap<string, string> songDateMap;//temporary map to be filled with all songs this singer has done, by song
-	multimap<string, string> artistSongMap;//temporary map to be filled with all songs this singer has done, by artist
-	map<string, string> uniqueSongs;
-	multimap<string, string> uniqueSongsByArtist;
-	set<string> uniqueArtists;
+		multimap<string, string> songDateMap;//temporary map to be filled with all songs this singer has done, by song
+		multimap<string, string> artistSongMap;//temporary map to be filled with all songs this singer has done, by artist
+		map<string, string> uniqueSongs;
+		multimap<string, string> uniqueSongsByArtist;
+		set<string> uniqueArtists;
 
-	//fill the other maps that are indexed by songkey and artistkey
-	for (auto& iter : dateSongMap) {
-		string song = iter.second;//songkey
-		Song tempSong;
-		SelectByKey(songMap, song, tempSong);
-		string artist = tempSong.getArtistKey();
-		addObjectToMap(&songDateMap, song, iter.first);
-		addObjectToMap(&artistSongMap, artist, song);
-		uniqueSongs.emplace(song, artist);//only allows a single instance of each
-		uniqueArtists.emplace(artist);
-	}
-	//save unique songs sorted by artist
-	for (auto& e : uniqueSongs) {
-		uniqueSongsByArtist.emplace(make_pair(e.second, e.first));
-	}
-
-	//do stuff with the results
-	//heading
-	auto iter = dateSongMap.begin();
-	cout << "\n\n----Results for " << iter->first<< " - ";
-	auto r_iter = dateSongMap.rbegin();
-	cout << r_iter->first << "----"<<endl;
-	////done printing heading
-	
-	multimap<int, string, greater <int> > descendingMap;
-	
-	///////display song count in descending order///////
-	cout << "\n---Number of times performing song----\n";
-	for (auto& e : uniqueSongs) {
-		string song = e.first;
-		descendingMap.emplace(make_pair(songDateMap.count(song), song));
-	}
-	for (auto& e : descendingMap) {
-		cout << e.first <<": "<<e.second << endl;
-	}
-	///////display song count in descending order///////
-	cin.get();
-
-	///////display artist count in descending order///////
-	cout << "\n---Number of times songs by artist were performed----\n";
-	descendingMap.clear();
-	for (auto& e : uniqueArtists) {
-		descendingMap.emplace(make_pair(artistSongMap.count(e), e));
-	}
-	for (auto& e : descendingMap) {
-		cout << e.first << ": " << e.second << endl;
-	}
-	///////display artist count in descending order///////
-	cin.get();
-
-	///////display artist unique song count in descending order///////
-	cout << "\n---Number of songs by artist that were performed----\n";
-	descendingMap.clear();
-	for (auto& e : uniqueArtists) {
-		descendingMap.emplace(make_pair(uniqueSongsByArtist.count(e), e));
-	}
-	for (auto& e : descendingMap) {
-		string artist = e.second;
-		cout << e.first << ": " << artist << endl;
-		multimap<string, string> resultMap;
-		mapResultsByKey(uniqueSongsByArtist, resultMap, artist);
-		for (auto& s : resultMap) {
-			cout << "     " << " " << s.second << endl;
+		//fill the other maps that are indexed by songkey and artistkey
+		for (auto& iter : dateSongMap) {
+			string song = iter.second;//songkey
+			Song tempSong;
+			SelectByKey(songMap, song, tempSong);
+			string artist = tempSong.getArtistKey();
+			addObjectToMap(&songDateMap, song, iter.first);
+			addObjectToMap(&artistSongMap, artist, song);
+			uniqueSongs.emplace(song, artist);//only allows a single instance of each
+			uniqueArtists.emplace(artist);
 		}
+		//save unique songs sorted by artist
+		for (auto& e : uniqueSongs) {
+			uniqueSongsByArtist.emplace(make_pair(e.second, e.first));
+		}
+
+		//do stuff with the results...
+		//heading
+		auto iter = dateSongMap.begin();
+		cout << "\n\n----Results for " << iter->first << " - ";
+		auto r_iter = dateSongMap.rbegin();
+		cout << r_iter->first << "----" << endl;
+		////done printing heading
+
+		multimap<int, string, greater <int> > descendingMap;
+
+		///////display song count in descending order///////
+		cout << "\n---Number of times performing song----\n";
+		for (auto& e : uniqueSongs) {
+			string song = e.first;
+			descendingMap.emplace(make_pair(songDateMap.count(song), song));
+		}
+		for (auto& e : descendingMap) {
+			cout << e.first << ": " << e.second << endl;
+		}
+		//////////////
+		cin.get();
+		descendingMap.clear();
+
+		///////display artist count in descending order///////
+		cout << "\n---Number of times songs by artist were performed----\n";
+		for (auto& e : uniqueArtists) {
+			descendingMap.emplace(make_pair(artistSongMap.count(e), e));
+		}
+		for (auto& e : descendingMap) {
+			cout << e.first << ": " << e.second << endl;
+		}
+		//////////////
+		cin.get();
+		descendingMap.clear();
+
+		///////display artist unique song count in descending order///////
+		cout << "\n---Number of songs by artist that were performed----\n";
+		for (auto& e : uniqueArtists) {
+			descendingMap.emplace(make_pair(uniqueSongsByArtist.count(e), e));
+		}
+		for (auto& e : descendingMap) {
+			string artist = e.second;
+			cout << e.first << ": " << artist << endl;
+			multimap<string, string> resultMap;
+			mapResultsByKey(uniqueSongsByArtist, resultMap, artist);
+			for (auto& s : resultMap) {
+				cout << "     " << " " << s.second << endl;
+			}
+		}
+		//////////////
+		cin.get();
+		descendingMap.clear();
+
 	}
-	///////display artist unique song count in descending order///////
-	cin.get();
-}
-
-
-//adapted from https://thispointer.com/finding-all-values-for-a-key-in-multimap-using-equals_range-example/
-bool mapResultsByKey(multimap<string, string>& searchMap, multimap<string, string>& resultMap, string keyMatch) {
-	return mapResultsByKey(searchMap, resultMap, keyMatch, keyMatch);
-}
-
-//adapted from https://www.geeksforgeeks.org/searching-map-using-stdmap-functions-c/
-bool mapResultsByKey(multimap<string, string>& searchMap, multimap<string, string>& resultMap, string keyMin, string keyMax)
-{
-	std::pair<MMAPIterator, MMAPIterator> matchRange;
-	matchRange.first = searchMap.lower_bound(keyMin);
-	matchRange.second = searchMap.upper_bound(keyMax);
-
-	if (distance(matchRange.first, matchRange.second) == 0) {
-		return false; //none found 
-	}
-	for (MMAPIterator iter = matchRange.first; iter != matchRange.second; iter++)
-	{
-		addObjectToMap(&resultMap, iter->first, iter->second);	
-	}
-	return true;
+	catch (...) { cout << "Error in viewSingerHistory(). Not able to display."; }
 }
 
 
@@ -275,4 +262,63 @@ void viewSingerMenu() {
 		}//end switch singerOptions
 	} while (true);
 
+};
+
+//date time functions
+struct tm* setDate(int year, int month, int day, time_t& storeTime) {
+	struct tm* timeinfo;
+
+	/* get current timeinfo and modify it to the user's choice */
+	time(&storeTime);
+	timeinfo = localtime(&storeTime);
+	timeinfo->tm_year = year - 1900;
+	timeinfo->tm_mon = month - 1;
+	timeinfo->tm_mday = day;
+
+	/* call mktime: timeinfo->tm_wday will be set */
+	storeTime = mktime(timeinfo);
+	return timeinfo;
+};
+//adapted from http://www.cplusplus.com/reference/ctime/mktime/
+struct tm* setDate(int year, int month, int day)
+{
+	time_t rawtime;
+	return setDate(year, month, day, rawtime);
+};
+
+string dateToString(tm* dateStruct) {
+	char    time_buf[256];
+	strftime(time_buf, sizeof(time_buf),
+		"%F", dateStruct);
+	return time_buf;
+};
+
+//Promput user for the components of a date, enforce ranges
+tm* userInputDate() {
+	const int MIN_YEAR = 1980;
+	const int MAX_YEAR = 2300;
+	const int MIN_MONTH = 1;
+	const int MAX_MONTH = 12;
+	const int MIN_DAY = 1;
+	int max_day = 31;
+	int month, day, year = 0;
+	month = getInputReprompt("Enter the month:", MIN_MONTH, MAX_MONTH);
+	switch (month) {
+	case 1: max_day = 31; break;
+	case 2: max_day = 29; break;
+	case 3: max_day = 31; break;
+	case 4: max_day = 30; break;
+	case 5: max_day = 31; break;
+	case 6: max_day = 30; break;
+	case 7: max_day = 31; break;
+	case 8: max_day = 31; break;
+	case 9: max_day = 30; break;
+	case 10: max_day = 31; break;
+	case 11: max_day = 30; break;
+	case 12: max_day = 31; break;
+	default:cout << "Error, max day set to 31."; break;
+	}
+	day = getInputReprompt("Enter the day:", MIN_DAY, max_day);
+	year = getInputReprompt("Enter the year:", MIN_YEAR, MAX_YEAR);
+	return setDate(year, month, day);
 };

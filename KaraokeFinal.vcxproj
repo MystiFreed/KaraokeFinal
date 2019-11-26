@@ -124,12 +124,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Artist.h" />
-    <ClInclude Include="Band.h" />
     <ClInclude Include="CatalogEntry.h" />
-    <ClInclude Include="DateCalcLong.h" />
     <ClInclude Include="FileManagement.h" />
-    <ClInclude Include="Genre.h" />
-    <ClInclude Include="IndividualArtist.h" />
     <ClInclude Include="MapManagement.h" />
     <ClInclude Include="QueueManagement_KJ.h" />
     <ClInclude Include="Singer.h" />
@@ -144,7 +140,6 @@
     <Text Include="SongListByArtistReport.txt" />
     <Text Include="SongListReport.txt" />
     <Text Include="Songs.txt" />
-    <Text Include="testMap.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="KaraokeFinal.cpp" />

@@ -3,6 +3,7 @@
 #include<vector>
 using namespace std;
 
+//abstract class for objects that are saved in primary maps (could be printed for "catalogs")
 class CatalogEntry
 {
 public:
