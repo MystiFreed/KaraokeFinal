@@ -311,30 +311,10 @@ void menuQueueManagement()
 		switch (userSelection) {
 		case 1:
 			
-			newSinger = userInputSinger(); //use the userInputSinger function from the Singer.h to verify whether to add new or use an existing singer
-			displayname = newSinger.getDisplayName(); //set the displayname to the displayname from the singer's profile
-			singerKey = newSinger.getKey(); //capture the singer's key for use int he map
-			list.appendNode(singerKey, displayname); //add that displayname to the list
-			displayList.appendNode(displayname);
-
-			cout << "Please enter the song you that the singer has chosen:\n"; //solicit the song that the singer has selected
-			//cin >> songTitle; //gather the song name
-			//credit to geeksforgeeks: https://www.geeksforgeeks.org/conversion-whole-string-uppercase-lowercase-using-stl-c/
-			//transform(songTitle.begin(), songTitle.end(), songTitle.begin(), ::toupper); //convert the whole combined string to all caps
-			newSong = userInputSong(); //use the function to verify the right song name
-			
-			songTitle = newSong.getTitle(); //gather the title for the song
-			songKey = newSong.getKey(); //gather the key for the song
-			songList.appendNode(songTitle); //add to the songlist
-			cout << displayname << " singing " << songTitle << " added.\n";
-			cin.ignore(); //cut off trailing whitespace
-
-	
-
 		////////amy's experiment?????????????
 			//set struct contents
-			newRequest.reqSinger = newSinger; //or could use    newRequest.reqSinger = userInputSinger();
-			newRequest.reqSong = newSong;  //or could use    newRequest.reqSinger = userInputSong();
+			 newRequest.reqSinger = userInputSinger();
+			  newRequest.reqSong = userInputSong();
 			//add struct as object of the list node
 			comboList.appendNode(newRequest);
 			cout << "Amy's experiment with SongRequest list output: ";
