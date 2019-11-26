@@ -3,11 +3,12 @@
 #include<vector>
 using namespace std;
 
+const string BLANK_FIELD = "Unknown";
+
 //abstract class for objects that are saved in primary maps (could be printed for "catalogs")
 class CatalogEntry
 {
-public:
-	const string BLANK_FIELD = "Unknown";
+public: 
 	CatalogEntry() {};
 	///Pure virtual functions require child class to implement
 	//return a string that describes the object in a way that is readable to a user.

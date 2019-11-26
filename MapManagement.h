@@ -265,8 +265,8 @@ Artist userInputArtist() {
 	if (UserInputSelectByKey(artistMap, instructions, alphaName, tempArtist)) { return tempArtist; 
 	}//if found, return existing 
 	else {
-		string prompt = "Not found, add new Artist? \n  1: Use \"" + alphaName + "\" as display name for artist. \n  2: Enter a different display name. \n  3. Cancel new artist. Enter a selection: ";
-		int userSelection = getInputReprompt(prompt, 1, 3);
+		string prompt = "Not found, add new Artist?\n  0. Cancel new artist. \n  1: Use \"" + alphaName + "\" as display name for artist. \n  2: Enter a different display name. \n Enter a selection: \n";
+		int userSelection = getInputReprompt(prompt, 0, 2);
 		switch (userSelection) {
 		case 1:
 			tempArtist = Artist(alphaName);
@@ -288,18 +288,38 @@ return tempArtist;
 
 //create song object, add to map
 Song userInputSong() {
-	if (DEBUGMAP) cout << "\nstarting userInputSong\n";
 	string songTitle = "";
 	Song tempSong;
 	string instructions = "\nSong Title:";
 	if (UserInputSelectByKey(songMap, instructions, songTitle, tempSong)) { return tempSong; };//if found, return existing 
-	cout << songTitle<<" was not found. Enter artist and song information to add the song record:\n";
+	cout << songTitle<<" was not found. Enter artist to add the song record:\n";
 	Artist tempArtist = userInputArtist();
 	string tempArtistKey = tempArtist.getKey();
 	tempSong = Song(songTitle, tempArtistKey);
-	addSongToCatalogs(tempSong);
+	if (getInputReprompt("Add new Song ( " + tempSong.getKey() + ")?    0:No,   1:Yes", 0, 1)) {
+		addSongToCatalogs(tempSong);
+	}
+	else {
+		tempSong = Song();//cancel, return blank instead
+	}
 	return tempSong;
 };
+Song userInputSong(Artist tempArtist) {
+	string songTitle = "";
+	string tempArtistKey = tempArtist.getKey();
+	cout<< "\nSong Title:";
+	songTitle = inputMapString();
+	Song tempSong = Song(songTitle, tempArtistKey);
+	if (SelectByKey(songMap, tempSong.getKey(), tempSong)) { return tempSong; };//if found, return existing 
+	if (getInputReprompt("Add new Song ( " + tempSong.getKey() + ")?    0:No,   1:Yes", 0, 1)) {
+		addSongToCatalogs(tempSong);
+	}
+	else {
+		tempSong = Song();//cancel, return blank instead
+	}
+	return tempSong;
+};
+
 
 //create singer object, add to map
 Singer userInputSinger() {

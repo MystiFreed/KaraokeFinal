@@ -194,7 +194,7 @@ void menuSinger()
 						tempSinger = userInputSinger();
 						addObjectToMap(singerMap, tempSinger);
 						primaryMapToFile(singerMap, singerFstream);
-				} while (getInputReprompt("Add another singer? 0: No, 1: Yes. Enter a selection: ", 0, 1));
+				} while (getInputReprompt("Add another singer?    0:No,  1:Yes   Enter a selection: \n", 0, 1));
 			break;
 			
 			case VIEW_SINGER:
@@ -232,7 +232,7 @@ void viewSingerMenu() {
 			{
 				cout << "Add a song to your Singer History\n";
 				addToSingerHistory(tempSinger.getKey());
-			} while (getInputReprompt("Add a song to your song history? 0: No, 1: Yes, add a song. Enter a selection: ", 0, 1));
+			} while (getInputReprompt("Add a song to your song history? 0: No, 1: Yes, add a song. Enter a selection: \n", 0, 1));
 
 		}
 		break;
@@ -250,7 +250,7 @@ void viewSingerMenu() {
 					//	cout << "----Add your song request to the queue.----\n (If the song is not available, the KJ will let you know).\n";
 					//	Song songRequest = userInputSong();
 					//	//NEED TO DO ADD TO QUEUE
-					//}while (getInputReprompt("Add a song request to the queue now? 0: No, 1: Yes, add a song. Enter a selection: ", 0, 1));
+					//}while (getInputReprompt("Add a song request to the queue now? 0: No, 1: Yes, add a song. Enter a selection: \n", 0, 1));
 
 			//break;
 		//}

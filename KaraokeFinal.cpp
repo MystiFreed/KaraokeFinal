@@ -117,11 +117,11 @@ void menuManageCatalogue() {
 	while (true)
 	{
 		int userSelection;
-		enum catalogOptions {BACK, ADD_ARTIST, ADD_SONG, COUNTS, VIEW};
+		enum catalogOptions {BACK,  ADD_SONG, ADD_ARTIST, COUNTS, VIEW};
 		string prompt = "\n----Catalogue Management Menu----\n ";
 		prompt += "  "+to_string(BACK)+") Back\n ";
-		prompt += "  "+to_string(ADD_ARTIST) + ") Add Artist to Catalogue\n "; //this holds the menu options specific to management of the song/artist catalogues
-		prompt += "  "+to_string(ADD_SONG) + ") Add Song to Catalogue\n "; //this menu holds options for the KJ to manage the queue of singers
+		prompt += "  "+to_string(ADD_SONG) + ") Add a Song to Catalogue\n "; //this menu holds options for the KJ to manage the queue of singers
+		prompt += "  " + to_string(ADD_ARTIST) + ") Add Multiple Songs by Artist to Catalogue\n "; //this holds the menu options specific to management of the song/artist catalogues
 		prompt += "  " + to_string(COUNTS) + ") View Song Popularity Counts\n "; //this menu holds options for the KJ to manage the queue of singers
 		prompt += "  "+to_string(VIEW) + ") View Catalogues\n "; //this menu holds singer options - histories, etc
 		
@@ -132,14 +132,22 @@ void menuManageCatalogue() {
 		Song tempSong;
 		switch (userSelection) {
 		case ADD_ARTIST:
-			do{
-			userInputArtist();
-			} while (getInputReprompt("Add another Artist? 0: No, 1: Yes. Enter a selection: ", 0, 1));
-			 break;
+			do 
+			{
+				Artist tempArtist = userInputArtist();
+				if (!(tempArtist.getKey() == BLANK_FIELD))//skip if no artist entered/selected
+				{
+					do {
+						userInputSong(tempArtist);
+					} while (getInputReprompt("Add another song by this Artist?    0:No,  1:Yes   Enter a selection: \n", 0, 1));
+				}
+			} while (getInputReprompt("Add another Artist?    0:No,  1:Yes   Enter a selection: \n", 0, 1));
+			
+			break;
 		case ADD_SONG:
 			do{
 			 userInputSong();
-			} while (getInputReprompt("Add another Song? 0: No, 1: Yes. Enter a selection: ", 0, 1));
+			} while (getInputReprompt("Add another Song?    0:No,  1:Yes   Enter a selection: \n", 0, 1));
 			break;
 		case VIEW:
 			menuDisplayCatalogue();

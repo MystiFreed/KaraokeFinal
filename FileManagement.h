@@ -67,6 +67,7 @@ int getInputReprompt(std::string promptMessage, int minRange, int maxRange) {
 
 	do {
 		std::cout << promptMessage;
+
 		getline(cin, strInput);
 		stringstream ssInput(strInput);
 		ssInput>>intInput;	
@@ -79,10 +80,10 @@ int getInputReprompt(std::string promptMessage, int minRange, int maxRange) {
 			std::cout << "Outside Range " << invalidMessage;
 			isInvalidInput = true;
 		}
-		if (isInvalidInput) {//clear to reprompt (not needed with this version of function that uses getline();
-			//std::cin.clear();
-			//std::cin.ignore(numeric_limits<streamsize>::max(), '\n');
-		}
+	//	if (isInvalidInput) {//clear to reprompt (not needed with this version of function that uses getline();
+					//std::cin.clear();
+		//	std::cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		//}
 	} while (isInvalidInput);//reprompt until valid
 
 	return intInput;//return valid input
