@@ -16,6 +16,7 @@ using namespace std;
 //This is the QueueNode class, which creates a type used to store the node of the linked list (GADDIS pg 1148) with modifications for a doubly
 //linked list (GADDIS pg 1153)
 
+
 template <class T>
 
 class QueueNode
@@ -62,6 +63,7 @@ public:
 	void displayFullList() const;
 	bool verifyNameExists(string);
 	void deleteList();
+	T findNode(T&);
 	//still need to add in doubly linked elements, such as insert between, etc
 };
 
@@ -240,30 +242,30 @@ QueueManagement_KJ<T>::~QueueManagement_KJ()
 	}
 }
 
-template <class T>
-bool QueueManagement_KJ<T>::verifyNameExists(string dispname)
-{
-	QueueNode<T>* nodePtr; //used to iterate through the list
-
-	//position the pointer at the beginning of the list
-	nodePtr = head;
-
-	bool exists = false;
-	string tempCheck;
-	string nameToCheck = dispname;
-
-	while (nodePtr) //while the pointer points to a valid singer, generate the information in that singer
-	{
-		tempCheck = nodePtr->value; //generate the name of the singer
-		if (tempCheck == nameToCheck)
-		{
-			exists = true;
-			break;
-		}
-		nodePtr = nodePtr->next; //move to the next singer node
-	}
-	return exists;
-}
+//template <class T>
+//bool QueueManagement_KJ<T>::verifyNameExists(string dispname)
+//{
+//	QueueNode<T>* nodePtr; //used to iterate through the list
+//
+//	//position the pointer at the beginning of the list
+//	nodePtr = head;
+//
+//	bool exists = false;
+//	string tempCheck;
+//	string nameToCheck = dispname;
+//
+//	while (nodePtr) //while the pointer points to a valid singer, generate the information in that singer
+//	{
+//		tempCheck = nodePtr->value; //generate the name of the singer
+//		if (tempCheck == nameToCheck)
+//		{
+//			exists = true;
+//			break;
+//		}
+//		nodePtr = nodePtr->next; //move to the next singer node
+//	}
+//	return exists;
+//}
 
 template <class T>
 void QueueManagement_KJ<T>::displayFullList() const
@@ -275,9 +277,35 @@ void QueueManagement_KJ<T>::displayFullList() const
 
 	while (nodePtr) //while the pointer points to a valid singer, generate the information in that singer
 	{
-		cout << nodePtr->value << endl; //generate the name of the singer
+		cout<< nodePtr->value.display() << endl; //generate the name of the singer
 		nodePtr = nodePtr->next; //move to the next singer node
 	}
+}
+//returns copy of object
+template <class T>
+T QueueManagement_KJ<T>::findNode(T& searchObject)
+{
+	QueueNode<T>* nodePtr; //used to iterate through the list
+
+	//position the pointer at the beginning of the list
+	nodePtr = head;
+
+	bool exists = false;
+	T tempCheck;
+	//string nameToCheck = dispname;
+
+	while (nodePtr) //while the pointer points to a valid singer, generate the information in that singer
+	{
+		tempCheck = nodePtr->value; //generate the name of the singer
+		if (tempCheck == searchObject)
+		{
+			return searchObject;
+			break;
+		}
+		nodePtr = nodePtr->next; //move to the next singer node
+	}
+
+	return T();
 }
 
 #endif // !QUEUEMANAGEMENT_KJ_H

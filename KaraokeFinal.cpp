@@ -10,6 +10,7 @@
 #include <map>
 #include "SingerHistory.h"
 #include <algorithm>
+#include "SongRequest.h"
 
 using namespace std;
 
@@ -265,6 +266,12 @@ void menuQueueManagement()
 {
 	bool continueMenu = true;
 
+	//////amy's experiment
+	
+	QueueManagement_KJ<SongRequest> comboList; //holds combo of everything
+	SongRequest newRequest;
+	/////amy's experiment
+
 	QueueManagement_KJ<string> list; //this holds the list of singers with both their key and display name
 	QueueManagement_KJ<string> songList; //this holds all the songs in the queue, this is only the song names
 	QueueManagement_KJ<string> displayList; //this holds only the singer's display name, used to pop up on deck singers for the audience
@@ -301,25 +308,22 @@ void menuQueueManagement()
 		string songTitleToMove;
 		bool verifyExists; //verify that the singer is in the queue
 		char songComplete; //holds the user input for whether the singer completed the song
-
+		SongRequest confirm;
 		switch (userSelection) {
 		case 1:
-			newSinger = userInputSinger(); //use the userInputSinger function from the Singer.h to verify whether to add new or use an existing singer
-			displayname = newSinger.getDisplayName(); //set the displayname to the displayname from the singer's profile
-			singerKey = newSinger.getKey(); //capture the singer's key for use int he map
-			list.appendNode(singerKey, displayname); //add that displayname to the list
-			displayList.appendNode(displayname);
-
-			cout << "Please enter the song you that the singer has chosen:\n"; //solicit the song that the singer has selected
-			//cin >> songTitle; //gather the song name
-			//credit to geeksforgeeks: https://www.geeksforgeeks.org/conversion-whole-string-uppercase-lowercase-using-stl-c/
-			//transform(songTitle.begin(), songTitle.end(), songTitle.begin(), ::toupper); //convert the whole combined string to all caps
-			newSong = userInputSong(); //use the function to verify the right song name
-			songTitle = newSong.getTitle(); //gather the title for the song
-			songKey = newSong.getKey(); //gather the key for the song
-			songList.appendNode(songTitle); //add to the songlist
-			cout << displayname << " singing " << songTitle << " added.\n";
-			cin.ignore(); //cut off trailing whitespace
+			
+		////////amy's experiment?????????????
+			//set struct contents
+			 newRequest.reqSinger = userInputSinger();
+			 newRequest.reqSong = userInputSong();
+			//add struct as object of the list node
+			comboList.appendNode(newRequest);
+			cout << "Amy's experiment with SongRequest list output: ";
+			 confirm = comboList.findNode(newRequest);
+			cout << confirm.display() <<" added.\n";
+			//cout << " This should be possible to move the node around a single list and keep everything together. \nYou won't need new variables for the fields of the Singer and Song, just grab the fields from the struct in the list.\n";
+			cin.get();
+		/////amy's experiment????????????????
 			break;
 		case 2:
 			cout << endl;

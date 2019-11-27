@@ -35,6 +35,14 @@ public:
 		displayName = a2.displayName;
 		return *this;
 	}
+	bool operator==(const Singer& a2)
+	{
+		if (singerKey == a2.singerKey)
+		{
+			return true;
+		}
+		return false;
+	}
 
 	void setDisplayName(string newName);
 	string getDisplayName

@@ -131,6 +131,7 @@
     <ClInclude Include="Singer.h" />
     <ClInclude Include="SingerHistory.h" />
     <ClInclude Include="Song.h" />
+    <ClInclude Include="SongRequest.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ArtistList.txt" />
