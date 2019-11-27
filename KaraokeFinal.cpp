@@ -10,6 +10,7 @@
 #include <map>
 #include "SingerHistory.h"
 #include <algorithm>
+#include "SongRequest.h"
 
 using namespace std;
 
@@ -266,7 +267,7 @@ void menuQueueManagement()
 	bool continueMenu = true;
 
 	//////amy's experiment
-	struct SongRequest { Singer reqSinger; Song reqSong; };
+	
 	QueueManagement_KJ<SongRequest> comboList; //holds combo of everything
 	SongRequest newRequest;
 	/////amy's experiment
@@ -307,19 +308,20 @@ void menuQueueManagement()
 		string songTitleToMove;
 		bool verifyExists; //verify that the singer is in the queue
 		char songComplete; //holds the user input for whether the singer completed the song
-
+		SongRequest confirm;
 		switch (userSelection) {
 		case 1:
 			
 		////////amy's experiment?????????????
 			//set struct contents
 			 newRequest.reqSinger = userInputSinger();
-			  newRequest.reqSong = userInputSong();
+			 newRequest.reqSong = userInputSong();
 			//add struct as object of the list node
 			comboList.appendNode(newRequest);
 			cout << "Amy's experiment with SongRequest list output: ";
-			cout<< newRequest.reqSinger.getDisplayName() << " singing " << newRequest.reqSong.display() << " added.\n";
-			cout << " This should be possible to move the node around a single list and keep everything together. \nYou won't need new variables for the fields of the Singer and Song, just grab the fields from the struct in the list.\n";
+			 confirm = comboList.findNode(newRequest);
+			cout << confirm.display() <<" added.\n";
+			//cout << " This should be possible to move the node around a single list and keep everything together. \nYou won't need new variables for the fields of the Singer and Song, just grab the fields from the struct in the list.\n";
 			cin.get();
 		/////amy's experiment????????????????
 			break;
