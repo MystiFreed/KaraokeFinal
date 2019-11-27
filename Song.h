@@ -31,15 +31,14 @@ class Song : public CatalogEntry
 			if (DEBUGSONG) cout << songKey << "3\n";
 
 		}
-		//https://en.cppreference.com/w/cpp/language/copy_assignment
-		Song& operator=(const Song& a2)
-		{
-			songKey = a2.songKey;
-			title = a2.title;
-			artistKey = a2.artistKey;
-			if (DEBUGSONG) cout << songKey << "4\n";
 
-			return *this;
+		bool operator==(const Song& a2)
+		{
+			if (songKey == a2.songKey)
+			{
+				return true;
+			}
+			return false;
 		}
 
 		void setTitle(string newTitle);
