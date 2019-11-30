@@ -1,6 +1,10 @@
 Artist                        	Song Title                    
+AEROSMITH                     	DREAM ON                      
+AEROSMITH                     	PINK                          
 BOSTON                        	LONG TIME                     
 CHAPMAN, TRACY                	GIVE ME ONE REASON            
+DEF LEPPARD                   	PYROMANIA                     
+DEF LEPPARD                   	ROCK OF AGES                  
 FLEETWOOD MAC                 	DREAMS                        
 FLEETWOOD MAC                 	GO YOUR OWN WAY               
 FLEETWOOD MAC                 	RHIANNON                      
@@ -11,6 +15,7 @@ JOPLIN, JANIS                 	ME AND BOBBY MCGEE
 JUDD, WYNONNA                 	NO ONE ELSE ON EARTH          
 LED ZEPPELIN                  	D'YER MAK'R                   
 MEATLOAF                      	BAT OUT OF HELL               
+SKID ROW                      	I REMEMBER YOU                
 TESLA                         	LOVE SONG                     
 TESLA                         	MODERN DAY COWBOY             
 TILLIS, PAM                   	MAYBE IT WAS MEMPHIS          
