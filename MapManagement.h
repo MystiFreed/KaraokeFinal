@@ -128,6 +128,9 @@ template <typename T> bool UserInputSelectByKey(map<string, T> myMap, string use
 //search map for exact match key
 template <typename T> bool SelectByKey(map<string, T> myMap, string searchString, T& storeObject)
 {
+	for (auto& c : searchString) {
+		c = toupper((unsigned char)c);
+	}
 	//attempt finding exact match
 	typename map<string, T>::iterator iter;
 	iter = myMap.find(searchString);

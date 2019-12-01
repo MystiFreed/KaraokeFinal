@@ -197,12 +197,12 @@ void QueueManagement_KJ<T>::insertNode(T movedNode, T beforenode)
 //placeholder only, as I need to look into this for the doubly linked list vs single
 
 template <class T>
-void QueueManagement_KJ<T>::deleteNode(T singerToRemove)
+void QueueManagement_KJ<T>::deleteNode(T reqToRemove)
 {
 	QueueNode<T>* nodePtr; //used to iterate through the list
 	QueueNode<T>* previousNode = nullptr; //points to the previous singer
 	
-	SongRequest reqToRemove = singerToRemove;
+//	T reqToRemove = singerToRemove;
 	//string dataToFind = reqToRemove.display();
 	//Using recommendations from: https://stackoverflow.com/questions/4092393/value-of-type-t-cannot-be-converted-to
 
@@ -224,7 +224,7 @@ void QueueManagement_KJ<T>::deleteNode(T singerToRemove)
 	else //if the first isn't the singer to remove, search the list
 	{
 		nodePtr = head;
-		while (nodePtr != nullptr && nodePtr->value != reqToRemove)
+		while (nodePtr != nullptr && !(nodePtr->value == reqToRemove))
 		{
 			previousNode = nodePtr;
 			nodePtr = nodePtr->next;

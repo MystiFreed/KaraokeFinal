@@ -20,7 +20,7 @@ SongRequest newRequest;
 SongRequest confirm;
 //testing 
 const bool DEBUGMAIN = false;
-
+const bool DEMO = true;//pre-load some things for demo purposes
 //function prototypes
 void startup();
 bool displayMenu();
@@ -30,49 +30,12 @@ void exitSaving();
 void menuQueueManagement();
 void menuSinger();
 void addSongReq();
-
 //inline bool operator==( Song& s1,  Song& s2) { return s1.getKey() == s2.getKey(); }
 
-
-void testOperator() {
-	Singer a;
-	string temp;
-	UserInputSelectByKey(singerMap,"Select a singer\n",temp, a);
-	Singer b;
-	UserInputSelectByKey(singerMap, "Select a singer\n", temp, b);
-	bool equal = a == a;
-	bool notequal = a == b;
-	cout <<endl<< "a==a " << equal;
-	cout << endl << "a==b " << notequal;
-	Song c;
-	Song d;
-	UserInputSelectByKey(songMap, "Select a song\n", temp, c);
-	UserInputSelectByKey(songMap, "Select a song\n", temp, d);
-
-	equal = c == c;
-	  notequal = c == d;
-	 cout << endl << "c==c " << equal;
-	 cout << endl << "c==d " << notequal;
-
-	 SongRequest e;
-	 SongRequest f;
-	 e.reqSinger = a;
-	 e.reqSong = c;
-	 f.reqSinger = b;
-	 f.reqSong = d;
-
-	 equal =  e== e;
-	 notequal = f == e;
-	 cout << endl << "e==e " << equal;
-	 cout << endl << "f==e " << notequal;
-
-}
 int main()
 {
 	startup();
-	//delete testOperator() after testing
-	testOperator();
-	///
+	
 
 	while (displayMenu()); //automatically repeats until a false (exit) is returned.
 	exitSaving();
@@ -104,6 +67,34 @@ void startup() {
 	primaryMapFromFile(singerMap, singerFstream);
 	multiMapFromFile(allSingerHistoryMap, singerHistoryFstream);
 	cout << "Done importing map data\n";
+	if (DEMO) {
+		Song songA;
+		Singer singerA;
+		bool singercheck = SelectByKey(singerMap, "amy100", singerA);
+		bool songcheck = SelectByKey(songMap, "Dreams - Fleetwood Mac", songA);
+		if (singercheck && songcheck) {
+			SongRequest newRequest = SongRequest(singerA, songA);
+			comboList.appendNode(newRequest);
+		}
+		if (SelectByKey(singerMap, "mystifreed", singerA) && SelectByKey(songMap, "Alone - Heart", songA)) {
+
+			SongRequest newRequest = SongRequest(singerA, songA);
+			comboList.appendNode(newRequest);
+		}
+
+		if (SelectByKey(singerMap, "anna", singerA) && SelectByKey(songMap, "JOLENE - PARTON, DOLLY", songA)) {
+
+			SongRequest newRequest = SongRequest(singerA, songA);
+			comboList.appendNode(newRequest);
+		}
+
+		if (SelectByKey(singerMap, "ethanf", singerA) && SelectByKey(songMap, "PANAMA - VAN HALEN", songA)) {
+
+			SongRequest newRequest = SongRequest(singerA, songA);
+			comboList.appendNode(newRequest);
+		}
+		cout << "Loaded demo data into kj queue.\n";
+	}
 };
 
 // Function displays a menu for user selection of the submenu. Returns true if menu should continue.
@@ -166,10 +157,9 @@ void menuManageCatalogue() {
 		enum catalogOptions {BACK,  ADD_SONG, ADD_ARTIST, COUNTS, VIEW};
 		string prompt = "\n----Catalogue Management Menu----\n ";
 		prompt += "  "+to_string(BACK)+") Back\n ";
-		prompt += "  "+to_string(ADD_SONG) + ") Add a Song to Catalogue\n "; //this menu holds options for the KJ to manage the queue of singers
-		prompt += "  " + to_string(ADD_ARTIST) + ") Add Multiple Songs by Artist to Catalogue\n "; //this holds the menu options specific to management of the song/artist catalogues
-		prompt += "  " + to_string(COUNTS) + ") View Song Popularity Counts\n "; //this menu holds options for the KJ to manage the queue of singers
-		prompt += "  "+to_string(VIEW) + ") View Catalogues\n "; //this menu holds singer options - histories, etc
+		prompt += "  " + to_string(ADD_ARTIST) + ") Add Multiple Songs by Artist to Catalogue\n "; 
+		prompt += "  " + to_string(COUNTS) + ") View Song Popularity Counts\n "; 
+		prompt += "  "+to_string(VIEW) + ") View Catalogues\n "; 
 		
 		prompt += "  Please make a selection:\n ";
 		userSelection = getInputReprompt(prompt, BACK, VIEW);//getInputPreprompt converts any entry to upper for comparison
