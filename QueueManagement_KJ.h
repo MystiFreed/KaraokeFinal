@@ -64,12 +64,8 @@ public:
 	void deleteNode(T);
 	void displayList() const;
 	void displayFullList() const;
-	bool verifyNameExists(string);
-	void deleteList();
-	//void tryDeleteNode();
+	//bool verifyNameExists(string);
 	T findNode(T&);
-	void findAndRemoveNode(string);
-	//still need to add in doubly linked elements, such as insert between, etc
 };
 
 //This is the append operation, which adds a new singer to the very end of the list
@@ -93,8 +89,6 @@ void QueueManagement_KJ<T>::appendNode(T newS)
 			nodePtr = nodePtr->next; //get to the end of the list
 		nodePtr->next = newNode; //set the singer to the last node (after the end is found
 	}
-
-	//do I need to add more here for the double part of doubly linked list? make sure to look this up
 }
 
 template <class T>
@@ -116,8 +110,6 @@ void QueueManagement_KJ<T>::appendNode(T newS, T newDN)
 			nodePtr = nodePtr->next; //get to the end of the list
 		nodePtr->next = newNode; //set the singer to the last node (after the end is found
 	}
-
-	//do I need to add more here for the double part of doubly linked list? make sure to look this up
 }
 
 //This is the display operation, which will display the nodes in their order, for use in popping up the next 10 to the screen
@@ -141,9 +133,6 @@ void QueueManagement_KJ<T>::displayList() const
 	}
 }
 
-//This is the insert operation, which will insert a new singer into a selected place in the queue
-//placeholder only, as I need to look into this for the doubly linked list vs single
-
 template <class T>
 //credit to geeksforgeeks for the basic ideas: https://www.geeksforgeeks.org/insert-a-node-at-a-specific-position-in-a-linked-list/
 //second: https://www.geeksforgeeks.org/rearrange-a-given-linked-list-in-place/ and https://ide.geeksforgeeks.org/1eGSEy
@@ -161,25 +150,24 @@ void QueueManagement_KJ<T>::insertNode(T movedNode, T beforenode)
 	//allocate a new node and store the new value in that node
 	newNode = new QueueNode<T>(movedNode);
 
-	//string newData = movedNode;
-	//nodePtr = head;
 	int queueSize = 0; //this holds the size of the existing queue
 
-	if (!head)
+	//if this is the first singer of the night, add them to the first in queue and make newSinger the first node
+	if (!head) 
 	{
 		head = newNode;
 		newNode->next = nullptr;
 	}
-	else
+	else //otherwise, set the node pointer to the head, make the previous null
 	{
 		nodePtr = head;
 		previousNode = nullptr;
-		while (nodePtr != nullptr && nodePtr->value != beforenode)
+		while (nodePtr != nullptr && !(nodePtr->value == beforenode)) //while the pointer isn't null and isn't at the right node to insert before
 		{
-			previousNode = nodePtr;
+			previousNode = nodePtr; //move onto the next
 			nodePtr = nodePtr->next;
 		}
-		if (previousNode == nullptr)
+		if (previousNode == nullptr) 
 		{
 			head = newNode;
 			newNode->next = nodePtr;
@@ -202,14 +190,7 @@ void QueueManagement_KJ<T>::deleteNode(T reqToRemove)
 	QueueNode<T>* nodePtr; //used to iterate through the list
 	QueueNode<T>* previousNode = nullptr; //points to the previous singer
 	
-//	T reqToRemove = singerToRemove;
-	//string dataToFind = reqToRemove.display();
 	//Using recommendations from: https://stackoverflow.com/questions/4092393/value-of-type-t-cannot-be-converted-to
-
-	//T singerToRemove = (T)(object)dataToFind;
-	//string dataToFind = (string)(object)t;
-
-	
 
 	//if the head is empty, no need to do anything
 	if (!head)
@@ -321,51 +302,6 @@ T QueueManagement_KJ<T>::findNode(T& searchObject)
 
 	return T();
 }
-
-template <class T>
-void QueueManagement_KJ<T>::findAndRemoveNode(string subs)
-{
-	/*QueueNode<T>* nodePtr; //used to iterate through the list
-	QueueNode<T>* previousNode = nullptr; //points to the previous singer
-
-	string substringVal = subs;
-	SongRequest toRemove;
-	string value;
-	int trueOrNot;
-
-	//if the head is empty, no need to do anything
-	if (!head)
-		return;
-
-	value = head->value.display();
-	trueOrNot = value.find(substringVal);
-
-	if (trueOrNot >= 0) //if the head is the right singer to remove
-	{
-		toRemove = nodePtr;
-		nodePtr = head->next;
-		delete head;
-		head = nodePtr;
-	}
-	else //if the first isn't the singer to remove, search the list
-	{
-		nodePtr = head;
-		while (nodePtr != nullptr)
-		{
-			previousNode = nodePtr;
-			nodePtr = nodePtr->next;
-		}
-		//if the value isn't found, reset the ptr and delete it
-		if (nodePtr)
-		{
-			//toRemove == NULL;
-			previousNode->next = nodePtr->next;
-			delete nodePtr;
-		}
-	}
-	return toRemove;*/
-}
-
 
 #endif // !QUEUEMANAGEMENT_KJ_H
 
