@@ -10,6 +10,9 @@
 #ifndef QUEUEMANAGEMENT_KJ_H
 #define QUEUEMANAGEMENT_KJ_H
 #include <iostream>
+#include <string>
+#include "SongRequest.h"
+
 
 using namespace std;
 
@@ -63,7 +66,9 @@ public:
 	void displayFullList() const;
 	bool verifyNameExists(string);
 	void deleteList();
+	//void tryDeleteNode();
 	T findNode(T&);
+	void findAndRemoveNode(string);
 	//still need to add in doubly linked elements, such as insert between, etc
 };
 
@@ -130,7 +135,7 @@ void QueueManagement_KJ<T>::displayList() const
 
 	while (counter < COUNT_MAX && nodePtr) //while the pointer points to a valid singer, generate the information in that singer
 	{
-		cout << nodePtr->value << endl; //generate the name of the singer
+		cout << nodePtr->value.display() << endl; //generate the name of the singer
 		nodePtr = nodePtr->next; //move to the next singer node
 		counter++;
 	}
@@ -194,23 +199,32 @@ void QueueManagement_KJ<T>::insertNode(T movedNode, T beforenode)
 template <class T>
 void QueueManagement_KJ<T>::deleteNode(T singerToRemove)
 {
-	QueueNode<T> *nodePtr; //used to iterate through the list
-	QueueNode<T> *previousNode = nullptr; //points to the previous singer
+	QueueNode<T>* nodePtr; //used to iterate through the list
+	QueueNode<T>* previousNode = nullptr; //points to the previous singer
+	
+	SongRequest reqToRemove = singerToRemove;
+	//string dataToFind = reqToRemove.display();
+	//Using recommendations from: https://stackoverflow.com/questions/4092393/value-of-type-t-cannot-be-converted-to
+
+	//T singerToRemove = (T)(object)dataToFind;
+	//string dataToFind = (string)(object)t;
+
+	
 
 	//if the head is empty, no need to do anything
 	if (!head)
 		return;
 
-	if (head->value == singerToRemove) //if the head is the right singer to remove
+	if (head->value == reqToRemove) //if the head is the right singer to remove
 	{
-		nodePtr = head->next; 
+		nodePtr = head->next;
 		delete head;
 		head = nodePtr;
 	}
 	else //if the first isn't the singer to remove, search the list
 	{
 		nodePtr = head;
-		while (nodePtr != nullptr && nodePtr->value != singerToRemove)
+		while (nodePtr != nullptr && nodePtr->value != reqToRemove)
 		{
 			previousNode = nodePtr;
 			nodePtr = nodePtr->next;
@@ -277,7 +291,7 @@ void QueueManagement_KJ<T>::displayFullList() const
 
 	while (nodePtr) //while the pointer points to a valid singer, generate the information in that singer
 	{
-		cout<< nodePtr->value << endl; //generate the name of the singer
+		cout<< nodePtr->value.display() << endl; //generate the name of the singer
 		nodePtr = nodePtr->next; //move to the next singer node
 	}
 }
@@ -307,6 +321,51 @@ T QueueManagement_KJ<T>::findNode(T& searchObject)
 
 	return T();
 }
+
+template <class T>
+void QueueManagement_KJ<T>::findAndRemoveNode(string subs)
+{
+	/*QueueNode<T>* nodePtr; //used to iterate through the list
+	QueueNode<T>* previousNode = nullptr; //points to the previous singer
+
+	string substringVal = subs;
+	SongRequest toRemove;
+	string value;
+	int trueOrNot;
+
+	//if the head is empty, no need to do anything
+	if (!head)
+		return;
+
+	value = head->value.display();
+	trueOrNot = value.find(substringVal);
+
+	if (trueOrNot >= 0) //if the head is the right singer to remove
+	{
+		toRemove = nodePtr;
+		nodePtr = head->next;
+		delete head;
+		head = nodePtr;
+	}
+	else //if the first isn't the singer to remove, search the list
+	{
+		nodePtr = head;
+		while (nodePtr != nullptr)
+		{
+			previousNode = nodePtr;
+			nodePtr = nodePtr->next;
+		}
+		//if the value isn't found, reset the ptr and delete it
+		if (nodePtr)
+		{
+			//toRemove == NULL;
+			previousNode->next = nodePtr->next;
+			delete nodePtr;
+		}
+	}
+	return toRemove;*/
+}
+
 
 #endif // !QUEUEMANAGEMENT_KJ_H
 

@@ -14,6 +14,10 @@
 
 using namespace std;
 
+//global variables
+static QueueManagement_KJ<SongRequest> comboList; //holds combo of everything
+SongRequest newRequest;
+SongRequest confirm;
 //testing 
 const bool DEBUGMAIN = false;
 
@@ -25,6 +29,7 @@ void menuDisplayCatalogue();
 void exitSaving();
 void menuQueueManagement();
 void menuSinger();
+void addSongReq();
 
 //inline bool operator==( Song& s1,  Song& s2) { return s1.getKey() == s2.getKey(); }
 
@@ -289,12 +294,10 @@ void menuDisplayCatalogue()
 void menuQueueManagement()
 {
 	bool continueMenu = true;
-
-	//////amy's experiment
 	
-	QueueManagement_KJ<SongRequest> comboList; //holds combo of everything
+	//QueueManagement_KJ<SongRequest> comboList; //holds combo of everything
+	//QueueManagement_KJ<string> comboList; //holds combo of everything
 	SongRequest newRequest;
-	/////amy's experiment
 
 	QueueManagement_KJ<string> list; //this holds the list of singers with both their key and display name
 	QueueManagement_KJ<string> songList; //this holds all the songs in the queue, this is only the song names
@@ -309,9 +312,9 @@ void menuQueueManagement()
 		prompt += "  2) Remove Singer\n "; //remove a singer from the queue 
 		prompt += "  3) Move Singer in Queue\n "; //move a singer from their current place in the queue to another selected place
 		prompt += "  4) Display Pending Singers\n "; //display the next 10 singers pending
-		prompt += "  5) Display Pending Songs\n "; //display the pending songs (and their corresponding singer)
-		prompt += "  6) EOD Clear Queue\n "; //clears out any remaining in the queue at the end of the day
-		prompt += "  7) Exit to main\n "; //exit to main menu
+		/*prompt += "  5) Display Pending Songs\n "; //display the pending songs (and their corresponding singer)*/
+		prompt += "  5) EOD Clear Queue\n "; //clears out any remaining in the queue at the end of the day
+		prompt += "  6) Exit to main\n "; //exit to main menu
 		prompt += "  Please make a selection:\n ";
 		userSelection = getInputReprompt(prompt, 1, 7);//getInputPreprompt converts any entry to upper for comparison
 
@@ -335,31 +338,51 @@ void menuQueueManagement()
 		SongRequest confirm;
 		switch (userSelection) {
 		case 1:
-			
-		////////amy's experiment?????????????
+			//confirm = addSongReq();
 			//set struct contents
-			 newRequest.reqSinger = userInputSinger();
-			 newRequest.reqSong = userInputSong();
+			newRequest.reqSinger = userInputSinger();
+			newRequest.reqSong = userInputSong();
 			//add struct as object of the list node
 			comboList.appendNode(newRequest);
-			cout << "Amy's experiment with SongRequest list output: ";
-			 confirm = comboList.findNode(newRequest);
+			//cout << "Amy's experiment with SongRequest list output: ";
+			confirm = comboList.findNode(newRequest);
 			cout << confirm.display() <<" added.\n";
-			//cout << " This should be possible to move the node around a single list and keep everything together. \nYou won't need new variables for the fields of the Singer and Song, just grab the fields from the struct in the list.\n";
-			cin.get();
-		/////amy's experiment????????????????
+			//cin.get();
+
+			//try a different way//
+			/*newRequest.reqSinger = userInputSinger(); //use userInputSinger to gather the right singer
+			singerKey = newRequest.reqSinger.getKey();  //get the key for the singer that needs removed
+			displayname = newRequest.reqSinger.getDisplayName(); //get the display name for the singer to remove
+			newRequest.reqSong = userInputSong();
+			songKey = newRequest.reqSong.getKey();
+			songTitle = newRequest.reqSong.getTitle();
+			nodeData = (displayname + " / " + songKey);
+			displayname = newSinger.getDisplayName(); //get the display name for the singer to remove
+			comboList.appendNode(nodeData);
+			cout << confirm.display() << " added.\n";*/
+			//lets see//
 			break;
 		case 2:
 			cout << endl;
 			cout << "Current queue:" << endl; 
-			list.displayFullList(); //generate the full list of singers
+			comboList.displayFullList(); //generate the full list of singers
 			cout << endl;
+			
 			//cout << "Please select the singer to remove by entering the display name.\n";//select the user to remove
-			/*reenter1:cin >> displayname; //collect the input*/
-			newSinger = userInputSinger(); //use userInputSinger to gather the right singer
-			singerKey = newSinger.getKey();  //get the key for the singer that needs removed
+			//cin >> displayname; //collect the input*/
+			//confirm = comboList.findAndRemoveNode(displayname);
+			//cout << confirm.display();
+			newRequest.reqSinger = userInputSinger(); //use userInputSinger to gather the right singer
+			singerKey = newRequest.reqSinger.getKey();  //get the key for the singer that needs removed
+			displayname = newRequest.reqSinger.getDisplayName(); //get the display name for the singer to remove
+			newRequest.reqSong = userInputSong();
+			songKey = newRequest.reqSong.getKey();
+			songTitle = newRequest.reqSong.getTitle();
+			cout << singerKey << " is key" << songKey << " is song key";
+			nodeData = (displayname + " / " + songKey);
+			cout << nodeData << " is node data";
 			displayname = newSinger.getDisplayName(); //get the display name for the singer to remove
-			nodeData = (singerKey + "/" + displayname); //concatenate key and name to create node data for the list/removal
+			//nodeData = (singerKey + "/" + displayname); //concatenate key and name to create node data for the list/removal
 			/*verifyExists = list.verifyNameExists(displayname); //make sure that the name is on the list
 			if (verifyExists == false) //if not on the list, have them reenter until it is
 			{
@@ -371,8 +394,8 @@ void menuQueueManagement()
 			reenter2:cin >> songComplete; 
 			if (toupper(songComplete) == 'Y')
 			{
-				songList.displayFullList(); //list all the songs in the queue for review
-				cout << "Please select the name of the song they completed:\n";
+				//comboList.displayFullList(); //list all the songs in the queue for review
+				//cout << "Please select the name of the song they completed:\n";
 				/*reenter3:cin >> songTitle;
 				verifyExists = songList.verifyNameExists(songTitle);
 				if (verifyExists == false) //if not on the list, have them reenter until it is
@@ -380,26 +403,28 @@ void menuQueueManagement()
 					cout << "Please enter a valid song name:\n";
 					goto reenter3;
 				}*/
-				cin.ignore();
-				newSong = userInputSong(); //use userInputSong to gather the right singer
-				songKey = newSong.getKey(); //get the key for the singer that needs to be added to the map
-				songTitle = newSong.getTitle(); //get the song title for the song to remove
-				addToSingerHistory(singerKey, 2019, 11, 10, songKey); //add the song to the singer's history
-				list.deleteNode(nodeData); //delete the node from the list that has the singer name/username
-				displayList.deleteNode(displayname); //delete the node from the list that only has display names
-				songList.deleteNode(songTitle); //delete the song from the songlist
+				//cin.ignore();
+				//newSong = userInputSong(); //use userInputSong to gather the right singer
+				//songKey = newSong.getKey(); //get the key for the singer that needs to be added to the map
+				//songTitle = newSong.getTitle(); //get the song title for the song to remove
+				cout << singerKey << " is key" << songKey << " is song key";
+				cout << nodeData << " is node data";
+				addToSingerHistory(singerKey, 2019, 12, 13, songKey); //add the song to the singer's history
+				comboList.deleteNode(newRequest); //delete the node from the list that has the singer name/username
+				//displayList.deleteNode(displayname); //delete the node from the list that only has display names
+				//songList.deleteNode(songTitle); //delete the song from the songlist
 				cout << "Singer removed and singer history updated with song: " << songTitle << endl; //tell the KJ that the singer has been removed
 			}
 			else if (toupper(songComplete) == 'N') //don't add to the singer history as they didn't complete the song
 			{
-				list.deleteNode(nodeData); //delete the node from the list that has the singer name/username
-				displayList.deleteNode(displayname); //delete the node from the list that only has display names
-				songList.displayFullList(); //display the songs pending
-				cout << "Please select the name of the song they intended to sing:\n";
-				cin.ignore(); //ignore trailing whitespace
-				newSong = userInputSong();
-				songTitle = newSong.getTitle();
-				songList.deleteNode(songTitle); //delete the song
+				comboList.deleteNode(newRequest); //delete the node from the list that has the singer name/username
+				//displayList.deleteNode(displayname); //delete the node from the list that only has display names
+				comboList.displayFullList(); //display the songs pending
+				//cout << "Please select the name of the song they intended to sing:\n";
+				//cin.ignore(); //ignore trailing whitespace
+				//newSong = userInputSong();
+				//songTitle = newSong.getTitle();
+				//songList.deleteNode(songTitle); //delete the song
 				cout << "Singer removed.\n"; //tell the KJ that the singer has been removed
 			}
 			else //resolicit if they type anything but Y or N
@@ -409,15 +434,15 @@ void menuQueueManagement()
 			}
 			cout << "Remaining queue:\n"; //display the remaining queue for the KJ
 			cout << endl;
-			list.displayFullList();
+			comboList.displayFullList();
 			cin.ignore();
 			break;
 		case 3:
-			list.displayFullList();
+			comboList.displayFullList();
 			cout << "Please select the singer to move by entering the full name including the / from the list.\n";
 			getline(cin, singerToMove);
 			nodeData = singerToMove;
-			songList.displayFullList();
+			comboList.displayFullList();
 			//cin.ignore();
 			//credit to geeksforgeeks: https://www.geeksforgeeks.org/conversion-whole-string-uppercase-lowercase-using-stl-c/
 			transform(singerToMove.begin(), singerToMove.end(), singerToMove.begin(), ::toupper); //convert the whole combined string to all caps
@@ -439,15 +464,15 @@ void menuQueueManagement()
 		case 4:
 			cout << "On deck: \n";
 			cout << endl;
-			displayList.displayList(); //display the top 10 displaynames only for singers pending
+			comboList.displayList(); //display the top 10 displaynames only for singers pending
 			break;
-		case 5:
+		/*case 5:
 			cout << "Songs currently in the queue: \n"; 
 			songList.displayFullList(); //display the list of songs in the queue
-			break;
-		case 6:
+			break;*/
+		case 5:
 			cout << "Clearing queue.\n";
-			list.~QueueManagement_KJ(); //call the destructor to remove all pending singers, send back to the main to avoid duplicate delete[] calls
+			comboList.~QueueManagement_KJ(); //call the destructor to remove all pending singers, send back to the main to avoid duplicate delete[] calls
 			//main();
 			menuQueueManagement();
 		default:
@@ -456,4 +481,17 @@ void menuQueueManagement()
 			break;
 		}
 	}
+}
+
+//Mysti's function to add a singer and song to the queue, can be used from either the KJ or singer menus
+void addSongReq()
+{
+	/*newRequest.reqSinger = userInputSinger(); //gather the singer's information
+	newRequest.reqSong = userInputSong(); //gather the song information
+
+	comboList.appendNode(newRequest); //add the comboList (which includes the singer object and song object) to the list
+	confirm = comboList.findNode(newRequest); //gather the information in the node
+	cout << confirm.display() << " added.\n"; //generate the information for the user
+
+	return confirm;*/
 }
