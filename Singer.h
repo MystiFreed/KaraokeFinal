@@ -5,9 +5,10 @@
 #include "FileManagement.h"
 #include "MapManagement.h"
 #include"Song.h"
-
-class Singer : public CatalogEntry {
-	string singerKey;//"unique username"
+using namespace std;
+class Singer : public CatalogEntry
+{
+	string singerKey=BLANK_FIELD;//"unique username"
 	std::string displayName = "";
 public:
 	Singer() :CatalogEntry() {};
@@ -24,10 +25,12 @@ public:
 	};
 
 	//copy constructor
-	Singer(const Singer& a2) {
+	Singer(const Singer& a2) 
+	{
 		singerKey = a2.singerKey;
 		displayName = a2.displayName;
 	}
+
 	//https://en.cppreference.com/w/cpp/language/copy_assignment
 	Singer& operator=(const Singer& a2)
 	{
@@ -45,14 +48,15 @@ public:
 	}
 
 	void setDisplayName(string newName);
-	string getDisplayName
-	();
+	string getDisplayName();
 
 	virtual string	display();
 	virtual string	toFile();
 	virtual void fromFile(vector<string>::iterator);
 
 	virtual string	getKey();
+
+
 };
 
 void Singer::setDisplayName(string newName) { displayName = newName; };

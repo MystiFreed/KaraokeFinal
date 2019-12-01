@@ -3,6 +3,8 @@
 #include "Artist.h"
 #include "CatalogEntry.h"
 #include "FileManagement.h"
+#include <sstream>
+
 using namespace std;
 const bool DEBUGSONG = false;
 class Song : public CatalogEntry
@@ -51,6 +53,8 @@ class Song : public CatalogEntry
 		virtual void fromFile(vector<string>::iterator );
 
 		virtual string	getKey();
+
+		
 		
 };
 
@@ -83,10 +87,18 @@ void Song::fromFile(std::vector<string>::iterator iter) {
 
 }
 
+
 map<string, Song> songMap;
 string songFileTXT = "Songs.txt";
 fstream songFstream;// (songFileTXT, ios::in | ios::out);
 
+
+
+
+
+
 multimap<string, string> songCatalogByArtist; //key artistKey, value songKey ==will add using addSongToCatalogs
 string songsByArtistFileTXT = "SongsByArtist.txt";
 fstream songsByArtistFstream;
+
+

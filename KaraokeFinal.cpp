@@ -194,7 +194,8 @@ void menuDisplayCatalogue()
 		viewCatalog = getInputReprompt(promptb, 1, 4);//getInputPreprompt converts any entry to upper for comparison
 		
 		stringstream report;//fill with contents of map
-		char delim = '\t';
+		char delimiter = '\t';
+
 		string reportTXT;
 		switch (viewCatalog) {
 		case BACK:
@@ -203,39 +204,22 @@ void menuDisplayCatalogue()
 		case SONG: 
 		{
 			reportTXT = "SongListReport.txt";
-			const int WIDTH = 40;
-			report << setw(WIDTH) << left << "Song Title" << delim << setw(WIDTH) << left << "Artist" << endl;
-
-			for (auto& element : songMap) {
-				string artistKey = element.second.getArtistKey();
-				Artist tempArtist;
-				if (SelectByKey(artistMap, artistKey, tempArtist) )
-				{
-					report << setw(WIDTH) << left << element.second.getTitle() << delim << setw(WIDTH) << left << tempArtist.getDisplayName() << endl;
-				}
-			}
+			
+				report = reportSongMap(delimiter);
+			
 			break;
 		}
 		case SONG_ARTIST:
 		{
 			reportTXT = "SongListByArtistReport.txt";
-			const int WIDTH = 30;
-			report << setw(WIDTH) << left << "Artist" << delim << setw(WIDTH) << left << "Song Title" << endl;
-
-			for (auto& element : songCatalogByArtist) {
-					report << setw(WIDTH) << left << element.first << delim << setw(WIDTH) << left << element.second << endl;
-			}
+			
+			report = reportSongByArtistMap(delimiter);
 			break;
 		}
 		case ARTIST:
 		{
 			reportTXT = "ArtistListReport.txt";
-			const int WIDTH = 30;
-			report << setw(WIDTH) << left << "Artist (alphabetical)" << delim << setw(WIDTH) << left << "Artist" << endl;
-
-			for (auto& element : artistMap) {
-					report << setw(WIDTH) << left << element.first << delim << setw(WIDTH) << left << element.second.getDisplayName() << endl;
-			}
+			report = reportArtistMap(delimiter);
 			break;
 		}
 		default:// BACK OR ERROR GOES HERE, Returns from function

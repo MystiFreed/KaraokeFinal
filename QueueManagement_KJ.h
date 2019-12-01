@@ -277,7 +277,7 @@ void QueueManagement_KJ<T>::displayFullList() const
 
 	while (nodePtr) //while the pointer points to a valid singer, generate the information in that singer
 	{
-		cout<< nodePtr->value.display() << endl; //generate the name of the singer
+		cout<< nodePtr->value << endl; //generate the name of the singer
 		nodePtr = nodePtr->next; //move to the next singer node
 	}
 }

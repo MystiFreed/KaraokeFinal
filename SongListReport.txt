@@ -2,9 +2,11 @@ Song Title                              	Artist
 ALONE                                   	HEART                                   
 BAT OUT OF HELL                         	MEATLOAF                                
 D'YER MAK'R                             	LED ZEPPELIN                            
+DREAM ON                                	AEROSMITH                               
 DREAMS                                  	FLEETWOOD MAC                           
 GIVE ME ONE REASON                      	TRACY CHAMPAN                           
 GO YOUR OWN WAY                         	FLEETWOOD MAC                           
+I REMEMBER YOU                          	SKID ROW                                
 I'D RATHER GO BLIND                     	ETTA JAMES                              
 LONG TIME                               	BOSTON                                  
 LOVE SONG                               	TESLA                                   
@@ -13,5 +15,8 @@ MAYBE IT WAS MEMPHIS                    	PAM TILLIS
 ME AND BOBBY MCGEE                      	JANIS JOPLIN                            
 MODERN DAY COWBOY                       	TESLA                                   
 NO ONE ELSE ON EARTH                    	WYNONNA JUDD                            
+PINK                                    	AEROSMITH                               
+PYROMANIA                               	DEF LEPPARD                             
 RHIANNON                                	FLEETWOOD MAC                           
+ROCK OF AGES                            	DEF LEPPARD                             
 WHAT'S LOVE GOT TO DO WITH IT?          	TINA TURNER                             

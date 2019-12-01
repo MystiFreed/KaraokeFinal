@@ -36,6 +36,9 @@ string inputMapString();
 Artist userInputArtist();
 Song userInputSong();
 Singer userInputSinger();
+ostream& operator<<(ostream&, Artist&);
+ostream& operator<<(ostream&, Song&);
+ostream& operator<<(ostream&, Singer&);
 
 
 ///////////////
@@ -64,7 +67,7 @@ template <typename T>  void displayMap(map<string, T>& existingMap) {
 	stringstream report;
 	const int WIDTH = 30;
 	for (auto& element : existingMap) {
-			report << setw(WIDTH) <<left<< element.second.display() << FIELD_DELIMITER << endl;
+			report << setw(WIDTH) <<left<< element.second << FIELD_DELIMITER << endl;
 	}
 	cout << report.str();
 }
@@ -92,7 +95,7 @@ template <typename T> bool UserInputSelectByKey(map<string, T> myMap, string use
 		{
 			if (iter->first.find(searchString) != std::string::npos)//possible match
 			{//check if possible match is what user wants
-				string sectionTitle = "\n----Select This One?---\n " + iter->first+" "+iter->second.display() + "\n";
+				string sectionTitle = "\n----Select This One?---\n " + iter->second.display() + "\n";
 				enum ConfirmMenu { CANCEL, SELECT, AGAIN };
 				string sectionPrompt = sectionTitle + "\n  0:Cancel, go back without selection\n  1:Confirm, select this \n  2: Keep looking, see next match \nSelect an option: "; //define the prompt string.
 				int menuSelected = getInputReprompt(sectionPrompt, CANCEL, AGAIN); //get input within menu option range.
@@ -358,5 +361,68 @@ bool addSongToCatalogs(Song newSong) {
 		cout << "Already exists in catalog, not added."; return false;
 	}
 	addObjectToMap(&songCatalogByArtist, newSong.getArtistKey(), newSong.getTitle());
+	primaryMapToFile(songMap,songFstream);
+	primaryMapToFile(artistMap,artistFstream);
 	return true;
 };
+
+stringstream reportSongByArtistMap(const char DELIMITER)
+{
+	const int WIDTH = 30;
+	stringstream report;
+	report << setw(WIDTH) << left << "Artist" << DELIMITER << setw(WIDTH) << left << "Song Title" << endl;
+
+	for (auto& element : songCatalogByArtist) {
+		report << setw(WIDTH) << left << element.first << DELIMITER << setw(WIDTH) << left << element.second << endl;
+	}
+	return report;
+}
+
+stringstream reportArtistMap(const char DELIMITER) {
+	const int WIDTH = 30;
+	stringstream report;
+	report << setw(WIDTH) << left << "Artist Alphabetical" << setw(WIDTH) << left << "Artist Display Name" << endl;
+
+	for (auto& element : artistMap) {
+		string artistKey = element.second.getKey();
+		Artist tempArtist;
+		if (SelectByKey(artistMap, artistKey, tempArtist))
+		{
+			report << setw(WIDTH) << left << artistKey << setw(WIDTH) << left << tempArtist.getDisplayName() << endl;
+		}
+	}
+	return report;
+}
+
+stringstream reportSongMap(const char DELIMITER)
+{
+	const int WIDTH = 40;
+	stringstream report;
+	report << setw(WIDTH) << left << "Song Title" << DELIMITER << setw(WIDTH) << left << "Artist" << endl;
+
+	for (auto& element : songMap) {
+		string artistKey = element.second.getArtistKey();
+		Artist tempArtist;
+		if (SelectByKey(artistMap, artistKey, tempArtist))
+		{
+			report << setw(WIDTH) << left << element.second.getTitle() << DELIMITER << setw(WIDTH) << left << tempArtist.getDisplayName() << endl;
+		}
+	}
+	return report;
+}
+
+ ostream& operator<<(ostream& os, Artist& obj)
+{
+	os << obj.display();
+	return os;
+}
+   ostream& operator<<(ostream& os, Song& obj)
+{
+	os << obj.display();
+	return os;
+}
+ ostream& operator<<(ostream& os, Singer& obj)
+{
+	os << obj.display();
+	return os;
+}
