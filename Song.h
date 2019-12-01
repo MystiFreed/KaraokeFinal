@@ -58,6 +58,8 @@ class Song : public CatalogEntry
 		
 };
 
+inline bool operator==( Song& s1,  Song& s2) { return s1.getKey() == s2.getKey(); }
+
 //Class implementation
 //#include "Song.h"
 

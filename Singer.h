@@ -58,6 +58,8 @@ public:
 
 
 };
+inline bool operator==(Singer& s1, Singer& s2) { return s1.getKey() == s2.getKey(); }
+
 
 void Singer::setDisplayName(string newName) { displayName = newName; };
 string Singer::getDisplayName(){return displayName;}

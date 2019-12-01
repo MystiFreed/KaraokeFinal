@@ -26,9 +26,49 @@ void exitSaving();
 void menuQueueManagement();
 void menuSinger();
 
+//inline bool operator==( Song& s1,  Song& s2) { return s1.getKey() == s2.getKey(); }
+
+
+void testOperator() {
+	Singer a;
+	string temp;
+	UserInputSelectByKey(singerMap,"Select a singer\n",temp, a);
+	Singer b;
+	UserInputSelectByKey(singerMap, "Select a singer\n", temp, b);
+	bool equal = a == a;
+	bool notequal = a == b;
+	cout <<endl<< "a==a " << equal;
+	cout << endl << "a==b " << notequal;
+	Song c;
+	Song d;
+	UserInputSelectByKey(songMap, "Select a song\n", temp, c);
+	UserInputSelectByKey(songMap, "Select a song\n", temp, d);
+
+	equal = c == c;
+	  notequal = c == d;
+	 cout << endl << "c==c " << equal;
+	 cout << endl << "c==d " << notequal;
+
+	 SongRequest e;
+	 SongRequest f;
+	 e.reqSinger = a;
+	 e.reqSong = c;
+	 f.reqSinger = b;
+	 f.reqSong = d;
+
+	 equal =  e== e;
+	 notequal = f == e;
+	 cout << endl << "e==e " << equal;
+	 cout << endl << "f==e " << notequal;
+
+}
 int main()
 {
 	startup();
+	//delete testOperator() after testing
+	testOperator();
+	///
+
 	while (displayMenu()); //automatically repeats until a false (exit) is returned.
 	exitSaving();
 	return 0;

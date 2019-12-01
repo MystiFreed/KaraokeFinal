@@ -22,3 +22,5 @@ public:
 		return reqSinger.display() + " / " + reqSong.display();
 	}
 };
+
+inline bool operator==(SongRequest& s1, SongRequest& s2) { return (s1.reqSong == s2.reqSong && s1.reqSinger == s2.reqSinger); }
