@@ -5,10 +5,12 @@
 class SongRequest { 
 
 public:
-	Singer reqSinger; 
-	Song reqSong; 
+	Singer reqSinger=Singer(); 
+	Song reqSong=Song(); 
 	friend class Singer;
 	friend class Song;
+	SongRequest() {};
+	SongRequest(Singer Singer, Song Song) { reqSinger = Singer, reqSong = Song; }
 
 	bool operator==(const SongRequest& a2)
 	{

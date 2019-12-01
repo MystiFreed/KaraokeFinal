@@ -74,7 +74,7 @@ return songKey; };
 
 string Song::display()
 { 
-		return getKey(); 
+		return getKey();
 }
 
 string Song::toFile() { return songKey + FIELD_DELIMITER + title + FIELD_DELIMITER + artistKey; }
