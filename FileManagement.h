@@ -24,6 +24,7 @@ vector<string> ReadLineByID(fstream&, string);//can find any string, not just ID
 vector<string> SeparateLineByDelimiter(string, char);
 void GoBeginningOfFile(fstream& inputReader);
 string generateDisplayName(string);
+string generateSingerKey(string);
 
 //substring function to divide up the elements into display name and key
 string generateDisplayName(string comb)
@@ -36,6 +37,19 @@ string generateDisplayName(string comb)
 	singerKey = fullString.substr(0, fullString.find(delimiter));
 	displayName = fullString.substr(fullString.find(delimiter) + 1);
 	return displayName;
+}
+
+//substring function to divide up the elements into display name and key
+string generateSingerKey(string comb)
+{
+	string fullString = comb;
+	string singerKey;
+	char delimiter = '/';
+	string displayName;
+
+	singerKey = fullString.substr(0, fullString.find(delimiter));
+	displayName = fullString.substr(fullString.find(delimiter) + 1);
+	return singerKey;
 }
 
 //sets reader back to start of file //Amy

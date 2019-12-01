@@ -3,10 +3,12 @@
 #include "Song.h"
 #include <iostream>
 class SongRequest { 
+
 public:
 	Singer reqSinger; 
 	Song reqSong; 
-
+	friend class Singer;
+	friend class Song;
 
 	bool operator==(const SongRequest& a2)
 	{
@@ -22,3 +24,5 @@ public:
 		return reqSinger.display() + " / " + reqSong.display();
 	}
 };
+
+inline bool operator==(SongRequest& s1, SongRequest& s2) { return (s1.reqSong == s2.reqSong && s1.reqSinger == s2.reqSinger); }
