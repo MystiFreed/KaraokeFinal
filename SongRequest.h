@@ -3,10 +3,12 @@
 #include "Song.h"
 #include <iostream>
 class SongRequest { 
+
 public:
 	Singer reqSinger; 
 	Song reqSong; 
-
+	friend class Singer;
+	friend class Song;
 
 	bool operator==(const SongRequest& a2)
 	{
