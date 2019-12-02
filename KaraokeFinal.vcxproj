@@ -137,6 +137,7 @@
     <Text Include="ArtistList.txt" />
     <Text Include="Artists.txt" />
     <Text Include="allSingerHistory.txt" />
+    <Text Include="DemoOutline.txt" />
     <Text Include="Singers.txt" />
     <Text Include="SongListByArtistReport.txt" />
     <Text Include="SongListReport.txt" />

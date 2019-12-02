@@ -9,7 +9,7 @@ using namespace std;
 class Singer : public CatalogEntry
 {
 	string singerKey=BLANK_FIELD;//"unique username"
-	std::string displayName = "";
+	std::string displayName = BLANK_FIELD;
 public:
 	Singer() :CatalogEntry() {};
 	Singer(string username) :CatalogEntry()

@@ -264,6 +264,14 @@ void viewSingerMenu() {
 
 };
 
+struct tm* getToday() {/* get current timeinfo and modify it to the user's choice */
+	time_t rawtime;
+	struct tm* timeinfo;
+	time (&rawtime);
+	timeinfo = localtime(&rawtime);
+	return timeinfo;
+};
+
 //date time functions
 struct tm* setDate(int year, int month, int day, time_t& storeTime) {
 	struct tm* timeinfo;

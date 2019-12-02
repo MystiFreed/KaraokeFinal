@@ -36,8 +36,6 @@ void menuSinger();
 int main()
 {
 	startup();
-	
-
 	while (displayMenu()); //automatically repeats until a false (exit) is returned.
 	exitSaving();
 	return 0;
@@ -90,6 +88,26 @@ void startup() {
 		}
 
 		if (SelectByKey(singerMap, "ethanf", singerA) && SelectByKey(songMap, "PANAMA - VAN HALEN", songA)) {
+
+			SongRequest newRequest = SongRequest(singerA, songA);
+			comboList.appendNode(newRequest);
+		}
+		if (SelectByKey(singerMap, "cowboy", singerA) && SelectByKey(songMap, "friends in low places - brooks, garth", songA)) {
+
+			SongRequest newRequest = SongRequest(singerA, songA);
+			comboList.appendNode(newRequest);
+		}
+		if (SelectByKey(singerMap, "tylo", singerA) && SelectByKey(songMap, "i remember you - skid row", songA)) {
+
+			SongRequest newRequest = SongRequest(singerA, songA);
+			comboList.appendNode(newRequest);
+		}
+		if (SelectByKey(singerMap, "amy100", singerA) && SelectByKey(songMap, "D'yer mak'r - Led Zeppelin", songA)) {
+
+			SongRequest newRequest = SongRequest(singerA, songA);
+			comboList.appendNode(newRequest);
+		}
+		if (SelectByKey(singerMap, "mystifreed", singerA) && SelectByKey(songMap, "Maybe it was memphis - tillis, pam", songA)) {
 
 			SongRequest newRequest = SongRequest(singerA, songA);
 			comboList.appendNode(newRequest);
@@ -158,6 +176,7 @@ void menuManageCatalogue() {
 		enum catalogOptions {BACK,  ADD_SONG, ADD_ARTIST, COUNTS, VIEW};
 		string prompt = "\n----Catalogue Management Menu----\n ";
 		prompt += "  "+to_string(BACK)+") Back\n ";
+		prompt += "  " + to_string(ADD_SONG) + ") Add a Song to Catalogue\n ";
 		prompt += "  " + to_string(ADD_ARTIST) + ") Add Multiple Songs by Artist to Catalogue\n "; 
 		prompt += "  " + to_string(COUNTS) + ") View Song Popularity Counts\n "; 
 		prompt += "  "+to_string(VIEW) + ") View Catalogues\n "; 
@@ -288,9 +307,9 @@ void menuQueueManagement()
 	
 	SongRequest newRequest;
 
-	QueueManagement_KJ<string> list; //this holds the list of singers with both their key and display name
-	QueueManagement_KJ<string> songList; //this holds all the songs in the queue, this is only the song names
-	QueueManagement_KJ<string> displayList; //this holds only the singer's display name, used to pop up on deck singers for the audience
+	//QueueManagement_KJ<string> list; //this holds the list of singers with both their key and display name
+	//QueueManagement_KJ<string> songList; //this holds all the songs in the queue, this is only the song names
+	//QueueManagement_KJ<string> displayList; //this holds only the singer's display name, used to pop up \nOn deck singers for the audience
 
 
 	while (continueMenu)
@@ -319,7 +338,7 @@ void menuQueueManagement()
 		SongRequest singerAfter; //singer who will follow the singer being moved in the queue
 		char songComplete; //holds the user input for whether the singer completed the song
 		SongRequest confirm;
-
+		int newSpot;
 		switch (userSelection) {
 		case 1:
 			newRequest.reqSinger = userInputSinger(); //gather the singer information
@@ -335,11 +354,12 @@ void menuQueueManagement()
 			cout << endl;
 
 			newRequest.reqSinger = userInputSinger(); //use userInputSinger to gather the right singer
-			singerKey = newRequest.reqSinger.getKey();  //get the key for the singer that needs removed
-			displayname = newRequest.reqSinger.getDisplayName(); //get the display name for the singer to remove
+			//singerKey = newRequest.reqSinger.getKey();  //get the key for the singer that needs removed
+			//displayname = newRequest.reqSinger.getDisplayName(); //get the display name for the singer to remove
+
 			newRequest.reqSong = userInputSong(); //gather the song information
-			songKey = newRequest.reqSong.getKey(); //gather the song key
-			songTitle = newRequest.reqSong.getTitle(); //gather the song title
+			//songKey = newRequest.reqSong.getKey(); //gather the song key
+			//songTitle = newRequest.reqSong.getTitle(); //gather the song title
 			//nodeData = (displayname + " / " + songKey); 
 			displayname = newSinger.getDisplayName(); //get the display name for the singer to remove
 
@@ -348,7 +368,7 @@ void menuQueueManagement()
 			reenter2:cin >> songComplete; 
 			if (toupper(songComplete) == 'Y')
 			{
-				addToSingerHistory(singerKey, 2019, 12, 13, songKey); //add the song to the singer's history
+				addToSingerHistory(singerKey,getToday(), songKey); //add the song to the singer's history
 				comboList.deleteNode(newRequest); //delete the node from the list that has the singer name/username
 				cout << "Singer removed and singer history updated with song: " << songTitle << endl; //tell the KJ that the singer has been removed
 			}
@@ -375,26 +395,30 @@ void menuQueueManagement()
 			singerToMove.reqSong = userInputSong();
 			
 			comboList.displayFullList();
-			cout << "Select the name/song of the singer to move them before." << endl;
-			singerAfter.reqSinger = userInputSinger(); //use userInputSinger to gather the right singer
-			singerAfter.reqSong = userInputSong();
+			 newSpot = getInputReprompt("What spot to move this to? 1-10: ", 1, 10);
+			//cout << "Select the name/song of the singer to move them before." << endl;
+			//singerAfter.reqSinger = userInputSinger(); //use userInputSinger to gather the right singer
+			//singerAfter.reqSong = userInputSong();
 			
 			//credit to geeksforgeeks: https://www.geeksforgeeks.org/conversion-whole-string-uppercase-lowercase-using-stl-c/
 			//transform(singerToMove.begin(), singerToMove.end(), singerToMove.begin(), ::toupper); //convert the whole combined string to all caps
 
 			comboList.deleteNode(singerToMove);
-			comboList.insertNode(singerToMove, singerAfter);
+			comboList.insertNode(singerToMove, newSpot);
+			cout << "\nOn deck: \n";
+			cout << endl;
+			comboList.displayList(); //display the top 10 displaynames only for singers pending
 			break;
 		case 4:
-			cout << "On deck: \n";
+			cout << "\nOn deck: \n";
 			cout << endl;
 			comboList.displayList(); //display the top 10 displaynames only for singers pending
 			break;
 		case 5:
 			cout << "Clearing queue.\n";
 			comboList.~QueueManagement_KJ(); //call the destructor to remove all pending singers, send back to the main to avoid duplicate delete[] calls
-			//main();
-			menuQueueManagement();
+			return;
+			break;
 		default:
 			continueMenu = false; //change the boolean from true to false and exit the menu
 			return;
