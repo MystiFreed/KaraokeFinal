@@ -30,7 +30,6 @@ void exitSaving();
 void menuQueueManagement();
 void menuSinger();
 void addSongReq();
-//inline bool operator==( Song& s1,  Song& s2) { return s1.getKey() == s2.getKey(); }
 
 int main()
 {
