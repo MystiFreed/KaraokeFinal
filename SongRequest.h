@@ -23,6 +23,7 @@ public:
 	}
 	string display()
 	{
+		
 		return reqSinger.display() + " / " + reqSong.display();
 	}
 };

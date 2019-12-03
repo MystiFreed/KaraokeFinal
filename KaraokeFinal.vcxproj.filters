@@ -65,6 +65,9 @@
     <Text Include="ArtistList.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="DemoOutline.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="KaraokeFinal.cpp">

@@ -1,0 +1,32 @@
+Catalogue/Singers - Amy
+o	4 View Catalogues
+	o	1 Display on screen
+	o	2 Song by Artist
+o	0 Back
+o	2 Add Multiple Songs by Artist
+	o	Lambert, Miranda (Before He Cheats, Love Song)
+o	0 Back
+o	3 Singer Menu
+	o	3 View Singer – Select Singer amy100
+	o	View your song history 
+
+
+KJ - Mysti
+o	4 Display pending singers queue (will be preloaded with some singers for demo)
+o	1 Add singer and selection
+	o	Singer “NewDude”
+	o	singing Dance the Night Away (enter “Dance” to start the search, 1 to select)
+o	4 Display pending singers queue (show that it was added to end)
+o	We want to move NewDude up in front of the repeat singers
+o	3 Move Singer in Queue
+	o	Singer “NewDude”
+	o	Move to spot 6
+o	Point out NewDude’s spot on the list now
+o	2 remove singer 
+	o	Remove NewDude 
+	o	singing Dance the Night Away (enter “Dance” to start the search, 1 to select)
+	o	N Did not perform
+o	2 remove singer
+	o	Remove amy100
+	o	Singing DREAMS	(enter “Dreams” to start the search, 1 to select)
+	o	Y Did perform

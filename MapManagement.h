@@ -353,6 +353,8 @@ Singer userInputSinger() {
 	string tempDisplayName="";
 	tempDisplayName = inputMapString();
 	tempSinger.setDisplayName(tempDisplayName);
+	addObjectToMap(singerMap, tempSinger);
+	primaryMapToFile(singerMap, singerFstream);
 	return tempSinger;//not found, return created one
 };
 

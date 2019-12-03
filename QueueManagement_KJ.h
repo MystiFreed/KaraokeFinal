@@ -61,9 +61,11 @@ public:
 	void appendNode(T);
 	void appendNode(T, T);
 	void insertNode(T, T);
+	void insertNode(T, int);
 	void deleteNode(T);
 	void displayList() const;
 	void displayFullList() const;
+
 	//bool verifyNameExists(string);
 	T findNode(T&);
 };
@@ -118,7 +120,7 @@ template <class T>
 void QueueManagement_KJ<T>::displayList() const
 {
 	QueueNode<T> *nodePtr; //used to iterate through the list
-
+	if (head == nullptr) return;
 	//position the pointer at the beginning of the list
 	nodePtr = head;
 	const int COUNT_MAX = 10;
@@ -127,7 +129,7 @@ void QueueManagement_KJ<T>::displayList() const
 
 	while (counter < COUNT_MAX && nodePtr) //while the pointer points to a valid singer, generate the information in that singer
 	{
-		cout << nodePtr->value.display() << endl; //generate the name of the singer
+		cout << to_string(counter+1)<<"   "<<nodePtr->value.display() << endl; //generate the name of the singer
 		nodePtr = nodePtr->next; //move to the next singer node
 		counter++;
 	}
@@ -180,7 +182,49 @@ void QueueManagement_KJ<T>::insertNode(T movedNode, T beforenode)
 	}
 
 }
+template <class T>
+void QueueManagement_KJ<T>::insertNode(T movedNode, int listSpot)
+{
+	if (listSpot <= 0) { listSpot == 1; };
+	QueueNode<T>* newNode;
+	QueueNode<T>* nodePtr; //used to iterate through the list
+	QueueNode<T>* previousNode = nullptr; //points to the previous singer
 
+	//allocate a new node and store the new value in that node
+	newNode = new QueueNode<T>(movedNode);
+
+	int queueSize = 0; //this holds the size of the existing queue
+
+	//if this is the first singer of the night, add them to the first in queue and make newSinger the first node
+	if (!head)
+	{
+		head = newNode;
+		newNode->next = nullptr;
+	}
+	else //otherwise, set the node pointer to the head, make the previous null
+	{
+		nodePtr = head;
+		previousNode = nullptr;
+		int i = 1;
+		while (nodePtr != nullptr && i<listSpot) //while the pointer isn't null and isn't at the right node to insert before
+		{
+			previousNode = nodePtr; //move onto the next
+			nodePtr = nodePtr->next;
+			i++;
+		}
+		if (previousNode == nullptr)
+		{
+			head = newNode;
+			newNode->next = nodePtr;
+		}
+		else
+		{
+			previousNode->next = newNode;
+			newNode->next = nodePtr;
+		}
+	}
+
+}
 //This is the delete operation, which will remove a singer who has left the venue
 //placeholder only, as I need to look into this for the doubly linked list vs single
 
@@ -269,11 +313,12 @@ void QueueManagement_KJ<T>::displayFullList() const
 
 	//position the pointer at the beginning of the list
 	nodePtr = head;
-
+	int i = 1;
 	while (nodePtr) //while the pointer points to a valid singer, generate the information in that singer
 	{
-		cout<< nodePtr->value.display() << endl; //generate the name of the singer
+		cout<<i<<"   "<< nodePtr->value.display() << endl; //generate the name of the singer
 		nodePtr = nodePtr->next; //move to the next singer node
+		i++;
 	}
 }
 //returns copy of object
@@ -302,6 +347,7 @@ T QueueManagement_KJ<T>::findNode(T& searchObject)
 
 	return T();
 }
+
 
 #endif // !QUEUEMANAGEMENT_KJ_H
 
