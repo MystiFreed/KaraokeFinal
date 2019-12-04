@@ -416,7 +416,8 @@ void menuQueueManagement()
 			break;
 		case 5:
 			cout << "Clearing queue.\n";
-			comboList.~QueueManagement_KJ(); //call the destructor to remove all pending singers, send back to the main to avoid duplicate delete[] calls
+			//comboList.~QueueManagement_KJ(); //call the destructor to remove all pending singers, send back to the main to avoid duplicate delete[] calls
+			comboList.clearNodeList();
 			return;
 			break;
 		default:
