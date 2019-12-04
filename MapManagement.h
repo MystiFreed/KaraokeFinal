@@ -349,9 +349,9 @@ Singer userInputSinger() {
 		}
 	} while (!uniqueUsername);//continue promting and checking if exists until username is unique
 	
-	cout << "Enter a display name to be shown on screen. This may be different from the username.";
-	string tempDisplayName="";
-	tempDisplayName = inputMapString();
+	//cout << "Enter a display name to be shown on screen. This may be different from the username.";
+	string tempDisplayName=singerKey;
+	//tempDisplayName = inputMapString();
 	tempSinger.setDisplayName(tempDisplayName);
 	addObjectToMap(singerMap, tempSinger);
 	primaryMapToFile(singerMap, singerFstream);

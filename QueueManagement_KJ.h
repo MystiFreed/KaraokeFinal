@@ -63,6 +63,7 @@ public:
 	void insertNode(T, T);
 	void insertNode(T, int);
 	void deleteNode(T);
+	void clearNodeList();
 	void displayList() const;
 	void displayFullList() const;
 
@@ -347,7 +348,22 @@ T QueueManagement_KJ<T>::findNode(T& searchObject)
 
 	return T();
 }
+ template<class T>
+void QueueManagement_KJ<T>::clearNodeList()
+{
+	/*QueueNode<T>* nodePtr; //used to iterate through the list
 
+	nodePtr = head;
+	
+
+	while (nodePtr) //while the pointer points to a valid singer, generate the information in that singer
+	{
+		deleteNode(*nodePtr);
+		//nodePtr->next = NULL;
+		nodePtr = nodePtr->next; //move to the next singer node
+	}
+	//nodePtr = NULL;*/
+}
 
 #endif // !QUEUEMANAGEMENT_KJ_H
 
